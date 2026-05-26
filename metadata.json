@@ -1,0 +1,6 @@
+{
+  "name": "PRODE MAG IA",
+  "description": "Dashboard interactivo de predicciones de fútbol (Prode) con análisis estadístico, tabla de posiciones y mensajes de desafío para Slack y Teams.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

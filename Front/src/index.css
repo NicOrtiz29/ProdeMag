@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", sans-serif;
+  
+  /* Magnético brand colors */
+  --color-mag-indigo: #5B5FC7;
+  --color-mag-teal: #3CDBC0;
+  --color-mag-dark: #1a1a2e;
+  
+  /* Argentina colors */
+  --color-arg-celeste: #75AADB;
+  --color-arg-white: #FFFFFF;
+  --color-arg-gold: #F4C430;
+  
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+}
+
+@layer base {
+  body {
+    @apply font-sans bg-[#0f0f23] text-slate-100 antialiased selection:bg-mag-teal/30 selection:text-white;
+  }
+}
+
+@layer utilities {
+  .glass {
+    background: rgba(26, 26, 46, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(91, 95, 199, 0.15);
+  }
+  .glass-light {
+    background: rgba(91, 95, 199, 0.08);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(91, 95, 199, 0.2);
+  }
+  .gradient-text {
+    background: linear-gradient(135deg, #75AADB, #3CDBC0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .gradient-text-mag {
+    background: linear-gradient(135deg, #5B5FC7, #3CDBC0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .gradient-btn {
+    background: linear-gradient(135deg, #5B5FC7, #3CDBC0);
+  }
+  .gradient-btn:hover {
+    background: linear-gradient(135deg, #6B6FD7, #4CEBD0);
+  }
+  .arg-stripe {
+    background: repeating-linear-gradient(
+      90deg,
+      #75AADB 0px,
+      #75AADB 40px,
+      #FFFFFF 40px,
+      #FFFFFF 80px
+    );
+  }
+  .shimmer {
+    background: linear-gradient(90deg, transparent 0%, rgba(60, 219, 192, 0.1) 50%, transparent 100%);
+    background-size: 200% 100%;
+    animation: shimmer 3s infinite;
+  }
+}
