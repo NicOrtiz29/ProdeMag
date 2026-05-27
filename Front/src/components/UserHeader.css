@@ -1,0 +1,13 @@
+/* UserHeader.css */
+@keyframes headerGlow {
+  from {
+    box-shadow: 0 0 5px rgba(60, 219, 192, 0);
+  }
+  to {
+    box-shadow: 0 0 15px rgba(60, 219, 192, 0.7);
+  }
+}
+
+.header-animate {
+  animation: headerGlow 3s ease-in-out infinite alternate;
+}

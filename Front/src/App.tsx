@@ -6,13 +6,12 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { INITIAL_MATCHES, CHALLENGE_TONES, BOT_STATS, HISTORICAL_MATCHES } from './data';
 import { Match, StandingsEntry } from './types';
-import OracleHeader from './components/OracleHeader';
+
 import DashboardView from './components/DashboardView';
 import PredictionsList from './components/PredictionsList';
 import DetailedStandings from './components/DetailedStandings';
-import ChallengeBox from './components/ChallengeBox';
-import HistoryAndStats from './components/HistoryAndStats';
-import JsonViewer from './components/JsonViewer';
+
+import UserHeader from './components/UserHeader';
 import { useAuth } from './context/AuthContext';
 import AuthWall from './components/AuthWall';
 import UserProfilePanel from './components/UserProfilePanel';
@@ -20,13 +19,10 @@ import { calculateMatchPoints } from './utils/points';
 import { supabase } from './lib/supabase';
 
 import { 
-  Home, 
-  Target, 
-  Trophy, 
-  MessageSquare, 
-  History, 
-  Code,
-  User
+  Home,
+  Target,
+  Trophy,
+  History
 } from 'lucide-react';
 
 type TabId = 'inicio' | 'pronosticos' | 'admin' | 'tabla' | 'slack' | 'historico' | 'json' | 'perfil';
@@ -149,24 +145,7 @@ export default function App() {
       };
     });
 
-    let botPoints = 0;
-    Object.keys(officialResults).forEach(matchId => {
-      const pObj = INITIAL_MATCHES.find((m: Match) => m.id === matchId);
-      if (pObj) {
-        botPoints += calculateMatchPoints(pObj.prediction, officialResults[matchId]);
-      }
-    });
-
-    const botEntry: StandingsEntry = {
-      id: 'oracle_bot',
-      name: 'Bot MagIA 🤖',
-      points: botPoints,
-      isBot: true,
-      avatar: '🤖',
-      role: 'Inteligencia Artificial'
-    };
-
-    const combined = [...userEntries, botEntry];
+    const combined = userEntries;
     combined.sort((a, b) => b.points - a.points);
     return combined;
   }, [officialResults, allUsersData]);
@@ -189,10 +168,7 @@ export default function App() {
     { id: 'pronosticos', label: 'Pronósticos', icon: <Target className="w-5 h-5" /> },
     ...(user?.isAdmin ? [{ id: 'admin', label: 'Admin', icon: <Target className="w-5 h-5 text-[#F4C430]" /> }] : []),
     { id: 'tabla', label: 'Ranking', icon: <Trophy className="w-5 h-5" /> },
-    { id: 'slack', label: 'Desafío', icon: <MessageSquare className="w-5 h-5" /> },
     { id: 'historico', label: 'Historial', icon: <History className="w-5 h-5" /> },
-    { id: 'json', label: 'JSON', icon: <Code className="w-5 h-5" /> },
-    { id: 'perfil', label: 'Perfil', icon: <User className="w-5 h-5" /> },
   ] as const;
 
   // Loading
@@ -226,8 +202,8 @@ export default function App() {
       {/* Main Container */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-6 space-y-5">
         
-        <OracleHeader />
-
+        <UserHeader onNavigate={() => setActiveTab('perfil')} />
+        
         {/* Desktop Tabs */}
         <div className="hidden sm:block border-b border-[#5B5FC7]/10 pb-px">
           <nav className="flex flex-wrap items-center gap-1 -mb-px" aria-label="Tabs">
@@ -236,7 +212,7 @@ export default function App() {
               return (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
+                  onClick={() => setActiveTab(tab.id as TabId)}
                   className={`flex items-center gap-2 px-4 py-2.5 border-b-2 text-sm font-semibold transition-all rounded-t-xl ${
                     active
                       ? 'border-[#3CDBC0] text-[#3CDBC0] bg-[#3CDBC0]/5'
@@ -288,26 +264,10 @@ export default function App() {
             <DetailedStandings standings={dynamicStandings} />
           )}
 
-          {activeTab === 'slack' && (
-            <ChallengeBox 
-              tones={CHALLENGE_TONES}
-              currentToneId={currentToneId}
-              onToneChange={handleToneChange}
-              messageText={messageText}
-              onMessageTextChange={handleMessageTextChange}
-            />
-          )}
-
           {activeTab === 'historico' && (
             <HistoryAndStats historicalMatches={HISTORICAL_MATCHES} />
           )}
 
-          {activeTab === 'json' && (
-            <JsonViewer 
-              matches={matches}
-              messageText={messageText}
-            />
-          )}
 
           {activeTab === 'perfil' && (
             <UserProfilePanel matches={matches} />
@@ -317,7 +277,7 @@ export default function App() {
         {/* Footer */}
         <footer className="text-center pt-6 border-t border-[#5B5FC7]/10 space-y-1 pb-4">
           <p className="text-xs text-slate-600">
-            Hecho con 💜 por <span className="font-bold text-[#5B5FC7]">MAG</span><span className="font-bold text-[#3CDBC0]">~</span>
+            Hecho con 💜 por <span className="font-bold">MAG</span>
           </p>
           <p className="text-[10px] text-slate-700">
             Prode MagIA © 2026 — Mundial FIFA 2026
@@ -332,7 +292,6 @@ export default function App() {
             { id: 'inicio', icon: <Home className="w-5 h-5" />, label: 'Inicio' },
             { id: 'pronosticos', icon: <Target className="w-5 h-5" />, label: 'Prode' },
             { id: 'tabla', icon: <Trophy className="w-5 h-5" />, label: 'Ranking' },
-            { id: 'perfil', icon: <User className="w-5 h-5" />, label: 'Perfil' },
           ].map((tab) => {
             const active = activeTab === tab.id;
             return (

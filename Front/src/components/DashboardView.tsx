@@ -1,6 +1,6 @@
 import React from 'react';
 import { Match, BotStatItem } from '../types';
-import { Target, Trophy, BarChart3, User } from 'lucide-react';
+import { Target, Trophy, BarChart3 } from 'lucide-react';
 
 interface DashboardViewProps {
   matches: Match[];
@@ -12,6 +12,7 @@ export default function DashboardView({ matches, stats, onNavigateToTab }: Dashb
   const totalMatches = matches.length;
   const matchesWithPrediction = matches.filter(m => m.prediction[0] > 0 || m.prediction[1] > 0).length;
   
+  // Quick actions without the "Mi Perfil" card
   const quickActions = [
     { 
       icon: <Target className="w-6 h-6 text-[#3CDBC0]" />,
@@ -31,19 +32,13 @@ export default function DashboardView({ matches, stats, onNavigateToTab }: Dashb
       description: 'Resultados y estadísticas pasadas',
       tab: 'historico',
     },
-    {
-      icon: <User className="w-6 h-6 text-[#5B5FC7]" />,
-      title: 'Mi Perfil',
-      description: 'Editá tu nombre, avatar y provincia',
-      tab: 'perfil',
-    },
   ];
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
       
       {/* Hero Banner with celebration image & Magnetico Branding */}
-      <div className="rounded-3xl overflow-hidden relative shadow-2xl shadow-[#5B5FC7]/20 border border-[#5B5FC7]/50 min-h-[280px] sm:min-h-[320px] flex items-center">
+      <div className="rounded-3xl overflow-hidden relative shadow-2xl shadow-[#5B5FC7]/20 border border-[#5B5FC7]/50 min-h-[280px] sm:min-h-[320px] flex items-center" onClick={() => onNavigateToTab('perfil')} style={{ cursor: 'pointer' }}>
         {/* Magnetico purple base */}
         <div className="absolute inset-0 bg-[#5B5FC7]"></div>
         
@@ -60,9 +55,9 @@ export default function DashboardView({ matches, stats, onNavigateToTab }: Dashb
 
         <div className="relative z-10 w-full flex flex-col items-center justify-center text-center px-6 py-10">
           <div className="flex gap-1 mb-4">
-            <span className="text-xl drop-shadow-md">⭐</span>
-            <span className="text-3xl -mt-2 drop-shadow-md text-[#F4C430]">⭐</span>
-            <span className="text-xl drop-shadow-md">⭐</span>
+            <span className="text-xl drop-shadow-[0_2px_5px_rgba(244,196,48,0.5)]">⭐</span>
+            <span className="text-2xl drop-shadow-[0_2px_8px_rgba(244,196,48,0.7)] -mt-1">⭐</span>
+            <span className="text-xl drop-shadow-[0_2px_5px_rgba(244,196,48,0.5)]">⭐</span>
           </div>
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white text-xs font-bold uppercase tracking-widest mb-4 shadow-lg">
             🏆 Mundial 2026
