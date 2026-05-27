@@ -6,7 +6,34 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Match } from '../types';
-import { User, Award, ShieldAlert, Sparkles, UserCheck, LogOut, Check, Save, Target, CheckSquare } from 'lucide-react';
+import { User, Award, ShieldAlert, Sparkles, UserCheck, LogOut, Check, Save, Target, CheckSquare, MapPin } from 'lucide-react';
+
+const PROVINCES_POOL = [
+  'Buenos Aires',
+  'CABA',
+  'Catamarca',
+  'Chaco',
+  'Chubut',
+  'Córdoba',
+  'Corrientes',
+  'Entre Ríos',
+  'Formosa',
+  'Jujuy',
+  'La Pampa',
+  'La Rioja',
+  'Mendoza',
+  'Misiones',
+  'Neuquén',
+  'Río Negro',
+  'Salta',
+  'San Juan',
+  'San Luis',
+  'Santa Cruz',
+  'Santa Fe',
+  'Santiago del Estero',
+  'Tierra del Fuego',
+  'Tucumán',
+];
 
 interface UserProfilePanelProps {
   matches: Match[];
@@ -32,6 +59,7 @@ export default function UserProfilePanel({ matches }: UserProfilePanelProps) {
   const [editRole, setEditRole] = useState<string>(user?.role || '');
   const [editAvatar, setEditAvatar] = useState<string>(user?.avatar || '🚀');
   const [editBio, setEditBio] = useState<string>(user?.bio || '');
+  const [editProvince, setEditProvince] = useState<string>(user?.province || '');
 
   const [saveSuccess, setSaveSuccess] = useState<boolean>(false);
 
@@ -59,7 +87,8 @@ export default function UserProfilePanel({ matches }: UserProfilePanelProps) {
       name: editName.trim(),
       role: editRole,
       avatar: editAvatar,
-      bio: editBio.trim()
+      bio: editBio.trim(),
+      province: editProvince,
     });
 
     setSaveSuccess(true);
@@ -108,7 +137,7 @@ export default function UserProfilePanel({ matches }: UserProfilePanelProps) {
           )}
 
           {/* User Details split row */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             
             <div className="space-y-1.5">
               <label className="text-[10px] uppercase font-mono tracking-wider text-slate-400 font-bold block">
@@ -136,6 +165,25 @@ export default function UserProfilePanel({ matches }: UserProfilePanelProps) {
                 {ROLES_POOL.map((r) => (
                   <option key={r} value={r} className="bg-slate-950 text-white">
                     {r}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-[10px] uppercase font-mono tracking-wider text-slate-400 font-bold flex items-center gap-1 block">
+                <MapPin className="w-3 h-3 text-cyan-400" />
+                Provincia
+              </label>
+              <select
+                value={editProvince || ''}
+                onChange={(e) => setEditProvince(e.target.value)}
+                className="w-full px-3 py-2.5 bg-slate-950 border border-slate-850 hover:border-slate-800 focus:border-cyan-500/60 rounded-xl text-xs text-slate-200 focus:outline-none transition-all font-sans cursor-pointer"
+              >
+                <option value="" className="bg-slate-950 text-slate-500">Seleccionar provincia...</option>
+                {PROVINCES_POOL.map((p) => (
+                  <option key={p} value={p} className="bg-slate-950 text-white">
+                    {p}
                   </option>
                 ))}
               </select>
@@ -258,6 +306,12 @@ export default function UserProfilePanel({ matches }: UserProfilePanelProps) {
               <p className="text-3xs text-cyan-400 font-mono font-bold tracking-tight uppercase">
                 {editRole}
               </p>
+              {editProvince && (
+                <p className="text-3xs text-slate-400 font-mono flex items-center justify-center gap-1 mt-0.5">
+                  <MapPin className="w-3 h-3 text-slate-500" />
+                  {editProvince}
+                </p>
+              )}
             </div>
           </div>
 
