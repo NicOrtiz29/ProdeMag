@@ -32,6 +32,8 @@ const generateOfficialMatches = (): Match[] => {
       flagVis: t1.flag,
       group,
       fecha: 1,
+      hora: "18:00",
+      lugar: "Estadio Nacional",
     });
     matches.push({
       id: `${group}_F1_M2`,
@@ -47,6 +49,8 @@ const generateOfficialMatches = (): Match[] => {
       flagVis: t3.flag,
       group,
       fecha: 1,
+      hora: "18:00",
+      lugar: "Estadio Nacional",
     });
 
     // Fecha 2: T0 vs T2, T1 vs T3
@@ -64,6 +68,8 @@ const generateOfficialMatches = (): Match[] => {
       flagVis: t2.flag,
       group,
       fecha: 2,
+      hora: "18:00",
+      lugar: "Estadio Nacional",
     });
     matches.push({
       id: `${group}_F2_M2`,
@@ -79,6 +85,8 @@ const generateOfficialMatches = (): Match[] => {
       flagVis: t3.flag,
       group,
       fecha: 2,
+      hora: "18:00",
+      lugar: "Estadio Nacional",
     });
 
     // Fecha 3: T3 vs T0, T1 vs T2
@@ -96,6 +104,8 @@ const generateOfficialMatches = (): Match[] => {
       flagVis: t0.flag,
       group,
       fecha: 3,
+      hora: "18:00",
+      lugar: "Estadio Nacional",
     });
     matches.push({
       id: `${group}_F3_M2`,
@@ -111,6 +121,8 @@ const generateOfficialMatches = (): Match[] => {
       flagVis: t2.flag,
       group,
       fecha: 3,
+      hora: "18:00",
+      lugar: "Estadio Nacional",
     });
   });
 

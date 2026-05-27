@@ -125,9 +125,12 @@ export default function PredictionsList({ matches, officialResults, isEditingOff
       ) : (
         <div className="space-y-3">
           {filteredMatches.map((match) => {
-            const scores = isEditingOfficial 
-              ? [officialResults?.[match.id]?.[0] || 0, officialResults?.[match.id]?.[1] || 0]
-              : match.prediction;
+            const scores = isEditingOfficial
+                ? [
+                    officialResults && officialResults[match.id] ? officialResults[match.id][0] : 0,
+                    officialResults && officialResults[match.id] ? officialResults[match.id][1] : 0,
+                  ]
+                : match.prediction;
             
             return (
               <div
@@ -135,14 +138,14 @@ export default function PredictionsList({ matches, officialResults, isEditingOff
                 className="glass rounded-2xl p-4 sm:p-5 transition-all hover:border-[#5B5FC7]/30"
               >
                 {/* Group and match day badge */}
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-xs font-semibold text-[#3CDBC0] bg-[#3CDBC0]/10 px-2.5 py-1 rounded-lg border border-[#3CDBC0]/20">
-                    Grupo {match.group}
-                  </span>
-                  <span className="text-xs text-slate-500">
-                    Fecha {match.fecha}
-                  </span>
-                </div>
+                <div className="flex items-center gap-2 mb-2">
+                    <span className="text-xs font-semibold text-[#3CDBC0] bg-[#3CDBC0]/10 px-2.5 py-1 rounded-lg border border-[#3CDBC0]/20">
+                      Grupo {match.group}
+                    </span>
+                    <span className="text-xs text-slate-500">
+                      Fecha {match.fecha} • {match.hora} • {match.lugar}
+                    </span>
+                  </div>
 
                 {/* Main match row */}
                 <div className="flex items-center justify-between gap-2">

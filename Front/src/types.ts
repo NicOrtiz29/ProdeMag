@@ -33,6 +33,8 @@ export interface Match {
   flagVis: string; // Emoji
   group: 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L';
   fecha: number; // 1, 2, 3
+  hora: string; // e.g., "18:30"
+  lugar: string; // stadium name
 }
 
 export interface StandingsEntry {

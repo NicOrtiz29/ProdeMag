@@ -17,6 +17,7 @@ import SuperAdminSettings from './components/SuperAdminSettings';
 import UserProfilePanel from './components/UserProfilePanel';
 import { calculateMatchPoints } from './utils/points';
 import { useAuth } from './context/AuthContext';
+import { supabase } from './lib/supabase';
 
 import { 
   Home,
