@@ -62,6 +62,16 @@ export default function App() {
     if (users && preds) {
       console.log('Fetched users:', users.length, 'predictions:', preds.length);
       setAllUsersData({ users, preds });
+      // Merge current user's predictions into matches state
+      if (user) {
+        const userPreds = preds.filter(p => p.user_id === user.id);
+        setMatches(prev =>
+          prev.map(m => {
+            const p = userPreds.find(up => String(up.match_id) === m.id);
+            return p ? { ...m, prediction: p.prediction } : m;
+          })
+        );
+      }
     }
   };
 
@@ -78,31 +88,37 @@ export default function App() {
     await loadAllData();
   };
 
-  const handleChangeScore = (id: string, index: 0 | 1, value: number) => {
-    setMatches((prevMatches) => {
-      const newMatches = prevMatches.map((match) => {
-        if (match.id === id) {
-          const newPrediction = [...match.prediction] as [number, number];
-          newPrediction[index] = value;
-          
-          if (user?.id) {
-            supabase.from('predictions').upsert({
-              user_id: user.id,
-              match_id: id,
-              prediction: newPrediction
-            }, { onConflict: 'user_id, match_id' }).then(() => fetchLeaderboard());
-          }
+  const handleChangeScore = async (id: string, index: 0 | 1, value: number) => {
+    const match = matches.find(m => m.id === id);
+    if (!match || !user?.id) return;
 
-          return { ...match, prediction: newPrediction };
-        }
-        return match;
+    const newPrediction = [...match.prediction] as [number, number];
+    newPrediction[index] = value;
+
+    // 1. Optimistic UI update
+    setMatches((prev) => prev.map(m => m.id === id ? { ...m, prediction: newPrediction } : m));
+
+    // 2. Call API
+    const token = (await supabase.auth.getSession()).data.session?.access_token;
+    try {
+      await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:4000'}/predictions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token ? `Bearer ${token}` : '',
+        },
+        body: JSON.stringify({ match_id: id, prediction: newPrediction }),
       });
-      return newMatches;
-    });
+      
+      // 3. Refresh data
+      await fetchLeaderboard();
+    } catch (error) {
+      console.error('Failed to update prediction:', error);
+    }
   };
 
   const handleUpdateOfficialResult = async (id: string, index: 0 | 1, value: number) => {
-    // Update local state optimistically
+    // Optimistically update UI
     setOfficialResults(prev => {
       const updated = { ...prev };
       if (!updated[id]) updated[id] = [0, 0];
@@ -110,21 +126,24 @@ export default function App() {
       return updated;
     });
 
-    // Persist change to Supabase
-    const { error } = await supabase
-      .from('official_results')
-      .upsert({
-        match_id: id,
-        result: (officialResults[id] || [0,0]).map((v, i) => i === index ? value : v)
-      }, { onConflict: 'match_id' });
-
-    if (error) {
-      console.error('Error updating official result:', error);
-      // Optionally revert optimistic update or notify user
-    } else {
-      // Refresh all data (official results, users, predictions) to ensure ranking updates
-      await loadAllData();
-    }
+    // Send update to API (admin only)
+    const token = (await supabase.auth.getSession()).data.session?.access_token;
+    fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:4000'}/official-results`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token ? `Bearer ${token}` : '',
+      },
+      body: JSON.stringify({ match_id: id, result: (officialResults[id] || [0, 0]).map((v, i) => i === index ? value : v) }),
+    })
+      .then(res => {
+        if (!res.ok) {
+          return res.json().then(data => { throw new Error(data.error || 'Failed to update result'); });
+        }
+        return res.json();
+      })
+      .then(() => loadAllData())
+      .catch(err => console.error('Official result API error:', err));
   };
 
   const handleResetMatches = async () => {
