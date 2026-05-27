@@ -70,37 +70,23 @@ export default function DetailedStandings({ standings }: DetailedStandingsProps)
       </div>
 
       {/* Podium - Top 3 */}
-      {podium.length >= 3 && !searchTerm && (
+      {podium.length > 0 && !searchTerm && (
         <div className="grid grid-cols-3 gap-3 items-end">
-          {/* 2nd place */}
-          <div className={`glass rounded-2xl p-5 text-center border ${getPodiumStyle(1)} transition-all`}>
-            <div className="text-3xl mb-2">{getMedalEmoji(1)}</div>
-            {renderAvatar(podium[1].avatar, 'w-14 h-14 text-3xl mx-auto')}
-            <h3 className="font-bold text-white mt-2 text-sm truncate">{podium[1].name}</h3>
-            <p className="text-xs text-slate-400 truncate">{podium[1].role || 'Participante'}</p>
-            <div className="mt-3 text-2xl font-extrabold text-slate-300">{podium[1].points}</div>
-            <span className="text-xs text-slate-500">puntos</span>
-          </div>
-
-          {/* 1st place - tallest */}
-          <div className={`glass rounded-2xl p-6 text-center border ${getPodiumStyle(0)} -mb-2 transition-all`}>
-            <div className="text-4xl mb-2">{getMedalEmoji(0)}</div>
-            {renderAvatar(podium[0].avatar, 'w-18 h-18 text-4xl mx-auto')}
-            <h3 className="font-bold text-white mt-3 text-base truncate">{podium[0].name}</h3>
-            <p className="text-xs text-slate-400 truncate">{podium[0].role || 'Participante'}</p>
-            <div className="mt-3 text-2xl font-extrabold gradient-text-mag">{podium[0].points}</div>
-            <span className="text-xs text-slate-500">puntos</span>
-          </div>
-
-          {/* 3rd place */}
-          <div className={`glass rounded-2xl p-5 text-center border ${getPodiumStyle(2)} transition-all`}>
-            <div className="text-3xl mb-2">{getMedalEmoji(2)}</div>
-            {renderAvatar(podium[2].avatar, 'w-14 h-14 text-3xl mx-auto')}
-            <h3 className="font-bold text-white mt-2 text-sm truncate">{podium[2].name}</h3>
-            <p className="text-xs text-slate-400 truncate">{podium[2].role || 'Participante'}</p>
-            <div className="mt-3 text-2xl font-extrabold text-amber-600">{podium[2].points}</div>
-            <span className="text-xs text-slate-500">puntos</span>
-          </div>
+          {podium.map((entry, idx) => (
+            <div
+              key={entry.id}
+              className={`glass rounded-2xl ${idx === 0 ? 'p-6' : 'p-5'} text-center border ${getPodiumStyle(idx)} transition-all`}
+            >
+              <div className={`text-${idx === 0 ? '4xl' : '3xl'} mb-2`}>{getMedalEmoji(idx)}</div>
+              {renderAvatar(entry.avatar, idx === 0 ? 'w-18 h-18 text-4xl mx-auto' : 'w-14 h-14 text-3xl mx-auto')}
+              <h3 className="font-bold text-white mt-2 text-sm truncate">{entry.name}</h3>
+              <p className="text-xs text-slate-400 truncate">{entry.role || 'Participante'}</p>
+              <div className={`mt-3 text-2xl font-extrabold ${idx === 0 ? 'gradient-text-mag' : 'text-slate-300'}`}>
+                {entry.points}
+              </div>
+              <span className="text-xs text-slate-500">puntos</span>
+            </div>
+          ))}
         </div>
       )}
 

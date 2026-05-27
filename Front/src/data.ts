@@ -129,7 +129,10 @@ const generateOfficialMatches = (): Match[] => {
   return matches;
 };
 
-export const INITIAL_MATCHES: Match[] = generateOfficialMatches();
+import worldCupMatches from './data/worldcup2026.json';
+
+// Usar los partidos cargados desde el dataset oficial del mundial 2026
+export const INITIAL_MATCHES: Match[] = worldCupMatches as Match[];
 
 export const STANDINGS: StandingsEntry[] = [
   {

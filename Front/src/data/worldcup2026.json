@@ -1,0 +1,2082 @@
+[
+  {
+    "id": "A_M1",
+    "localTeam": "Mexico",
+    "localCode": "MX",
+    "visitorTeam": "South Africa",
+    "visitorCode": "ZA",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "🇲🇽",
+    "flagVis": "🇿🇦",
+    "group": "A",
+    "fecha": 1,
+    "hora": "13:00",
+    "lugar": "Mexico City"
+  },
+  {
+    "id": "A_M2",
+    "localTeam": "South Korea",
+    "localCode": "KR",
+    "visitorTeam": "Czech Republic",
+    "visitorCode": "CZ",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "🇰🇷",
+    "flagVis": "🇨🇿",
+    "group": "A",
+    "fecha": 2,
+    "hora": "20:00",
+    "lugar": "Guadalajara (Zapopan)"
+  },
+  {
+    "id": "A_M3",
+    "localTeam": "Czech Republic",
+    "localCode": "CZ",
+    "visitorTeam": "South Africa",
+    "visitorCode": "ZA",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "🇨🇿",
+    "flagVis": "🇿🇦",
+    "group": "A",
+    "fecha": 3,
+    "hora": "12:00",
+    "lugar": "Atlanta"
+  },
+  {
+    "id": "A_M4",
+    "localTeam": "Mexico",
+    "localCode": "MX",
+    "visitorTeam": "South Korea",
+    "visitorCode": "KR",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "🇲🇽",
+    "flagVis": "🇰🇷",
+    "group": "A",
+    "fecha": 4,
+    "hora": "19:00",
+    "lugar": "Guadalajara (Zapopan)"
+  },
+  {
+    "id": "A_M5",
+    "localTeam": "Czech Republic",
+    "localCode": "CZ",
+    "visitorTeam": "Mexico",
+    "visitorCode": "MX",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "🇨🇿",
+    "flagVis": "🇲🇽",
+    "group": "A",
+    "fecha": 5,
+    "hora": "19:00",
+    "lugar": "Mexico City"
+  },
+  {
+    "id": "A_M6",
+    "localTeam": "South Africa",
+    "localCode": "ZA",
+    "visitorTeam": "South Korea",
+    "visitorCode": "KR",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "🇿🇦",
+    "flagVis": "🇰🇷",
+    "group": "A",
+    "fecha": 6,
+    "hora": "19:00",
+    "lugar": "Monterrey (Guadalupe)"
+  },
+  {
+    "id": "B_M7",
+    "localTeam": "Canada",
+    "localCode": "CA",
+    "visitorTeam": "Bosnia & Herzegovina",
+    "visitorCode": "BA",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "🇨🇦",
+    "flagVis": "🇧🇦",
+    "group": "B",
+    "fecha": 7,
+    "hora": "15:00",
+    "lugar": "Toronto"
+  },
+  {
+    "id": "B_M8",
+    "localTeam": "Qatar",
+    "localCode": "QA",
+    "visitorTeam": "Switzerland",
+    "visitorCode": "CH",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "🇶🇦",
+    "flagVis": "🇨🇭",
+    "group": "B",
+    "fecha": 8,
+    "hora": "12:00",
+    "lugar": "San Francisco Bay Area (Santa Clara)"
+  },
+  {
+    "id": "B_M9",
+    "localTeam": "Switzerland",
+    "localCode": "CH",
+    "visitorTeam": "Bosnia & Herzegovina",
+    "visitorCode": "BA",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "🇨🇭",
+    "flagVis": "🇧🇦",
+    "group": "B",
+    "fecha": 9,
+    "hora": "12:00",
+    "lugar": "Los Angeles (Inglewood)"
+  },
+  {
+    "id": "B_M10",
+    "localTeam": "Canada",
+    "localCode": "CA",
+    "visitorTeam": "Qatar",
+    "visitorCode": "QA",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "🇨🇦",
+    "flagVis": "🇶🇦",
+    "group": "B",
+    "fecha": 10,
+    "hora": "15:00",
+    "lugar": "Vancouver"
+  },
+  {
+    "id": "B_M11",
+    "localTeam": "Switzerland",
+    "localCode": "CH",
+    "visitorTeam": "Canada",
+    "visitorCode": "CA",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "🇨🇭",
+    "flagVis": "🇨🇦",
+    "group": "B",
+    "fecha": 11,
+    "hora": "12:00",
+    "lugar": "Vancouver"
+  },
+  {
+    "id": "B_M12",
+    "localTeam": "Bosnia & Herzegovina",
+    "localCode": "BA",
+    "visitorTeam": "Qatar",
+    "visitorCode": "QA",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "🇧🇦",
+    "flagVis": "🇶🇦",
+    "group": "B",
+    "fecha": 12,
+    "hora": "12:00",
+    "lugar": "Seattle"
+  },
+  {
+    "id": "C_M13",
+    "localTeam": "Brazil",
+    "localCode": "",
+    "visitorTeam": "Morocco",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "C",
+    "fecha": 13,
+    "hora": "18:00",
+    "lugar": "New York/New Jersey (East Rutherford)"
+  },
+  {
+    "id": "C_M14",
+    "localTeam": "Haiti",
+    "localCode": "",
+    "visitorTeam": "Scotland",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "C",
+    "fecha": 14,
+    "hora": "21:00",
+    "lugar": "Boston (Foxborough)"
+  },
+  {
+    "id": "C_M15",
+    "localTeam": "Scotland",
+    "localCode": "",
+    "visitorTeam": "Morocco",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "C",
+    "fecha": 15,
+    "hora": "18:00",
+    "lugar": "Boston (Foxborough)"
+  },
+  {
+    "id": "C_M16",
+    "localTeam": "Brazil",
+    "localCode": "",
+    "visitorTeam": "Haiti",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "C",
+    "fecha": 16,
+    "hora": "20:30",
+    "lugar": "Philadelphia"
+  },
+  {
+    "id": "C_M17",
+    "localTeam": "Scotland",
+    "localCode": "",
+    "visitorTeam": "Brazil",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "C",
+    "fecha": 17,
+    "hora": "18:00",
+    "lugar": "Miami (Miami Gardens)"
+  },
+  {
+    "id": "C_M18",
+    "localTeam": "Morocco",
+    "localCode": "",
+    "visitorTeam": "Haiti",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "C",
+    "fecha": 18,
+    "hora": "18:00",
+    "lugar": "Atlanta"
+  },
+  {
+    "id": "D_M19",
+    "localTeam": "USA",
+    "localCode": "",
+    "visitorTeam": "Paraguay",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "D",
+    "fecha": 19,
+    "hora": "18:00",
+    "lugar": "Los Angeles (Inglewood)"
+  },
+  {
+    "id": "D_M20",
+    "localTeam": "Australia",
+    "localCode": "",
+    "visitorTeam": "Turkey",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "D",
+    "fecha": 20,
+    "hora": "21:00",
+    "lugar": "Vancouver"
+  },
+  {
+    "id": "D_M21",
+    "localTeam": "USA",
+    "localCode": "",
+    "visitorTeam": "Australia",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "D",
+    "fecha": 21,
+    "hora": "12:00",
+    "lugar": "Seattle"
+  },
+  {
+    "id": "D_M22",
+    "localTeam": "Turkey",
+    "localCode": "",
+    "visitorTeam": "Paraguay",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "D",
+    "fecha": 22,
+    "hora": "20:00",
+    "lugar": "San Francisco Bay Area (Santa Clara)"
+  },
+  {
+    "id": "D_M23",
+    "localTeam": "Turkey",
+    "localCode": "",
+    "visitorTeam": "USA",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "D",
+    "fecha": 23,
+    "hora": "19:00",
+    "lugar": "Los Angeles (Inglewood)"
+  },
+  {
+    "id": "D_M24",
+    "localTeam": "Paraguay",
+    "localCode": "",
+    "visitorTeam": "Australia",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "D",
+    "fecha": 24,
+    "hora": "19:00",
+    "lugar": "San Francisco Bay Area (Santa Clara)"
+  },
+  {
+    "id": "E_M25",
+    "localTeam": "Germany",
+    "localCode": "",
+    "visitorTeam": "Curaçao",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "E",
+    "fecha": 25,
+    "hora": "12:00",
+    "lugar": "Houston"
+  },
+  {
+    "id": "E_M26",
+    "localTeam": "Ivory Coast",
+    "localCode": "",
+    "visitorTeam": "Ecuador",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "E",
+    "fecha": 26,
+    "hora": "19:00",
+    "lugar": "Philadelphia"
+  },
+  {
+    "id": "E_M27",
+    "localTeam": "Germany",
+    "localCode": "",
+    "visitorTeam": "Ivory Coast",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "E",
+    "fecha": 27,
+    "hora": "16:00",
+    "lugar": "Toronto"
+  },
+  {
+    "id": "E_M28",
+    "localTeam": "Ecuador",
+    "localCode": "",
+    "visitorTeam": "Curaçao",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "E",
+    "fecha": 28,
+    "hora": "19:00",
+    "lugar": "Kansas City"
+  },
+  {
+    "id": "E_M29",
+    "localTeam": "Curaçao",
+    "localCode": "",
+    "visitorTeam": "Ivory Coast",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "E",
+    "fecha": 29,
+    "hora": "16:00",
+    "lugar": "Philadelphia"
+  },
+  {
+    "id": "E_M30",
+    "localTeam": "Ecuador",
+    "localCode": "",
+    "visitorTeam": "Germany",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "E",
+    "fecha": 30,
+    "hora": "16:00",
+    "lugar": "New York/New Jersey (East Rutherford)"
+  },
+  {
+    "id": "F_M31",
+    "localTeam": "Netherlands",
+    "localCode": "",
+    "visitorTeam": "Japan",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "F",
+    "fecha": 31,
+    "hora": "15:00",
+    "lugar": "Dallas (Arlington)"
+  },
+  {
+    "id": "F_M32",
+    "localTeam": "Sweden",
+    "localCode": "",
+    "visitorTeam": "Tunisia",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "F",
+    "fecha": 32,
+    "hora": "20:00",
+    "lugar": "Monterrey (Guadalupe)"
+  },
+  {
+    "id": "F_M33",
+    "localTeam": "Netherlands",
+    "localCode": "",
+    "visitorTeam": "Sweden",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "F",
+    "fecha": 33,
+    "hora": "12:00",
+    "lugar": "Houston"
+  },
+  {
+    "id": "F_M34",
+    "localTeam": "Tunisia",
+    "localCode": "",
+    "visitorTeam": "Japan",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "F",
+    "fecha": 34,
+    "hora": "22:00",
+    "lugar": "Monterrey (Guadalupe)"
+  },
+  {
+    "id": "F_M35",
+    "localTeam": "Japan",
+    "localCode": "",
+    "visitorTeam": "Sweden",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "F",
+    "fecha": 35,
+    "hora": "18:00",
+    "lugar": "Dallas (Arlington)"
+  },
+  {
+    "id": "F_M36",
+    "localTeam": "Tunisia",
+    "localCode": "",
+    "visitorTeam": "Netherlands",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "F",
+    "fecha": 36,
+    "hora": "18:00",
+    "lugar": "Kansas City"
+  },
+  {
+    "id": "G_M37",
+    "localTeam": "Belgium",
+    "localCode": "",
+    "visitorTeam": "Egypt",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "G",
+    "fecha": 37,
+    "hora": "12:00",
+    "lugar": "Seattle"
+  },
+  {
+    "id": "G_M38",
+    "localTeam": "Iran",
+    "localCode": "",
+    "visitorTeam": "New Zealand",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "G",
+    "fecha": 38,
+    "hora": "18:00",
+    "lugar": "Los Angeles (Inglewood)"
+  },
+  {
+    "id": "G_M39",
+    "localTeam": "Belgium",
+    "localCode": "",
+    "visitorTeam": "Iran",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "G",
+    "fecha": 39,
+    "hora": "12:00",
+    "lugar": "Los Angeles (Inglewood)"
+  },
+  {
+    "id": "G_M40",
+    "localTeam": "New Zealand",
+    "localCode": "",
+    "visitorTeam": "Egypt",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "G",
+    "fecha": 40,
+    "hora": "18:00",
+    "lugar": "Vancouver"
+  },
+  {
+    "id": "G_M41",
+    "localTeam": "Egypt",
+    "localCode": "",
+    "visitorTeam": "Iran",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "G",
+    "fecha": 41,
+    "hora": "20:00",
+    "lugar": "Seattle"
+  },
+  {
+    "id": "G_M42",
+    "localTeam": "New Zealand",
+    "localCode": "",
+    "visitorTeam": "Belgium",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "G",
+    "fecha": 42,
+    "hora": "20:00",
+    "lugar": "Vancouver"
+  },
+  {
+    "id": "H_M43",
+    "localTeam": "Spain",
+    "localCode": "",
+    "visitorTeam": "Cape Verde",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "H",
+    "fecha": 43,
+    "hora": "12:00",
+    "lugar": "Atlanta"
+  },
+  {
+    "id": "H_M44",
+    "localTeam": "Saudi Arabia",
+    "localCode": "",
+    "visitorTeam": "Uruguay",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "H",
+    "fecha": 44,
+    "hora": "18:00",
+    "lugar": "Miami (Miami Gardens)"
+  },
+  {
+    "id": "H_M45",
+    "localTeam": "Spain",
+    "localCode": "",
+    "visitorTeam": "Saudi Arabia",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "H",
+    "fecha": 45,
+    "hora": "12:00",
+    "lugar": "Atlanta"
+  },
+  {
+    "id": "H_M46",
+    "localTeam": "Uruguay",
+    "localCode": "",
+    "visitorTeam": "Cape Verde",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "H",
+    "fecha": 46,
+    "hora": "18:00",
+    "lugar": "Miami (Miami Gardens)"
+  },
+  {
+    "id": "H_M47",
+    "localTeam": "Cape Verde",
+    "localCode": "",
+    "visitorTeam": "Saudi Arabia",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "H",
+    "fecha": 47,
+    "hora": "19:00",
+    "lugar": "Houston"
+  },
+  {
+    "id": "H_M48",
+    "localTeam": "Uruguay",
+    "localCode": "",
+    "visitorTeam": "Spain",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "H",
+    "fecha": 48,
+    "hora": "18:00",
+    "lugar": "Guadalajara (Zapopan)"
+  },
+  {
+    "id": "I_M49",
+    "localTeam": "France",
+    "localCode": "",
+    "visitorTeam": "Senegal",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "I",
+    "fecha": 49,
+    "hora": "15:00",
+    "lugar": "New York/New Jersey (East Rutherford)"
+  },
+  {
+    "id": "I_M50",
+    "localTeam": "Iraq",
+    "localCode": "",
+    "visitorTeam": "Norway",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "I",
+    "fecha": 50,
+    "hora": "18:00",
+    "lugar": "Boston (Foxborough)"
+  },
+  {
+    "id": "I_M51",
+    "localTeam": "France",
+    "localCode": "",
+    "visitorTeam": "Iraq",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "I",
+    "fecha": 51,
+    "hora": "17:00",
+    "lugar": "Philadelphia"
+  },
+  {
+    "id": "I_M52",
+    "localTeam": "Norway",
+    "localCode": "",
+    "visitorTeam": "Senegal",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "I",
+    "fecha": 52,
+    "hora": "20:00",
+    "lugar": "New York/New Jersey (East Rutherford)"
+  },
+  {
+    "id": "I_M53",
+    "localTeam": "Norway",
+    "localCode": "",
+    "visitorTeam": "France",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "I",
+    "fecha": 53,
+    "hora": "15:00",
+    "lugar": "Boston (Foxborough)"
+  },
+  {
+    "id": "I_M54",
+    "localTeam": "Senegal",
+    "localCode": "",
+    "visitorTeam": "Iraq",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "I",
+    "fecha": 54,
+    "hora": "15:00",
+    "lugar": "Toronto"
+  },
+  {
+    "id": "J_M55",
+    "localTeam": "Argentina",
+    "localCode": "",
+    "visitorTeam": "Algeria",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "J",
+    "fecha": 55,
+    "hora": "20:00",
+    "lugar": "Kansas City"
+  },
+  {
+    "id": "J_M56",
+    "localTeam": "Austria",
+    "localCode": "",
+    "visitorTeam": "Jordan",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "J",
+    "fecha": 56,
+    "hora": "21:00",
+    "lugar": "San Francisco Bay Area (Santa Clara)"
+  },
+  {
+    "id": "J_M57",
+    "localTeam": "Argentina",
+    "localCode": "",
+    "visitorTeam": "Austria",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "J",
+    "fecha": 57,
+    "hora": "12:00",
+    "lugar": "Dallas (Arlington)"
+  },
+  {
+    "id": "J_M58",
+    "localTeam": "Jordan",
+    "localCode": "",
+    "visitorTeam": "Algeria",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "J",
+    "fecha": 58,
+    "hora": "20:00",
+    "lugar": "San Francisco Bay Area (Santa Clara)"
+  },
+  {
+    "id": "J_M59",
+    "localTeam": "Algeria",
+    "localCode": "",
+    "visitorTeam": "Austria",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "J",
+    "fecha": 59,
+    "hora": "21:00",
+    "lugar": "Kansas City"
+  },
+  {
+    "id": "J_M60",
+    "localTeam": "Jordan",
+    "localCode": "",
+    "visitorTeam": "Argentina",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "J",
+    "fecha": 60,
+    "hora": "21:00",
+    "lugar": "Dallas (Arlington)"
+  },
+  {
+    "id": "K_M61",
+    "localTeam": "Portugal",
+    "localCode": "",
+    "visitorTeam": "DR Congo",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "K",
+    "fecha": 61,
+    "hora": "12:00",
+    "lugar": "Houston"
+  },
+  {
+    "id": "K_M62",
+    "localTeam": "Uzbekistan",
+    "localCode": "",
+    "visitorTeam": "Colombia",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "K",
+    "fecha": 62,
+    "hora": "20:00",
+    "lugar": "Mexico City"
+  },
+  {
+    "id": "K_M63",
+    "localTeam": "Portugal",
+    "localCode": "",
+    "visitorTeam": "Uzbekistan",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "K",
+    "fecha": 63,
+    "hora": "12:00",
+    "lugar": "Houston"
+  },
+  {
+    "id": "K_M64",
+    "localTeam": "Colombia",
+    "localCode": "",
+    "visitorTeam": "DR Congo",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "K",
+    "fecha": 64,
+    "hora": "20:00",
+    "lugar": "Guadalajara (Zapopan)"
+  },
+  {
+    "id": "K_M65",
+    "localTeam": "Colombia",
+    "localCode": "",
+    "visitorTeam": "Portugal",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "K",
+    "fecha": 65,
+    "hora": "19:30",
+    "lugar": "Miami (Miami Gardens)"
+  },
+  {
+    "id": "K_M66",
+    "localTeam": "DR Congo",
+    "localCode": "",
+    "visitorTeam": "Uzbekistan",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "K",
+    "fecha": 66,
+    "hora": "19:30",
+    "lugar": "Atlanta"
+  },
+  {
+    "id": "L_M67",
+    "localTeam": "England",
+    "localCode": "",
+    "visitorTeam": "Croatia",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "L",
+    "fecha": 67,
+    "hora": "15:00",
+    "lugar": "Dallas (Arlington)"
+  },
+  {
+    "id": "L_M68",
+    "localTeam": "Ghana",
+    "localCode": "",
+    "visitorTeam": "Panama",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "L",
+    "fecha": 68,
+    "hora": "19:00",
+    "lugar": "Toronto"
+  },
+  {
+    "id": "L_M69",
+    "localTeam": "England",
+    "localCode": "",
+    "visitorTeam": "Ghana",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "L",
+    "fecha": 69,
+    "hora": "16:00",
+    "lugar": "Boston (Foxborough)"
+  },
+  {
+    "id": "L_M70",
+    "localTeam": "Panama",
+    "localCode": "",
+    "visitorTeam": "Croatia",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "L",
+    "fecha": 70,
+    "hora": "19:00",
+    "lugar": "Toronto"
+  },
+  {
+    "id": "L_M71",
+    "localTeam": "Panama",
+    "localCode": "",
+    "visitorTeam": "England",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "L",
+    "fecha": 71,
+    "hora": "17:00",
+    "lugar": "New York/New Jersey (East Rutherford)"
+  },
+  {
+    "id": "L_M72",
+    "localTeam": "Croatia",
+    "localCode": "",
+    "visitorTeam": "Ghana",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "L",
+    "fecha": 72,
+    "hora": "17:00",
+    "lugar": "Philadelphia"
+  },
+  {
+    "id": "A_M73",
+    "localTeam": "2A",
+    "localCode": "",
+    "visitorTeam": "2B",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 73,
+    "hora": "12:00",
+    "lugar": "Los Angeles (Inglewood)"
+  },
+  {
+    "id": "A_M74",
+    "localTeam": "1E",
+    "localCode": "",
+    "visitorTeam": "3A/B/C/D/F",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 74,
+    "hora": "16:30",
+    "lugar": "Boston (Foxborough)"
+  },
+  {
+    "id": "A_M75",
+    "localTeam": "1F",
+    "localCode": "",
+    "visitorTeam": "2C",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 75,
+    "hora": "19:00",
+    "lugar": "Monterrey (Guadalupe)"
+  },
+  {
+    "id": "A_M76",
+    "localTeam": "1C",
+    "localCode": "",
+    "visitorTeam": "2F",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 76,
+    "hora": "12:00",
+    "lugar": "Houston"
+  },
+  {
+    "id": "A_M77",
+    "localTeam": "1I",
+    "localCode": "",
+    "visitorTeam": "3C/D/F/G/H",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 77,
+    "hora": "17:00",
+    "lugar": "New York/New Jersey (East Rutherford)"
+  },
+  {
+    "id": "A_M78",
+    "localTeam": "2E",
+    "localCode": "",
+    "visitorTeam": "2I",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 78,
+    "hora": "12:00",
+    "lugar": "Dallas (Arlington)"
+  },
+  {
+    "id": "A_M79",
+    "localTeam": "1A",
+    "localCode": "",
+    "visitorTeam": "3C/E/F/H/I",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 79,
+    "hora": "19:00",
+    "lugar": "Mexico City"
+  },
+  {
+    "id": "A_M80",
+    "localTeam": "1L",
+    "localCode": "",
+    "visitorTeam": "3E/H/I/J/K",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 80,
+    "hora": "12:00",
+    "lugar": "Atlanta"
+  },
+  {
+    "id": "A_M81",
+    "localTeam": "1D",
+    "localCode": "",
+    "visitorTeam": "3B/E/F/I/J",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 81,
+    "hora": "17:00",
+    "lugar": "San Francisco Bay Area (Santa Clara)"
+  },
+  {
+    "id": "A_M82",
+    "localTeam": "1G",
+    "localCode": "",
+    "visitorTeam": "3A/E/H/I/J",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 82,
+    "hora": "13:00",
+    "lugar": "Seattle"
+  },
+  {
+    "id": "A_M83",
+    "localTeam": "2K",
+    "localCode": "",
+    "visitorTeam": "2L",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 83,
+    "hora": "19:00",
+    "lugar": "Toronto"
+  },
+  {
+    "id": "A_M84",
+    "localTeam": "1H",
+    "localCode": "",
+    "visitorTeam": "2J",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 84,
+    "hora": "12:00",
+    "lugar": "Los Angeles (Inglewood)"
+  },
+  {
+    "id": "A_M85",
+    "localTeam": "1B",
+    "localCode": "",
+    "visitorTeam": "3E/F/G/I/J",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 85,
+    "hora": "20:00",
+    "lugar": "Vancouver"
+  },
+  {
+    "id": "A_M86",
+    "localTeam": "1J",
+    "localCode": "",
+    "visitorTeam": "2H",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 86,
+    "hora": "18:00",
+    "lugar": "Miami (Miami Gardens)"
+  },
+  {
+    "id": "A_M87",
+    "localTeam": "1K",
+    "localCode": "",
+    "visitorTeam": "3D/E/I/J/L",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 87,
+    "hora": "20:30",
+    "lugar": "Kansas City"
+  },
+  {
+    "id": "A_M88",
+    "localTeam": "2D",
+    "localCode": "",
+    "visitorTeam": "2G",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 88,
+    "hora": "13:00",
+    "lugar": "Dallas (Arlington)"
+  },
+  {
+    "id": "A_M89",
+    "localTeam": "W74",
+    "localCode": "",
+    "visitorTeam": "W77",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 89,
+    "hora": "17:00",
+    "lugar": "Philadelphia"
+  },
+  {
+    "id": "A_M90",
+    "localTeam": "W73",
+    "localCode": "",
+    "visitorTeam": "W75",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 90,
+    "hora": "12:00",
+    "lugar": "Houston"
+  },
+  {
+    "id": "A_M91",
+    "localTeam": "W76",
+    "localCode": "",
+    "visitorTeam": "W78",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 91,
+    "hora": "16:00",
+    "lugar": "New York/New Jersey (East Rutherford)"
+  },
+  {
+    "id": "A_M92",
+    "localTeam": "W79",
+    "localCode": "",
+    "visitorTeam": "W80",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 92,
+    "hora": "18:00",
+    "lugar": "Mexico City"
+  },
+  {
+    "id": "A_M93",
+    "localTeam": "W83",
+    "localCode": "",
+    "visitorTeam": "W84",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 93,
+    "hora": "14:00",
+    "lugar": "Dallas (Arlington)"
+  },
+  {
+    "id": "A_M94",
+    "localTeam": "W81",
+    "localCode": "",
+    "visitorTeam": "W82",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 94,
+    "hora": "17:00",
+    "lugar": "Seattle"
+  },
+  {
+    "id": "A_M95",
+    "localTeam": "W86",
+    "localCode": "",
+    "visitorTeam": "W88",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 95,
+    "hora": "12:00",
+    "lugar": "Atlanta"
+  },
+  {
+    "id": "A_M96",
+    "localTeam": "W85",
+    "localCode": "",
+    "visitorTeam": "W87",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 96,
+    "hora": "13:00",
+    "lugar": "Vancouver"
+  },
+  {
+    "id": "A_M97",
+    "localTeam": "W89",
+    "localCode": "",
+    "visitorTeam": "W90",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 97,
+    "hora": "16:00",
+    "lugar": "Boston (Foxborough)"
+  },
+  {
+    "id": "A_M98",
+    "localTeam": "W93",
+    "localCode": "",
+    "visitorTeam": "W94",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 98,
+    "hora": "12:00",
+    "lugar": "Los Angeles (Inglewood)"
+  },
+  {
+    "id": "A_M99",
+    "localTeam": "W91",
+    "localCode": "",
+    "visitorTeam": "W92",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 99,
+    "hora": "17:00",
+    "lugar": "Miami (Miami Gardens)"
+  },
+  {
+    "id": "A_M100",
+    "localTeam": "W95",
+    "localCode": "",
+    "visitorTeam": "W96",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 100,
+    "hora": "20:00",
+    "lugar": "Kansas City"
+  },
+  {
+    "id": "A_M101",
+    "localTeam": "W97",
+    "localCode": "",
+    "visitorTeam": "W98",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 101,
+    "hora": "14:00",
+    "lugar": "Dallas (Arlington)"
+  },
+  {
+    "id": "A_M102",
+    "localTeam": "W99",
+    "localCode": "",
+    "visitorTeam": "W100",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 102,
+    "hora": "15:00",
+    "lugar": "Atlanta"
+  },
+  {
+    "id": "A_M103",
+    "localTeam": "L101",
+    "localCode": "",
+    "visitorTeam": "L102",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 103,
+    "hora": "17:00",
+    "lugar": "Miami (Miami Gardens)"
+  },
+  {
+    "id": "A_M104",
+    "localTeam": "W101",
+    "localCode": "",
+    "visitorTeam": "W102",
+    "visitorCode": "",
+    "rivalry": "Media",
+    "probabilityText": "",
+    "importance": "",
+    "prediction": [
+      0,
+      0
+    ],
+    "flagLocal": "",
+    "flagVis": "",
+    "group": "A",
+    "fecha": 104,
+    "hora": "15:00",
+    "lugar": "New York/New Jersey (East Rutherford)"
+  }
+]

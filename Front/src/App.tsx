@@ -36,45 +36,47 @@ export default function App() {
   const [officialResults, setOfficialResults] = useState<Record<string, [number, number]>>({});
   const [currentToneId, setCurrentToneId] = useState<string>('analista');
   const [messageText, setMessageText] = useState<string>(CHALLENGE_TONES[0].message);
-  
-  const [allUsersData, setAllUsersData] = useState<{users: any[], preds: any[]}>({users: [], preds: []});
+  const [isSpinning, setIsSpinning] = useState<boolean>(false);
+  const [allUsersData, setAllUsersData] = useState<{users:any[], preds:any[]}>({users: [], preds: []});
 
+  // --------------------------------------------------
+  // Load all required data (official results, users, predictions)
+  // --------------------------------------------------
+  const loadAllData = async () => {
+    // 1️⃣ Official results
+    const { data: offRes, error: offErr } = await supabase.from('official_results').select('match_id, result');
+    if (offErr) {
+      console.error('Error loading official results:', offErr);
+    } else if (offRes) {
+      const offObj: Record<string, [number, number]> = {};
+      offRes.forEach(r => (offObj[r.match_id] = r.result));
+      setOfficialResults(offObj);
+      console.log('Official results loaded:', offRes.length);
+    }
+
+    // 2️⃣ Users and predictions
+    const { data: users, error: usersErr } = await supabase.from('users').select('*');
+    const { data: preds, error: predsErr } = await supabase.from('predictions').select('*');
+    if (usersErr) console.error('Error loading users:', usersErr);
+    if (predsErr) console.error('Error loading predictions:', predsErr);
+    if (users && preds) {
+      console.log('Fetched users:', users.length, 'predictions:', preds.length);
+      setAllUsersData({ users, preds });
+    }
+  };
+
+  // Run once when the authenticated user is available
   useEffect(() => {
-    const loadData = async () => {
-      if (user?.id) {
-        const { data: preds } = await supabase.from('predictions').select('match_id, prediction').eq('user_id', user.id);
-        if (preds && preds.length > 0) {
-          const newMatches = INITIAL_MATCHES.map(m => {
-            const p = preds.find(pred => pred.match_id === m.id);
-            return p ? { ...m, prediction: p.prediction } : m;
-          });
-          setMatches(newMatches);
-        } else {
-          setMatches(INITIAL_MATCHES);
-        }
-      }
-      const { data: offRes } = await supabase.from('official_results').select('match_id, result');
-      if (offRes) {
-        const offObj: Record<string, [number, number]> = {};
-        offRes.forEach(r => offObj[r.match_id] = r.result);
-        setOfficialResults(offObj);
-      }
-    };
-    loadData();
+    if (user) {
+      loadAllData();
+    }
   }, [user]);
 
-  useEffect(() => {
-    const fetchLeaderboard = async () => {
-      const { data: users } = await supabase.from('users').select('*');
-      const { data: preds } = await supabase.from('predictions').select('*');
-      if (users && preds) {
-        setAllUsersData({users, preds});
-      }
-    };
-    if (user) {
-      fetchLeaderboard();
-    }
-  }, [user]); // Removed matches and officialResults to prevent extreme lag and multiple DB calls on every score change
+  // Helper to manually refresh leaderboard (kept for admin button)
+  const fetchLeaderboard = async () => {
+    // Re‑run loadAllData to keep data in sync
+    await loadAllData();
+  };
 
   const handleChangeScore = (id: string, index: 0 | 1, value: number) => {
     setMatches((prevMatches) => {
@@ -88,7 +90,7 @@ export default function App() {
               user_id: user.id,
               match_id: id,
               prediction: newPrediction
-            }, { onConflict: 'user_id, match_id' }).then();
+            }, { onConflict: 'user_id, match_id' }).then(() => fetchLeaderboard());
           }
 
           return { ...match, prediction: newPrediction };
@@ -99,26 +101,35 @@ export default function App() {
     });
   };
 
-  const handleUpdateOfficialResult = (id: string, index: 0 | 1, value: number) => {
+  const handleUpdateOfficialResult = async (id: string, index: 0 | 1, value: number) => {
+    // Update local state optimistically
     setOfficialResults(prev => {
       const updated = { ...prev };
       if (!updated[id]) updated[id] = [0, 0];
       updated[id][index] = value;
-      
-      supabase.from('official_results').upsert({
-        match_id: id,
-        result: updated[id]
-      }, { onConflict: 'match_id' }).then();
-
       return updated;
     });
+
+    // Persist change to Supabase
+    const { error } = await supabase
+      .from('official_results')
+      .upsert({
+        match_id: id,
+        result: (officialResults[id] || [0,0]).map((v, i) => i === index ? value : v)
+      }, { onConflict: 'match_id' });
+
+    if (error) {
+      console.error('Error updating official result:', error);
+      // Optionally revert optimistic update or notify user
+    } else {
+      // Refresh all data (official results, users, predictions) to ensure ranking updates
+      await loadAllData();
+    }
   };
 
   const handleResetMatches = async () => {
     setMatches(INITIAL_MATCHES);
-    if (user?.id) {
-      await supabase.from('predictions').delete().eq('user_id', user.id);
-    }
+    // Intentionally retain user predictions; do not clear them
   };
 
   const dynamicStandings = useMemo(() => {
@@ -148,9 +159,19 @@ export default function App() {
     });
 
     const combined = userEntries;
+    // Debug logs
+    console.log('User entries count:', userEntries.length);
+    console.log('Official results keys:', Object.keys(officialResults));
     combined.sort((a, b) => b.points - a.points);
+    // Log after sorting
+    console.log('Sorted standings count:', combined.length);
     return combined;
   }, [officialResults, allUsersData]);
+
+  // Log when dynamicStandings recompute
+  useEffect(() => {
+    console.log('Dynamic standings recomputed, count:', dynamicStandings.length);
+  }, [dynamicStandings]);
 
   const handleToneChange = (toneId: string) => {
     setCurrentToneId(toneId);
@@ -246,21 +267,44 @@ export default function App() {
               onResetMatches={handleResetMatches} 
             />
           )}
+{activeTab === 'admin' && user?.isAdmin && (
+  <div>
+    {/* Aviso de modo admin */}
+    <div className="bg-[#F4C430]/10 border border-[#F4C430]/40 flex items-center justify-center p-4 rounded-xl mb-4 text-[#F4C430] font-semibold text-sm shadow-xl">
+      ⚠️ MODO ADMINISTRADOR: EDITANDO RESULTADOS OFICIALES
+    </div>
 
-          {activeTab === 'admin' && user?.isAdmin && (
-            <div>
-              <div className="bg-[#F4C430]/10 border border-[#F4C430]/40 flex items-center justify-center p-4 rounded-xl mb-4 text-[#F4C430] font-semibold text-sm shadow-xl">
-                ⚠️ MODO ADMINISTRADOR: EDITANDO RESULTADOS OFICIALES
-              </div>
-              <PredictionsList 
-                matches={matches} 
-                officialResults={officialResults}
-                isEditingOfficial={true}
-                onChangeScore={handleUpdateOfficialResult} 
-                onResetMatches={() => {}} 
-              />
-            </div>
-          )}
+    {/* Botón de refresco manual */}
+      <button
+        onClick={async () => {
+          setIsSpinning(true);
+          const { data: offRes } = await supabase
+            .from('official_results')
+            .select('match_id, result');
+          if (offRes) {
+            const offObj: Record<string, [number, number]> = {};
+            offRes.forEach(r => (offObj[r.match_id] = r.result));
+            setOfficialResults(offObj);
+          }
+          setTimeout(() => setIsSpinning(false), 800);
+        }}
+        className="mb-2 px-3 py-1.5 rounded-xl bg-[#1a1a2e] hover:bg-[#1a1a2e]/80 text-slate-300"
+      >
+        <span className={"ball " + (isSpinning ? "spin" : "")}>🔄</span>
+        {isSpinning ? "" : " Refrescar oficiales"}
+      </button>
+
+    {/* Lista de partidos con edición de resultados oficiales */}
+    <PredictionsList
+      matches={matches}
+      officialResults={officialResults}
+      isEditingOfficial={true}
+      onChangeScore={handleUpdateOfficialResult}
+      onResetMatches={() => {}}
+    />
+  </div>
+)}
+          
 
           {activeTab === 'tabla' && (
             <DetailedStandings standings={dynamicStandings} />
