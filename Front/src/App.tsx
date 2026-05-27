@@ -12,11 +12,11 @@ import PredictionsList from './components/PredictionsList';
 import DetailedStandings from './components/DetailedStandings';
 
 import UserHeader from './components/UserHeader';
-import { useAuth } from './context/AuthContext';
 import AuthWall from './components/AuthWall';
+import SuperAdminSettings from './components/SuperAdminSettings';
 import UserProfilePanel from './components/UserProfilePanel';
 import { calculateMatchPoints } from './utils/points';
-import { supabase } from './lib/supabase';
+import { useAuth } from './context/AuthContext';
 
 import { 
   Home,

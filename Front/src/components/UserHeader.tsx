@@ -13,7 +13,7 @@ export default function UserHeader({ onNavigate }: UserHeaderProps) {
   if (!user) return null;
 
   return (
-    <div className="flex w-full justify-between items-center gap-4 px-4 py-2 bg-[#0b111a]/80 border-b border-[#5B5FC7]/20 cursor-pointer hover:bg-[#0b111a]/90 transition-colors header-animate" onClick={onNavigate}>
+    <div className="flex flex-col md:flex-row w-full justify-between items-center gap-4 px-4 py-2 bg-[#0b111a]/80 border-b border-[#5B5FC7]/20 cursor-pointer hover:bg-[#0b111a]/90 transition-colors header-animate" onClick={onNavigate}>
       {/* Left decorative element */}
       <div className="flex items-center gap-2">
         <span className="text-2xl animate-spin-slow text-[#3CDBC0]">⚽</span>
