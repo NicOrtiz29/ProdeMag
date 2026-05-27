@@ -17,6 +17,7 @@ import SuperAdminSettings from './components/SuperAdminSettings';
 import UserProfilePanel from './components/UserProfilePanel';
 import { calculateMatchPoints } from './utils/points';
 import { useAuth } from './context/AuthContext';
+import ChatWidget from './components/ChatWidget';
 import { supabase } from './lib/supabase';
 
 import { 
@@ -285,6 +286,7 @@ export default function App() {
           </p>
         </footer>
       </div>
+      <ChatWidget />
 
       {/* Mobile Bottom Navigation */}
       <nav className="sm:hidden fixed bottom-0 inset-x-0 bg-[#0f0f23]/95 backdrop-blur-md border-t border-[#5B5FC7]/15 z-50">

@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MessageSquare } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+import { useAuth } from '../context/AuthContext';
 
 /**
  * Simple internal chat widget.
@@ -9,14 +11,58 @@ import { MessageSquare } from 'lucide-react';
  */
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Array<{ text: string; from: string }>>([]);
+  const [messages, setMessages] = useState<Array<{ id?: string; text: string; from: string; created_at?: string }>>([]);
   const [input, setInput] = useState('');
+  const { user } = useAuth();
 
-  const sendMessage = () => {
+  // Load existing messages and subscribe to realtime updates
+  useEffect(() => {
+    const fetchMessages = async () => {
+      const { data, error } = await supabase
+        .from('messages')
+        .select('*')
+        .order('created_at', { ascending: true });
+      if (error) console.error('Error fetching messages:', error);
+      else {
+        console.log('Fetched messages:', data);
+        setMessages(data);
+      }
+    };
+    fetchMessages();
+
+    const channel = supabase
+      .channel('public:messages')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, payload => {
+        const newMsg = payload.new as any;
+        console.log('Realtime new message:', newMsg);
+        setMessages(prev => [...prev, newMsg]);
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const sendMessage = async () => {
     if (!input.trim()) return;
-    setMessages(prev => [...prev, { text: input.trim(), from: 'Me' }]);
+    const message = {
+      text: input.trim(),
+      from: user?.name ?? 'Me',
+      created_at: new Date().toISOString()
+    };
+    const { data, error } = await supabase.from('messages').insert(message).select();
+    if (error) {
+      console.error('Error sending message:', error);
+    } else {
+      // Optimistically add the message to local state so it appears instantly
+      const inserted = data && data[0] ? data[0] : { ...message };
+      setMessages(prev => [...prev, inserted]);
+    }
     setInput('');
   };
+
+  
 
   return (
     <>
@@ -36,9 +82,9 @@ export default function ChatWidget() {
             {messages.map((msg, i) => (
               <div
                 key={i}
-                className={`text-sm ${msg.from === 'Me' ? 'text-[#3CDBC0] text-right' : 'text-white text-left'}`}
+                className={`text-sm ${msg.from === (user?.name ?? 'Me') ? 'text-[#3CDBC0] text-right' : 'text-white text-left'}`}
               >
-                {msg.text}
+                <span className="font-medium">{msg.from}:</span> {msg.text}
               </div>
             ))}
           </div>
