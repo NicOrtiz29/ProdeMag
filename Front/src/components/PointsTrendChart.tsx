@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { TrendingUp, Users, Bot, Sparkles, HelpCircle } from 'lucide-react';
-import { StandingsEntry } from '../types';
+import { StandingsEntry, HistoricalMatch } from '../types';
 
 interface TrendNode {
   fecha: string;
@@ -50,12 +50,36 @@ const HISTORICAL_TREND: TrendNode[] = [
 
 interface PointsTrendChartProps {
   standings?: StandingsEntry[];
+  historicalMatches?: HistoricalMatch[];
 }
 
-export default function PointsTrendChart({ standings = [] }: PointsTrendChartProps) {
-  const [selectedIndex, setSelectedIndex] = useState<number>(4);
+export default function PointsTrendChart({ standings = [], historicalMatches = [] }: PointsTrendChartProps) {
+  // Build dynamic trend nodes based on historicalMatches if available, otherwise fallback
+  const trendData = useMemo(() => {
+    if (!historicalMatches || historicalMatches.length === 0) {
+      return HISTORICAL_TREND;
+    }
+    
+    let accOracle = 0;
+    let accHuman = 0;
+    
+    return historicalMatches.map((m, idx) => {
+      accOracle += m.pointsOracle;
+      accHuman += m.pointsHuman;
+      return {
+        fecha: `Part. ${idx + 1}`,
+        longLabel: m.matchName,
+        oracle: accOracle,
+        humanos: accHuman,
+        comentario: m.commentary
+      };
+    });
+  }, [historicalMatches]);
 
-  const lastTrendNode = HISTORICAL_TREND[HISTORICAL_TREND.length - 1];
+  const [selectedIndexState, setSelectedIndex] = useState<number>(-1);
+  const selectedIndex = selectedIndexState === -1 ? trendData.length - 1 : Math.min(selectedIndexState, trendData.length - 1);
+
+  const lastTrendNode = trendData[trendData.length - 1] || { oracle: 0, humanos: 0 };
   const botIsLeader = lastTrendNode.oracle >= lastTrendNode.humanos;
   const botLabel = `Santi (${botIsLeader ? 'Líder' : 'Escolta'})`;
   const humanLabel = `Flor (${botIsLeader ? 'Escolta' : 'Líder'})`;
@@ -71,27 +95,31 @@ export default function PointsTrendChart({ standings = [] }: PointsTrendChartPro
   const chartWidth = width - paddingLeft - paddingRight;
   const chartHeight = height - paddingTop - paddingBottom;
   
-  // Max value scale is 14 points
-  const maxVal = 14;
+  // Max value scale is calculated dynamically from the maximum score in trendData, with a fallback of 14 points
+  const maxVal = Math.max(14, ...trendData.map(d => Math.max(d.oracle, d.humanos)));
 
   const getCoordinates = (index: number, points: number) => {
-    const x = paddingLeft + (index * (chartWidth / (HISTORICAL_TREND.length - 1)));
+    const x = paddingLeft + (index * (chartWidth / Math.max(1, trendData.length - 1)));
     const y = height - paddingBottom - (points / maxVal) * chartHeight;
     return { x, y };
   };
 
   // Compile coordinate string paths
-  const oraclePoints = HISTORICAL_TREND.map((d, i) => getCoordinates(i, d.oracle));
-  const humanPoints = HISTORICAL_TREND.map((d, i) => getCoordinates(i, d.humanos));
+  const oraclePoints = trendData.map((d, i) => getCoordinates(i, d.oracle));
+  const humanPoints = trendData.map((d, i) => getCoordinates(i, d.humanos));
 
   const oraclePathString = oraclePoints.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
   const humanPathString = humanPoints.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
 
   // Gradient area points string paths
-  const oracleAreaString = `${oraclePathString} L ${oraclePoints[oraclePoints.length - 1].x} ${height - paddingBottom} L ${oraclePoints[0].x} ${height - paddingBottom} Z`;
-  const humanAreaString = `${humanPathString} L ${humanPoints[humanPoints.length - 1].x} ${height - paddingBottom} L ${humanPoints[0].x} ${height - paddingBottom} Z`;
+  const oracleAreaString = oraclePoints.length > 0 
+    ? `${oraclePathString} L ${oraclePoints[oraclePoints.length - 1].x} ${height - paddingBottom} L ${oraclePoints[0].x} ${height - paddingBottom} Z`
+    : '';
+  const humanAreaString = humanPoints.length > 0
+    ? `${humanPathString} L ${humanPoints[humanPoints.length - 1].x} ${height - paddingBottom} L ${humanPoints[0].x} ${height - paddingBottom} Z`
+    : '';
 
-  const selectedNode = HISTORICAL_TREND[selectedIndex];
+  const selectedNode = trendData[selectedIndex] || { oracle: 0, humanos: 0, longLabel: '', comentario: '' };
 
   return (
     <div className="bg-[#0b111a]/85 border border-slate-800 rounded-2xl p-5 md:p-6 space-y-5">
@@ -101,7 +129,7 @@ export default function PointsTrendChart({ standings = [] }: PointsTrendChartPro
           <TrendingUp className="w-5 h-5 text-cyan-400" />
           <div>
             <h3 className="font-display font-medium text-sm text-slate-100">Tendencia de Puntajes Acumulados</h3>
-            <p className="text-3xs text-slate-500 font-mono uppercase tracking-tight">Evolución de últimas 5 fechas históricas</p>
+            <p className="text-3xs text-slate-500 font-mono uppercase tracking-tight">Evolución de últimos partidos históricos</p>
           </div>
         </div>
 
@@ -134,10 +162,11 @@ export default function PointsTrendChart({ standings = [] }: PointsTrendChartPro
           </defs>
 
           {/* Grid lines */}
-          {[0, 2.5, 5, 7.5, 10, 12.5].map((gridPoints) => {
+          {Array.from({ length: 6 }).map((_, idx) => {
+            const gridPoints = Math.round((maxVal / 5) * idx * 10) / 10;
             const y = height - paddingBottom - (gridPoints / maxVal) * chartHeight;
             return (
-              <g key={gridPoints} className="opacity-20">
+              <g key={idx} className="opacity-20">
                 <line
                   x1={paddingLeft}
                   y1={y}
@@ -153,15 +182,15 @@ export default function PointsTrendChart({ standings = [] }: PointsTrendChartPro
                   textAnchor="end"
                   className="fill-slate-500 font-mono text-[9px] font-bold"
                 >
-                  {gridPoints * 1}
+                  {gridPoints}
                 </text>
               </g>
             );
           })}
 
           {/* Vertical Match Day columns background hover guides */}
-          {HISTORICAL_TREND.map((d, i) => {
-            const x = paddingLeft + (i * (chartWidth / (HISTORICAL_TREND.length - 1)));
+          {trendData.map((d, i) => {
+            const x = paddingLeft + (i * (chartWidth / Math.max(1, trendData.length - 1)));
             const isSelected = i === selectedIndex;
             return (
               <g key={i} className="cursor-pointer" onClick={() => setSelectedIndex(i)}>
@@ -187,29 +216,33 @@ export default function PointsTrendChart({ standings = [] }: PointsTrendChartPro
           })}
 
           {/* Draw filled helper path areas first */}
-          <path d={oracleAreaString} fill="url(#oracleAreaGrad)" />
-          <path d={humanAreaString} fill="url(#humanAreaGrad)" />
+          {oracleAreaString && <path d={oracleAreaString} fill="url(#oracleAreaGrad)" />}
+          {humanAreaString && <path d={humanAreaString} fill="url(#humanAreaGrad)" />}
 
           {/* Draw Trend Lines */}
-          <path
-            d={humanPathString}
-            fill="none"
-            stroke="#f59e0b"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            filter="url(#glow-amber)"
-          />
+          {humanPathString && (
+            <path
+              d={humanPathString}
+              fill="none"
+              stroke="#f59e0b"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              filter="url(#glow-amber)"
+            />
+          )}
 
-          <path
-            d={oraclePathString}
-            fill="none"
-            stroke="#06b6d4"
-            strokeWidth="3.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            filter="url(#glow-cyan)"
-          />
+          {oraclePathString && (
+            <path
+              d={oraclePathString}
+              fill="none"
+              stroke="#06b6d4"
+              strokeWidth="3.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              filter="url(#glow-cyan)"
+            />
+          )}
 
           {/* Data Nodes Interactive circles for Humans */}
           {humanPoints.map((p, i) => {
@@ -242,8 +275,8 @@ export default function PointsTrendChart({ standings = [] }: PointsTrendChartPro
           })}
 
           {/* Match Day x axis label ticks */}
-          {HISTORICAL_TREND.map((d, i) => {
-            const x = paddingLeft + (i * (chartWidth / (HISTORICAL_TREND.length - 1)));
+          {trendData.map((d, i) => {
+            const x = paddingLeft + (i * (chartWidth / Math.max(1, trendData.length - 1)));
             const isSelected = i === selectedIndex;
             return (
               <text
@@ -294,7 +327,7 @@ export default function PointsTrendChart({ standings = [] }: PointsTrendChartPro
         <div className="space-y-1">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-xs font-bold text-white font-display">
-              Detalle en {selectedNode.longLabel}
+              Detalle: {selectedNode.longLabel}
             </span>
             <span className={`text-[9px] font-mono font-bold px-1.5 py-0.2 rounded ${
               selectedNode.oracle > selectedNode.humanos 

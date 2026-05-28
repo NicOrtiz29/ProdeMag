@@ -262,7 +262,7 @@ export default function HistoryAndStats({ historicalMatches, standings = [] }: H
       </div>
 
       {/* ═══════════ POINTS TREND CHART ═══════════ */}
-      <PointsTrendChart standings={standings} />
+      <PointsTrendChart standings={standings} historicalMatches={historicalMatches} />
 
       {/* ═══════════ MATCH HISTORY GRID ═══════════ */}
       <div className="space-y-4">
