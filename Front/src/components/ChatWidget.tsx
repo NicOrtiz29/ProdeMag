@@ -24,7 +24,7 @@ export default function ChatWidget() {
         .order('created_at', { ascending: true });
       if (error) console.error('Error fetching messages:', error);
       else {
-        console.log('Fetched messages:', data);
+        if (import.meta.env.DEV) console.log('Fetched messages:', data);
         setMessages(data);
       }
     };
@@ -34,7 +34,7 @@ export default function ChatWidget() {
       .channel('public:messages')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, payload => {
         const newMsg = payload.new as any;
-        console.log('Realtime new message:', newMsg);
+        if (import.meta.env.DEV) console.log('Realtime new message:', newMsg);
         setMessages(prev => [...prev, newMsg]);
       })
       .subscribe();

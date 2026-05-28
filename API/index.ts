@@ -1,5 +1,7 @@
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 
@@ -7,7 +9,30 @@ import { createClient } from '@supabase/supabase-js';
 dotenv.config({ path: '../.env' }); 
 
 const app = express();
-app.use(cors());
+
+// ─── Security: Helmet HTTP headers (#5) ────────────────────────────────────
+app.use(helmet());
+
+// ─── Security: CORS restricted to known origins (#1) ───────────────────────
+const ALLOWED_ORIGINS = (process.env.CORS_ORIGINS || 'http://localhost:3000,http://localhost:5173')
+  .split(',')
+  .map(o => o.trim());
+
+app.use(cors({
+  origin: ALLOWED_ORIGINS,
+  credentials: true
+}));
+
+// ─── Security: Rate limiting (#4) ──────────────────────────────────────────
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 100, // máximo 100 requests por IP por ventana
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Demasiadas solicitudes. Intente nuevamente más tarde.' }
+});
+app.use(limiter);
+
 app.use(express.json());
 
 const SUPABASE_URL = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || '';
@@ -20,15 +45,20 @@ const API_SPORTS_KEY = process.env.API_SPORTS_KEY || '';
 const LEAGUE_ID = process.env.LEAGUE_ID || '1'; // API-Football League 1 = World Cup
 const SEASON = process.env.SEASON || '2026';
 
+// ─── Security: Separate API secret for sync endpoint (#2) ─────────────────
+// Use a dedicated API_SYNC_SECRET instead of the service_role key as bearer token.
+// If not configured, falls back to SUPABASE_SERVICE_ROLE_KEY for backwards compatibility.
+const API_SYNC_SECRET = process.env.API_SYNC_SECRET || SUPABASE_SERVICE_ROLE_KEY;
+
 app.post('/api/sync-matches', async (req, res) => {
-  // Check authorization - require passing the service role key to trigger sync
+  // Check authorization using dedicated sync secret (#2)
   const authHeader = req.headers.authorization;
-  if (authHeader !== `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`) {
+  if (!API_SYNC_SECRET || authHeader !== `Bearer ${API_SYNC_SECRET}`) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
   if (!API_SPORTS_KEY) {
-    return res.status(500).json({ error: 'Falta configurar API_SPORTS_KEY en el .env' });
+    return res.status(500).json({ error: 'Configuración del servidor incompleta.' });
   }
 
   try {
@@ -101,9 +131,10 @@ app.post('/api/sync-matches', async (req, res) => {
     console.log(`[API] Successfully synced ${updatedCount} matches to Supabase.`);
     res.json({ success: true, count: updatedCount });
 
-  } catch (err) {
+  } catch (err: any) {
+    // Security: Don't expose internal error details to clients (#12)
     console.error('[API] Error during sync:', err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Error interno del servidor. Revise los logs.' });
   }
 });
 

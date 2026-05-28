@@ -76,7 +76,7 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
   // Determine tiers dynamically based on actual province max scores
   const scoreTiers = useMemo(() => {
     const allScores = Object.values(provinceStats)
-      .map(s => s.maxScore)
+      .map((s: any) => s.maxScore)
       .filter(score => score > 0);
 
     if (allScores.length === 0) return { leaderScore: 0, midScore: 0 };

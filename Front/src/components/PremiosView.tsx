@@ -73,6 +73,12 @@ export default function PremiosView() {
   };
 
   const handleImageUpload = (index: number, file: File) => {
+    // Security (#8): Limit prize image file size to 1MB
+    const MAX_SIZE = 1024 * 1024; // 1MB
+    if (file.size > MAX_SIZE) {
+      alert('La imagen es muy grande. Máximo 1MB.');
+      return;
+    }
     const reader = new FileReader();
     reader.onloadend = () => {
       if (reader.result) {

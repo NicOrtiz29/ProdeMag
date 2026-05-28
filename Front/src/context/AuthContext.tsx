@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase';
 
 interface AuthContextType {
   user: UserProfile | null;
-  register: (email: string, password: string, name: string, role: string, avatar: string, bio?: string, province?: string) => Promise<{ success: boolean; message: string }>;
+  register: (email: string, password: string, name: string, avatar: string, bio?: string, province?: string) => Promise<{ success: boolean; message: string }>;
   login: (email: string, password: string) => Promise<{ success: boolean; message: string }>;
   loginWithGoogle: () => Promise<{ success: boolean; message: string }>;
   recoverPassword: (email: string) => Promise<{ success: boolean; message: string }>;
@@ -20,10 +20,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const fetchProfile = async (userId: string) => {
-    console.log("[AuthContext] fetchProfile started for user", userId);
+    if (import.meta.env.DEV) console.log("[AuthContext] fetchProfile started for user", userId);
     try {
       const { data, error } = await supabase.from('users').select('*').eq('id', userId).single();
-      console.log("[AuthContext] fetchProfile db result", { data, error });
+      if (import.meta.env.DEV) console.log("[AuthContext] fetchProfile db result", { data, error });
       if (data) {
         setUser({
           id: data.id,
@@ -45,7 +45,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('Error fetching profile:', e);
       setUser(null);
     } finally {
-      console.log("[AuthContext] fetchProfile finally block, setting loading false");
+      if (import.meta.env.DEV) console.log("[AuthContext] fetchProfile finally block, setting loading false");
       setIsLoading(false);
     }
   };
@@ -54,10 +54,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     let mounted = true;
 
     const initSession = async () => {
-      console.log("[AuthContext] initSession started");
+      if (import.meta.env.DEV) console.log("[AuthContext] initSession started");
       try {
         const { data, error } = await supabase.auth.getSession();
-        console.log("[AuthContext] getSession resolved", { data, error, mounted });
+        if (import.meta.env.DEV) console.log("[AuthContext] getSession resolved", { data, error, mounted });
         if (!mounted) return;
         
         if (error) {
@@ -67,10 +67,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
 
         if (data?.session?.user) {
-          console.log("[AuthContext] session found, fetching profile");
+          if (import.meta.env.DEV) console.log("[AuthContext] session found, fetching profile");
           await fetchProfile(data.session.user.id);
         } else {
-          console.log("[AuthContext] no session found, setting loading false");
+          if (import.meta.env.DEV) console.log("[AuthContext] no session found, setting loading false");
           setIsLoading(false);
         }
       } catch (err) {
@@ -87,10 +87,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (!mounted) return;
         try {
           if (session?.user) {
-            console.log("[AuthContext] onAuthStateChange session found, fetching profile");
+            if (import.meta.env.DEV) console.log("[AuthContext] onAuthStateChange session found, fetching profile");
             await fetchProfile(session.user.id);
           } else {
-            console.log("[AuthContext] onAuthStateChange no session, setting user null");
+            if (import.meta.env.DEV) console.log("[AuthContext] onAuthStateChange no session, setting user null");
             setUser(null);
             setIsLoading(false);
           }
@@ -105,7 +105,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Safety fallback: if for ANY reason it takes more than 3 seconds, force unblock
     const fallbackTimer = setTimeout(() => {
       if (mounted) {
-        console.warn("[AuthContext] Safety fallback triggered! Force unblocking loading state.");
+        if (import.meta.env.DEV) console.warn("[AuthContext] Safety fallback triggered! Force unblocking loading state.");
         setIsLoading(false);
       }
     }, 3000);
@@ -117,7 +117,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  const register = async (email: string, password: string, name: string, role: string, avatar: string, bio?: string, province?: string) => {
+  const register = async (email: string, password: string, name: string, avatar: string, bio?: string, province?: string) => {
     try {
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -125,7 +125,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         options: {
           data: {
             name,
-            role: role || 'user',
+            // Security (#7): Never send 'role' in metadata — trigger always sets 'user'
             avatar: avatar || '⚽',
             province: province || 'Capital Federal'
           }

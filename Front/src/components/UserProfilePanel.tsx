@@ -309,6 +309,12 @@ export default function UserProfilePanel({ matches, standings = [] }: UserProfil
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     if (file) {
+                      // Security (#8): Limit avatar file size to 512KB
+                      const MAX_SIZE = 512 * 1024; // 512KB
+                      if (file.size > MAX_SIZE) {
+                        alert('La imagen es muy grande. Máximo 500KB.');
+                        return;
+                      }
                       const reader = new FileReader();
                       reader.onloadend = () => {
                         if (reader.result) {

@@ -56,7 +56,7 @@ export default function App() {
       const offObj: Record<string, [number, number]> = {};
       offRes.forEach(r => (offObj[r.match_id] = r.result));
       setOfficialResults(offObj);
-      console.log('Official results loaded:', offRes.length);
+      if (import.meta.env.DEV) console.log('Official results loaded:', offRes.length);
     }
 
     // 2️⃣ Users and predictions
@@ -65,7 +65,7 @@ export default function App() {
     if (usersErr) console.error('Error loading users:', usersErr);
     if (predsErr) console.error('Error loading predictions:', predsErr);
     if (users && preds) {
-      console.log('Fetched users:', users.length, 'predictions:', preds.length);
+      if (import.meta.env.DEV) console.log('Fetched users:', users.length, 'predictions:', preds.length);
       setAllUsersData({ users, preds });
       // Merge current user's predictions into matches state
       if (user) {
@@ -184,17 +184,17 @@ export default function App() {
 
     const combined = userEntries;
     // Debug logs
-    console.log('User entries count:', userEntries.length);
-    console.log('Official results keys:', Object.keys(officialResults));
+    if (import.meta.env.DEV) console.log('User entries count:', userEntries.length);
+    if (import.meta.env.DEV) console.log('Official results keys:', Object.keys(officialResults));
     combined.sort((a, b) => b.points - a.points);
     // Log after sorting
-    console.log('Sorted standings count:', combined.length);
+    if (import.meta.env.DEV) console.log('Sorted standings count:', combined.length);
     return combined;
   }, [officialResults, allUsersData]);
 
   // Log when dynamicStandings recompute
   useEffect(() => {
-    console.log('Dynamic standings recomputed, count:', dynamicStandings.length);
+    if (import.meta.env.DEV) console.log('Dynamic standings recomputed, count:', dynamicStandings.length);
   }, [dynamicStandings]);
 
   const handleToneChange = (toneId: string) => {

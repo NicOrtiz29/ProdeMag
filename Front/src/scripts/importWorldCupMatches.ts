@@ -44,7 +44,7 @@ function countryCodeToEmoji(code: string): string {
 async function importMatches() {
   const res = await fetch(SOURCE_URL);
   if (!res.ok) throw new Error(`Failed to fetch ${SOURCE_URL}: ${res.statusText}`);
-  const data: WorldCupData = await res.json();
+  const data = (await res.json()) as WorldCupData;
 
   const transformed = data.matches.map((m, idx) => {
     const groupLetter = m.group ? m.group.split(' ')[1] : 'A';
