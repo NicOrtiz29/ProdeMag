@@ -278,7 +278,8 @@ export default function App() {
           {activeTab === 'inicio' && (
             <DashboardView 
               matches={matches} 
-              stats={BOT_STATS} 
+              standings={dynamicStandings} 
+              officialResults={officialResults} 
               onNavigateToTab={(id) => setActiveTab(id as TabId)}
             />
           )}

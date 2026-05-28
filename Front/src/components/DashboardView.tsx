@@ -1,55 +1,62 @@
-import React from 'react';
-import { Match, BotStatItem } from '../types';
-import { Target, Trophy, BarChart3 } from 'lucide-react';
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import React, { useMemo } from 'react';
+import { Match, StandingsEntry } from '../types';
+import { Target, Trophy, BarChart3, CheckCircle, TrendingUp, XCircle, Timer } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { calculateMatchPoints } from '../utils/points';
+import ArgentinaMap from './ArgentinaMap';
 
 interface DashboardViewProps {
   matches: Match[];
-  stats: BotStatItem[];
+  standings: StandingsEntry[];
+  officialResults: Record<string, [number, number]>;
   onNavigateToTab: (tabId: string) => void;
 }
 
-export default function DashboardView({ matches, stats, onNavigateToTab }: DashboardViewProps) {
-  const totalMatches = matches.length;
-  const matchesWithPrediction = matches.filter(m => m.prediction[0] > 0 || m.prediction[1] > 0).length;
+export default function DashboardView({ matches, standings, officialResults, onNavigateToTab }: DashboardViewProps) {
+  const { user } = useAuth();
   
-  // Quick actions without the "Mi Perfil" card
-  const quickActions = [
-    { 
-      icon: <Target className="w-6 h-6 text-[#3CDBC0]" />,
-      title: 'Mis Pronósticos',
-      description: 'Cargá tus resultados para cada partido',
-      tab: 'pronosticos',
-    },
-    {
-      icon: <Trophy className="w-6 h-6 text-[#F4C430]" />,
-      title: 'Tabla de Posiciones',
-      description: 'Mirá quién va ganando en tu empresa',
-      tab: 'tabla',
-    },
-    {
-      icon: <BarChart3 className="w-6 h-6 text-[#75AADB]" />,
-      title: 'Historial',
-      description: 'Resultados y estadísticas pasadas',
-      tab: 'historico',
-    },
-  ];
+  const totalMatches = matches.length;
+  
+  // Calculate stats for the current logged-in user
+  const userStats = useMemo(() => {
+    let points = 0;
+    let acertados = 0;
+    let errados = 0;
+
+    matches.forEach(m => {
+      const real = officialResults[m.id];
+      if (real) {
+        const pts = calculateMatchPoints(m.prediction, real);
+        points += pts;
+        if (pts > 0) {
+          acertados += 1;
+        } else {
+          errados += 1;
+        }
+      }
+    });
+
+    return { points, acertados, errados };
+  }, [matches, officialResults]);
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
       
-      {/* Hero Banner with celebration image & Magnetico Branding */}
+      {/* Hero Banner with celebration image */}
       <div className="rounded-3xl overflow-hidden relative shadow-2xl shadow-[#5B5FC7]/20 border border-[#5B5FC7]/50 min-h-[280px] sm:min-h-[320px] flex items-center" onClick={() => onNavigateToTab('perfil')} style={{ cursor: 'pointer' }}>
-        {/* Magnetico purple base */}
         <div className="absolute inset-0 bg-[#5B5FC7]"></div>
         
-        {/* Blended Argentina image */}
         <img 
           src="/argentina-campeon-2026.png" 
           alt="Argentina Campeón 2026" 
           className="absolute inset-0 w-full h-full object-cover opacity-25 mix-blend-luminosity"
         />
         
-        {/* Dark gradient for text readability */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f23] via-[#0f0f23]/60 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#5B5FC7]/80 to-transparent" />
 
@@ -71,67 +78,59 @@ export default function DashboardView({ matches, stats, onNavigateToTab }: Dashb
         </div>
       </div>
 
-      {/* Stats Row */}
+      {/* Dynamic Stats Row showing user statistics */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="glass rounded-xl p-4 text-center">
           <span className="text-2xl font-extrabold text-white">{totalMatches}</span>
           <span className="block text-xs text-slate-400 mt-1">Partidos</span>
         </div>
         <div className="glass rounded-xl p-4 text-center">
-          <span className="text-2xl font-extrabold text-[#3CDBC0]">{matchesWithPrediction}</span>
-          <span className="block text-xs text-slate-400 mt-1">Cargados</span>
+          <span className="text-2xl font-extrabold text-[#3CDBC0]">{userStats.points}</span>
+          <span className="block text-xs text-slate-400 mt-1">Tus Puntos</span>
         </div>
         <div className="glass rounded-xl p-4 text-center">
-          <span className="text-2xl font-extrabold text-[#F4C430]">3</span>
-          <span className="block text-xs text-slate-400 mt-1">Pts x Exacto</span>
+          <span className="text-2xl font-extrabold text-[#F4C430]">{userStats.acertados}</span>
+          <span className="block text-xs text-slate-400 mt-1">Acertados</span>
         </div>
         <div className="glass rounded-xl p-4 text-center">
-          <span className="text-2xl font-extrabold text-[#75AADB]">1</span>
-          <span className="block text-xs text-slate-400 mt-1">Pt x Ganador</span>
+          <span className="text-2xl font-extrabold text-red-400">{userStats.errados}</span>
+          <span className="block text-xs text-slate-400 mt-1">Errados</span>
         </div>
       </div>
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {quickActions.map((action) => (
-          <button
-            key={action.tab}
-            onClick={() => onNavigateToTab(action.tab)}
-            className="glass rounded-2xl p-5 text-left flex items-center gap-4 group hover:border-[#5B5FC7]/30 transition-all"
-          >
-            <div className="w-12 h-12 rounded-xl bg-[#5B5FC7]/10 border border-[#5B5FC7]/15 flex items-center justify-center shrink-0">
-              {action.icon}
-            </div>
-            <div className="min-w-0">
-              <h3 className="font-semibold text-white group-hover:text-[#3CDBC0] transition-colors">{action.title}</h3>
-              <p className="text-sm text-slate-400">{action.description}</p>
-            </div>
-            <span className="ml-auto text-slate-600 group-hover:text-[#3CDBC0] transition-colors text-lg">→</span>
-          </button>
-        ))}
+      {/* Interactive Argentina Map component replacing navigation cards */}
+      <div className="space-y-3">
+        <h3 className="font-bold text-white text-sm px-1">Distribución de Jugadores por Provincia</h3>
+        <ArgentinaMap standings={standings} />
       </div>
 
-      {/* How it works */}
-      <div className="glass rounded-2xl p-6">
-        <h3 className="font-bold text-white mb-4">¿Cómo funciona?</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="text-center space-y-2">
-            <div className="w-10 h-10 rounded-full bg-[#3CDBC0]/10 border border-[#3CDBC0]/20 flex items-center justify-center mx-auto text-lg font-bold text-[#3CDBC0]">1</div>
-            <h4 className="font-semibold text-white text-sm">Cargá tu pronóstico</h4>
-            <p className="text-xs text-slate-400">Usá los botones + y − para poner el resultado que pensás.</p>
+      {/* Rules of Prode relocated to home screen */}
+      <div className="glass rounded-2xl p-5 border-[#5B5FC7]/20">
+        <h3 className="text-sm font-bold text-white flex items-center gap-2 mb-3">
+          <Timer className="w-4 h-4 text-[#3CDBC0]" /> Reglas del Prode
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-slate-300">
+          <div className="bg-[#0a0a1e] rounded-xl p-3 border border-emerald-500/10">
+            <div className="text-emerald-400 font-bold mb-1 flex items-center gap-1.5">
+              <CheckCircle className="w-3.5 h-3.5" /> Resultado Exacto
+            </div>
+            <p className="text-slate-400 leading-relaxed">Acertás el marcador exacto → <strong className="text-emerald-400">4 puntos</strong></p>
           </div>
-          <div className="text-center space-y-2">
-            <div className="w-10 h-10 rounded-full bg-[#75AADB]/10 border border-[#75AADB]/20 flex items-center justify-center mx-auto text-lg font-bold text-[#75AADB]">2</div>
-            <h4 className="font-semibold text-white text-sm">Esperá el resultado</h4>
-            <p className="text-xs text-slate-400">El admin carga los resultados oficiales después de cada partido.</p>
+          <div className="bg-[#0a0a1e] rounded-xl p-3 border border-amber-500/10">
+            <div className="text-amber-400 font-bold mb-1 flex items-center gap-1.5">
+              <TrendingUp className="w-3.5 h-3.5" /> Tendencia
+            </div>
+            <p className="text-slate-400 leading-relaxed">Acertás ganador o empate → <strong className="text-amber-400">2 puntos</strong></p>
           </div>
-          <div className="text-center space-y-2">
-            <div className="w-10 h-10 rounded-full bg-[#F4C430]/10 border border-[#F4C430]/20 flex items-center justify-center mx-auto text-lg font-bold text-[#F4C430]">3</div>
-            <h4 className="font-semibold text-white text-sm">Sumá puntos</h4>
-            <p className="text-xs text-slate-400">3 pts por resultado exacto, 1 pt por acertar ganador o empate.</p>
+          <div className="bg-[#0a0a1e] rounded-xl p-3 border border-red-500/10">
+            <div className="text-red-400 font-bold mb-1 flex items-center gap-1.5">
+              <XCircle className="w-3.5 h-3.5" /> Fallo
+            </div>
+            <p className="text-slate-400 leading-relaxed">No acertás ni tendencia → <strong className="text-red-400">0 puntos</strong></p>
           </div>
         </div>
       </div>
+      
     </div>
   );
 }
