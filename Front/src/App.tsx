@@ -93,6 +93,11 @@ export default function App() {
     await loadAllData();
   };
 
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+      ? 'http://localhost:4000' 
+      : '/api');
+
   const handleChangeScore = async (id: string, index: 0 | 1, value: number) => {
     const match = matches.find(m => m.id === id);
     if (!match || !user?.id) return;
@@ -106,7 +111,7 @@ export default function App() {
     // 2. Call API
     const token = (await supabase.auth.getSession()).data.session?.access_token;
     try {
-      await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/predictions`, {
+      await fetch(`${API_BASE_URL}/predictions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -133,7 +138,7 @@ export default function App() {
 
     // Send update to API (admin only)
     const token = (await supabase.auth.getSession()).data.session?.access_token;
-    fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/official-results`, {
+    fetch(`${API_BASE_URL}/official-results`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
