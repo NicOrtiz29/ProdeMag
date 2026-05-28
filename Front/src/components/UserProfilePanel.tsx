@@ -130,7 +130,7 @@ export default function UserProfilePanel({ matches, standings = [] }: UserProfil
     });
 
     sortedMatches.forEach(m => {
-      if (m.realResult) {
+      if (m.fecha < 73 && m.realResult) {
         resolvedMatches += 1;
         const pts = calculateMatchPoints(m.prediction, m.realResult);
         points += pts;
@@ -165,8 +165,8 @@ export default function UserProfilePanel({ matches, standings = [] }: UserProfil
     );
   }
 
-  const totalMatchesCount = matches.length;
-  const nonZeroPredictions = matches.filter(m => m.prediction[0] !== 0 || m.prediction[1] !== 0).length;
+  const totalMatchesCount = matches.filter(m => m.fecha < 73).length;
+  const nonZeroPredictions = matches.filter(m => m.fecha < 73 && (m.prediction[0] !== 0 || m.prediction[1] !== 0)).length;
 
   const handleProfileSave = (e: React.FormEvent) => {
     e.preventDefault();

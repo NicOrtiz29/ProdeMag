@@ -106,7 +106,7 @@ export default function App() {
     // 2. Call API
     const token = (await supabase.auth.getSession()).data.session?.access_token;
     try {
-      await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:4000'}/predictions`, {
+      await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/predictions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -133,7 +133,7 @@ export default function App() {
 
     // Send update to API (admin only)
     const token = (await supabase.auth.getSession()).data.session?.access_token;
-    fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:4000'}/official-results`, {
+    fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/official-results`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -165,9 +165,12 @@ export default function App() {
       const uPreds = allPreds.filter(p => p.user_id === u.id);
 
       Object.keys(officialResults).forEach(matchId => {
-        const pObj = uPreds.find((m: any) => m.match_id === matchId);
-        if (pObj) {
-          points += calculateMatchPoints(pObj.prediction, officialResults[matchId]);
+        const matchObj = matches.find(m => m.id === matchId);
+        if (matchObj && matchObj.fecha < 73) {
+          const pObj = uPreds.find((m: any) => m.match_id === matchId);
+          if (pObj) {
+            points += calculateMatchPoints(pObj.prediction, officialResults[matchId]);
+          }
         }
       });
 

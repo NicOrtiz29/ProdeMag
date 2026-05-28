@@ -20,7 +20,7 @@ interface DashboardViewProps {
 export default function DashboardView({ matches, standings, officialResults, onNavigateToTab }: DashboardViewProps) {
   const { user } = useAuth();
   
-  const totalMatches = matches.length;
+  const totalMatches = matches.filter(m => m.fecha < 73).length;
   
   // Calculate stats for the current logged-in user
   const userStats = useMemo(() => {
@@ -29,14 +29,16 @@ export default function DashboardView({ matches, standings, officialResults, onN
     let errados = 0;
 
     matches.forEach(m => {
-      const real = officialResults[m.id];
-      if (real) {
-        const pts = calculateMatchPoints(m.prediction, real);
-        points += pts;
-        if (pts > 0) {
-          acertados += 1;
-        } else {
-          errados += 1;
+      if (m.fecha < 73) {
+        const real = officialResults[m.id];
+        if (real) {
+          const pts = calculateMatchPoints(m.prediction, real);
+          points += pts;
+          if (pts > 0) {
+            acertados += 1;
+          } else {
+            errados += 1;
+          }
         }
       }
     });
