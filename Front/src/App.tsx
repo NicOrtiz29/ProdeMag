@@ -12,6 +12,7 @@ import PredictionsList from './components/PredictionsList';
 import DetailedStandings from './components/DetailedStandings';
 import HistoryAndStats from './components/HistoryAndStats';
 import FixtureBracket from './components/FixtureBracket';
+import PremiosView from './components/PremiosView';
 
 import UserHeader from './components/UserHeader';
 import AuthWall from './components/AuthWall';
@@ -27,10 +28,11 @@ import {
   Target,
   Trophy,
   History,
-  GitFork
+  GitFork,
+  Gift
 } from 'lucide-react';
 
-type TabId = 'inicio' | 'pronosticos' | 'fixture' | 'admin' | 'tabla' | 'slack' | 'historico' | 'json' | 'perfil';
+type TabId = 'inicio' | 'pronosticos' | 'fixture' | 'admin' | 'tabla' | 'slack' | 'historico' | 'json' | 'perfil' | 'premios';
 
 export default function App() {
   const { user, isLoading } = useAuth();
@@ -215,6 +217,7 @@ export default function App() {
     ...(user?.isAdmin ? [{ id: 'admin', label: 'Admin', icon: <Target className="w-5 h-5 text-[#F4C430]" /> }] : []),
     { id: 'tabla', label: 'Ranking', icon: <Trophy className="w-5 h-5" /> },
     { id: 'historico', label: 'Historial', icon: <History className="w-5 h-5" /> },
+    { id: 'premios', label: 'Premios', icon: <Gift className="w-5 h-5 text-[#3CDBC0]" /> },
   ] as const;
 
   // Loading
@@ -346,6 +349,9 @@ export default function App() {
             <HistoryAndStats historicalMatches={HISTORICAL_MATCHES} standings={dynamicStandings} />
           )}
 
+          {activeTab === 'premios' && (
+            <PremiosView />
+          )}
 
           {activeTab === 'perfil' && (
             <UserProfilePanel matches={matches} standings={dynamicStandings} />
