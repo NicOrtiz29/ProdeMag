@@ -7,6 +7,7 @@ import React, { useState, useMemo, useRef } from 'react';
 import { resolveFixture, ResolvedMatch } from '../utils/fixtureResolver';
 import { Match } from '../types';
 import { Calendar, Filter, HelpCircle, Trophy } from 'lucide-react';
+import { calculateGroupStandings, GroupLetter, GroupTeam } from '../utils/standings';
 
 interface FixtureBracketProps {
   matches: Match[];
@@ -16,7 +17,7 @@ interface FixtureBracketProps {
 
 export default function FixtureBracket({ matches, officialResults, onChangeScore }: FixtureBracketProps) {
   const [viewType, setViewType] = useState<'predicted' | 'official'>('predicted');
-  const [activeTab, setActiveTab] = useState<'r32' | 'r16' | 'qf' | 'sf' | 'final' | 'full'>('full');
+  const [activeTab, setActiveTab] = useState<'groups' | 'full' | 'r32' | 'r16' | 'qf' | 'sf' | 'final'>('full');
   const [editingMatchId, setEditingMatchId] = useState<string | null>(null);
   const [localScoreInput, setLocalScoreInput] = useState<number>(0);
   const [visitorScoreInput, setVisitorScoreInput] = useState<number>(0);
@@ -34,6 +35,9 @@ export default function FixtureBracket({ matches, officialResults, onChangeScore
     if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('.cursor-pointer')) {
       return;
     }
+    // Only drag on full bracket tree
+    if (activeTab !== 'full') return;
+
     setIsDragging(true);
     if (scrollContainerRef.current) {
       setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
@@ -48,7 +52,7 @@ export default function FixtureBracket({ matches, officialResults, onChangeScore
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging || !scrollContainerRef.current) return;
+    if (!isDragging || !scrollContainerRef.current || activeTab !== 'full') return;
     e.preventDefault();
     
     // Horizontal scroll calculation
@@ -174,6 +178,73 @@ export default function FixtureBracket({ matches, officialResults, onChangeScore
     );
   };
 
+  // Render group standings tables
+  const renderGroupStandings = () => {
+    const groupLetters: GroupLetter[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+    
+    // Adjust predictions based on viewType
+    const adjustedMatches = matches.map(m => {
+      if (viewType === 'official' && officialResults[m.id]) {
+        return { ...m, prediction: officialResults[m.id] };
+      }
+      return m;
+    });
+
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full py-4 max-w-6xl mx-auto">
+        {groupLetters.map((g) => {
+          const standings = calculateGroupStandings(adjustedMatches, g);
+          return (
+            <div key={g} className="bg-[#1a1a2e]/60 border border-[#5B5FC7]/15 rounded-2xl p-4 shadow-xl backdrop-blur-sm space-y-3">
+              <h3 className="text-sm font-extrabold text-[#3CDBC0] border-b border-[#5B5FC7]/10 pb-1.5 flex justify-between items-center">
+                <span>Grupo {g}</span>
+                <span className="text-[10px] text-slate-500 font-normal">Copa Mundial 2026</span>
+              </h3>
+              
+              <table className="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr className="text-[10px] text-slate-400 uppercase border-b border-[#5B5FC7]/5 pb-1">
+                    <th className="py-1.5 w-8 text-center">Pos</th>
+                    <th className="py-1.5 pl-2">Equipo</th>
+                    <th className="py-1.5 w-12 text-center">Pts</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {standings.map((team, idx) => {
+                    const isQualified = idx < 2; // Top 2 qualify
+                    return (
+                      <tr 
+                        key={team.code} 
+                        className={`border-b border-[#5B5FC7]/5 hover:bg-[#5B5FC7]/5 transition-colors ${
+                          isQualified ? 'bg-[#3CDBC0]/5 text-white font-semibold' : 'text-slate-400'
+                        }`}
+                      >
+                        <td className="py-2 text-center font-mono font-bold">
+                          {isQualified ? (
+                            <span className="text-[#3CDBC0]">0{idx + 1}</span>
+                          ) : (
+                            <span>0{idx + 1}</span>
+                          )}
+                        </td>
+                        <td className="py-2 pl-2 flex items-center gap-2 font-semibold">
+                          <span className="text-base select-none">{team.flag}</span>
+                          <span className="truncate">{team.name}</span>
+                        </td>
+                        <td className="py-2 text-center font-mono font-extrabold">
+                          {team.points}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
   return (
     <div className="space-y-6">
       {/* CSS to hide scrollbars but keep functionality & Grab cursor style */}
@@ -230,10 +301,11 @@ export default function FixtureBracket({ matches, officialResults, onChangeScore
         </div>
       </div>
 
-      {/* Tabs for mobile view navigation */}
+      {/* Tabs for navigation */}
       <div className="flex overflow-x-auto bg-[#1a1a2e]/60 p-1.5 rounded-xl border border-[#5B5FC7]/15 gap-1 scrollbar-none">
         {[
           { id: 'full', label: 'Árbol Completo' },
+          { id: 'groups', label: 'Fase de Grupos' },
           { id: 'r32', label: '16avos' },
           { id: 'r16', label: 'Octavos' },
           { id: 'qf', label: 'Cuartos' },
@@ -261,8 +333,8 @@ export default function FixtureBracket({ matches, officialResults, onChangeScore
         onMouseUp={handleMouseLeaveOrUp}
         onMouseLeave={handleMouseLeaveOrUp}
         onMouseMove={handleMouseMove}
-        className={`glass rounded-3xl p-6 overflow-x-auto overflow-y-auto border border-[#5B5FC7]/10 relative flex items-center justify-start w-full custom-bracket-scrollbar pb-8 grab-cursor ${isDragging ? 'cursor-grabbing' : ''}`}
-        style={{ minHeight: '940px', maxHeight: '940px' }}
+        className={`glass rounded-3xl p-6 overflow-x-auto overflow-y-auto border border-[#5B5FC7]/10 relative flex items-center justify-start w-full custom-bracket-scrollbar pb-8 ${activeTab === 'full' ? 'grab-cursor' : ''} ${isDragging && activeTab === 'full' ? 'cursor-grabbing' : ''}`}
+        style={{ minHeight: activeTab === 'full' ? '940px' : 'auto', maxHeight: activeTab === 'full' ? '940px' : 'none' }}
       >
         {/* Full Bracket Tree (Left & Right Sides converging to Center) */}
         {activeTab === 'full' ? (
@@ -483,9 +555,12 @@ export default function FixtureBracket({ matches, officialResults, onChangeScore
           </div>
         ) : null}
 
+        {/* Render Group Standings inside this container when activeTab is groups */}
+        {activeTab === 'groups' && renderGroupStandings()}
+
         {/* Tabbed Views for mobile layouts */}
         {activeTab === 'r32' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4 w-full max-w-2xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4 w-full max-w-2xl mx-auto">
             <div className="space-y-4">
               <h4 className="text-xs font-bold text-[#3CDBC0] uppercase tracking-wider">Lado Izquierdo</h4>
               {renderMatchNode('A_M73')}
@@ -511,9 +586,8 @@ export default function FixtureBracket({ matches, officialResults, onChangeScore
           </div>
         )}
 
-        {/* Other tabs remain identical */}
         {activeTab === 'r16' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4 w-full max-w-xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4 w-full max-w-xl mx-auto">
             <div className="space-y-4">
               <h4 className="text-xs font-bold text-[#3CDBC0] uppercase tracking-wider">Lado Izquierdo</h4>
               {renderMatchNode('A_M90')}
@@ -532,7 +606,7 @@ export default function FixtureBracket({ matches, officialResults, onChangeScore
         )}
 
         {activeTab === 'qf' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 py-4 w-full max-w-lg">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 py-4 w-full max-w-lg mx-auto">
             <div className="space-y-4">
               <h4 className="text-xs font-bold text-[#3CDBC0] uppercase tracking-wider">Lado Izquierdo</h4>
               {renderMatchNode('A_M97')}
