@@ -91,7 +91,10 @@ CREATE TABLE public.matches (
 );
 
 ALTER TABLE public.matches ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Anyone can read matches." ON public.matches;
 CREATE POLICY "Anyone can read matches." ON public.matches FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Admins can update matches." ON public.matches;
 CREATE POLICY "Admins can update matches." ON public.matches FOR ALL USING (
   EXISTS (SELECT 1 FROM public.users WHERE users.id = auth.uid() AND (users.role = 'admin' OR users.role = 'Superadmin'))
 );
@@ -106,7 +109,10 @@ CREATE TABLE IF NOT EXISTS public.settings (
 );
 
 ALTER TABLE public.settings ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Anyone can read settings." ON public.settings;
 CREATE POLICY "Anyone can read settings." ON public.settings FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Only admins can modify settings." ON public.settings;
 CREATE POLICY "Only admins can modify settings." ON public.settings FOR ALL USING (
   EXISTS (SELECT 1 FROM public.users WHERE users.id = auth.uid() AND (users.role = 'admin' OR users.role = 'Superadmin'))
 );
