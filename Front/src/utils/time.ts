@@ -1,9 +1,8 @@
-// api/utils/time.js
-const { DateTime } = require('luxon');
+import { Match } from '../types';
 
-function getMatchDateTime(match) {
-  const fechaNum = parseInt(match.fecha, 10);
-  let month = 6; // June
+export function getMatchDateTimeUTC(match: Match): Date {
+  const fechaNum = match.fecha;
+  let month = 5; // June (0-indexed in JS)
   let day = 11;
   
   if (fechaNum <= 72) {
@@ -29,26 +28,26 @@ function getMatchDateTime(match) {
     if (calcDay <= 30) {
       day = calcDay;
     } else {
-      month = 7; // July
+      month = 6; // July
       day = calcDay - 30;
     }
   } else if (fechaNum <= 96) {
-    month = 7;
+    month = 6; // July
     day = 4 + Math.floor((fechaNum - 89) / 2);
   } else if (fechaNum <= 100) {
-    month = 7;
+    month = 6; // July
     day = fechaNum <= 98 ? 9 : 10;
   } else if (fechaNum === 101) {
-    month = 7;
+    month = 6; // July
     day = 14;
   } else if (fechaNum === 102) {
-    month = 7;
+    month = 6; // July
     day = 15;
   } else if (fechaNum === 103) {
-    month = 7;
+    month = 6; // July
     day = 18;
   } else {
-    month = 7;
+    month = 6; // July
     day = 19;
   }
 
@@ -56,19 +55,12 @@ function getMatchDateTime(match) {
   const hour = parseInt(hourStr, 10);
   const minute = parseInt(minuteStr, 10);
 
-  return DateTime.fromObject({
-    year: 2026,
-    month,
-    day,
-    hour,
-    minute
-  }, { zone: 'utc' });
+  return new Date(Date.UTC(2026, month, day, hour, minute));
 }
 
-function isPredictionAllowed(match) {
-  const matchDateTime = getMatchDateTime(match);
-  const now = DateTime.utc();
-  return now <= matchDateTime.minus({ minutes: 30 });
+export function isPredictionOpen(match: Match): boolean {
+  const matchDate = getMatchDateTimeUTC(match);
+  const now = new Date();
+  const cutoffTime = matchDate.getTime() - 30 * 60 * 1000;
+  return now.getTime() < cutoffTime;
 }
-
-module.exports = { isPredictionAllowed };

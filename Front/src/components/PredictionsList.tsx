@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { RotateCcw, AlertTriangle, Calendar, Filter } from 'lucide-react';
 import { Match } from '../types';
+import { isPredictionOpen } from '../utils/time';
 
 const getFlag = (teamName: string, defaultFlag: string): string => {
   if (defaultFlag && defaultFlag.trim() !== '') return defaultFlag;
@@ -287,6 +288,7 @@ export default function PredictionsList({ matches, officialResults, isEditingOff
       ) : (
         <div className="space-y-3">
           {filteredMatches.map((match) => {
+            const isLocked = !isEditingOfficial && !isPredictionOpen(match);
             const scores = isEditingOfficial
                 ? [
                     officialResults && officialResults[match.id] ? officialResults[match.id][0] : 0,
@@ -297,10 +299,11 @@ export default function PredictionsList({ matches, officialResults, isEditingOff
             return (
               <div
                 key={match.id}
-                className="glass rounded-2xl p-4 sm:p-5 transition-all hover:border-[#5B5FC7]/30"
+                className={`glass rounded-2xl p-4 sm:p-5 transition-all hover:border-[#5B5FC7]/30 ${isLocked ? 'opacity-70' : ''}`}
               >
                 {/* Group and match day badge */}
-                <div className="flex items-center gap-2 mb-2">
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                  <div className="flex items-center gap-2">
                     <span className="text-xs font-semibold text-[#3CDBC0] bg-[#3CDBC0]/10 px-2.5 py-1 rounded-lg border border-[#3CDBC0]/20">
                       Grupo {match.group}
                     </span>
@@ -308,6 +311,12 @@ export default function PredictionsList({ matches, officialResults, isEditingOff
                       {getJornadaLabel(getMatchJornada(match.fecha))} • {getMatchCalendarDate(match.fecha)} • {match.hora} • {match.lugar}
                     </span>
                   </div>
+                  {isLocked && (
+                    <span className="text-xs font-semibold text-rose-400 bg-rose-400/10 px-2.5 py-1 rounded-lg border border-rose-400/20 flex items-center gap-1">
+                      🔒 Cerrado
+                    </span>
+                  )}
+                </div>
 
                 {/* Main match row */}
                 <div className="flex items-center justify-between gap-2">
@@ -325,7 +334,8 @@ export default function PredictionsList({ matches, officialResults, isEditingOff
                     <div className="flex flex-col items-center gap-1">
                       <button
                         onClick={() => onChangeScore(match.id, 0, scores[0] + 1)}
-                        className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-[#3CDBC0]/10 border border-[#3CDBC0]/30 text-[#3CDBC0] text-xl font-bold hover:bg-[#3CDBC0]/20 transition-all active:scale-95"
+                        disabled={isLocked}
+                        className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-[#3CDBC0]/10 border border-[#3CDBC0]/30 text-[#3CDBC0] text-xl font-bold hover:bg-[#3CDBC0]/20 transition-all active:scale-95 disabled:opacity-30 disabled:pointer-events-none"
                         aria-label="Sumar gol local"
                       >
                         +
@@ -335,7 +345,8 @@ export default function PredictionsList({ matches, officialResults, isEditingOff
                       </span>
                       <button
                         onClick={() => onChangeScore(match.id, 0, Math.max(0, scores[0] - 1))}
-                        className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-[#1a1a2e] border border-[#5B5FC7]/15 text-slate-400 text-xl font-bold hover:bg-[#5B5FC7]/10 transition-all active:scale-95"
+                        disabled={isLocked}
+                        className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-[#1a1a2e] border border-[#5B5FC7]/15 text-slate-400 text-xl font-bold hover:bg-[#5B5FC7]/10 transition-all active:scale-95 disabled:opacity-30 disabled:pointer-events-none"
                         aria-label="Restar gol local"
                       >
                         −
@@ -348,7 +359,8 @@ export default function PredictionsList({ matches, officialResults, isEditingOff
                     <div className="flex flex-col items-center gap-1">
                       <button
                         onClick={() => onChangeScore(match.id, 1, scores[1] + 1)}
-                        className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-[#3CDBC0]/10 border border-[#3CDBC0]/30 text-[#3CDBC0] text-xl font-bold hover:bg-[#3CDBC0]/20 transition-all active:scale-95"
+                        disabled={isLocked}
+                        className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-[#3CDBC0]/10 border border-[#3CDBC0]/30 text-[#3CDBC0] text-xl font-bold hover:bg-[#3CDBC0]/20 transition-all active:scale-95 disabled:opacity-30 disabled:pointer-events-none"
                         aria-label="Sumar gol visitante"
                       >
                         +
@@ -358,7 +370,8 @@ export default function PredictionsList({ matches, officialResults, isEditingOff
                       </span>
                       <button
                         onClick={() => onChangeScore(match.id, 1, Math.max(0, scores[1] - 1))}
-                        className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-[#1a1a2e] border border-[#5B5FC7]/15 text-slate-400 text-xl font-bold hover:bg-[#5B5FC7]/10 transition-all active:scale-95"
+                        disabled={isLocked}
+                        className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-[#1a1a2e] border border-[#5B5FC7]/15 text-slate-400 text-xl font-bold hover:bg-[#5B5FC7]/10 transition-all active:scale-95 disabled:opacity-30 disabled:pointer-events-none"
                         aria-label="Restar gol visitante"
                       >
                         −

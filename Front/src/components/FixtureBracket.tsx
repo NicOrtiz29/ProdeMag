@@ -8,6 +8,7 @@ import { resolveFixture, ResolvedMatch } from '../utils/fixtureResolver';
 import { Match } from '../types';
 import { Calendar, Filter, HelpCircle, Trophy } from 'lucide-react';
 import { calculateGroupStandings, GroupLetter, GroupTeam } from '../utils/standings';
+import { isPredictionOpen } from '../utils/time';
 
 interface FixtureBracketProps {
   matches: Match[];
@@ -81,6 +82,7 @@ export default function FixtureBracket({ matches, officialResults, onChangeScore
 
   const openEditModal = (match: ResolvedMatch) => {
     if (viewType === 'official') return; // Can't edit official results here
+    if (!isPredictionOpen(match as any)) return; // Can't edit if prediction is closed
     setEditingMatchId(match.id);
     setLocalScoreInput(match.prediction[0]);
     setVisitorScoreInput(match.prediction[1]);
@@ -121,18 +123,22 @@ export default function FixtureBracket({ matches, officialResults, onChangeScore
     const isWinnerLocal = hasTeams && (localScore > visitorScore || (localScore === visitorScore && match.winnerId === 'local'));
     const isWinnerVisitor = hasTeams && (visitorScore > localScore || (localScore === visitorScore && match.winnerId === 'visitor'));
 
+    const isLocked = viewType !== 'official' && !isPredictionOpen(match as any);
+
     return (
       <div 
         onClick={() => openEditModal(match)}
         className={`w-[190px] bg-[#1a1a2e]/90 border ${
           editingMatchId === match.id 
             ? 'border-[#3CDBC0] shadow-[0_0_12px_rgba(60,219,192,0.3)]' 
-            : 'border-[#5B5FC7]/20 hover:border-[#3CDBC0]/50'
-        } rounded-xl p-2.5 text-left transition-all duration-300 backdrop-blur-sm cursor-pointer select-none relative group z-10`}
+            : isLocked
+            ? 'border-[#5B5FC7]/10 opacity-70 cursor-not-allowed'
+            : 'border-[#5B5FC7]/20 hover:border-[#3CDBC0]/50 cursor-pointer'
+        } rounded-xl p-2.5 text-left transition-all duration-300 backdrop-blur-sm select-none relative group z-10`}
       >
         <div className="flex justify-between items-center text-[9px] text-slate-400 mb-1 border-b border-[#5B5FC7]/10 pb-1">
           <span className="font-semibold text-[#5B5FC7]">Partido {match.fecha}</span>
-          <span>{getMatchDate(match.fecha)}</span>
+          <span>{isLocked ? '🔒 Cerrado' : getMatchDate(match.fecha)}</span>
         </div>
 
         {/* Local Team */}
@@ -169,7 +175,7 @@ export default function FixtureBracket({ matches, officialResults, onChangeScore
           </span>
         </div>
 
-        {viewType !== 'official' && (
+        {viewType !== 'official' && !isLocked && (
           <div className="absolute inset-0 bg-[#3CDBC0]/5 opacity-0 group-hover:opacity-100 rounded-xl transition-opacity flex items-center justify-center text-[10px] text-[#3CDBC0] font-bold">
             ⚡ Editar Pronóstico
           </div>
