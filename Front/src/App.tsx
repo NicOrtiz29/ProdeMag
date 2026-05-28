@@ -11,6 +11,7 @@ import DashboardView from './components/DashboardView';
 import PredictionsList from './components/PredictionsList';
 import DetailedStandings from './components/DetailedStandings';
 import HistoryAndStats from './components/HistoryAndStats';
+import FixtureBracket from './components/FixtureBracket';
 
 import UserHeader from './components/UserHeader';
 import AuthWall from './components/AuthWall';
@@ -25,10 +26,11 @@ import {
   Home,
   Target,
   Trophy,
-  History
+  History,
+  GitFork
 } from 'lucide-react';
 
-type TabId = 'inicio' | 'pronosticos' | 'admin' | 'tabla' | 'slack' | 'historico' | 'json' | 'perfil';
+type TabId = 'inicio' | 'pronosticos' | 'fixture' | 'admin' | 'tabla' | 'slack' | 'historico' | 'json' | 'perfil';
 
 export default function App() {
   const { user, isLoading } = useAuth();
@@ -209,6 +211,7 @@ export default function App() {
   const tabs = [
     { id: 'inicio', label: 'Inicio', icon: <Home className="w-5 h-5" /> },
     { id: 'pronosticos', label: 'Pronósticos', icon: <Target className="w-5 h-5" /> },
+    { id: 'fixture', label: 'Fixture', icon: <GitFork className="w-5 h-5 text-[#3CDBC0]" /> },
     ...(user?.isAdmin ? [{ id: 'admin', label: 'Admin', icon: <Target className="w-5 h-5 text-[#F4C430]" /> }] : []),
     { id: 'tabla', label: 'Ranking', icon: <Trophy className="w-5 h-5" /> },
     { id: 'historico', label: 'Historial', icon: <History className="w-5 h-5" /> },
@@ -287,6 +290,14 @@ export default function App() {
               onResetMatches={handleResetMatches} 
             />
           )}
+
+          {activeTab === 'fixture' && (
+            <FixtureBracket 
+              matches={matches} 
+              officialResults={officialResults} 
+              onChangeScore={handleChangeScore} 
+            />
+          )}
 {activeTab === 'admin' && user?.isAdmin && (
   <div>
     {/* Aviso de modo admin */}
@@ -358,6 +369,7 @@ export default function App() {
           {[
             { id: 'inicio', icon: <Home className="w-5 h-5" />, label: 'Inicio' },
             { id: 'pronosticos', icon: <Target className="w-5 h-5" />, label: 'Prode' },
+            { id: 'fixture', icon: <GitFork className="w-5 h-5" />, label: 'Fixture' },
             { id: 'tabla', icon: <Trophy className="w-5 h-5" />, label: 'Ranking' },
           ].map((tab) => {
             const active = activeTab === tab.id;

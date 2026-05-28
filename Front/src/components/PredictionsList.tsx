@@ -2,6 +2,26 @@ import React, { useState } from 'react';
 import { RotateCcw, AlertTriangle, Calendar, Filter } from 'lucide-react';
 import { Match } from '../types';
 
+const getFlag = (teamName: string, defaultFlag: string): string => {
+  if (defaultFlag && defaultFlag.trim() !== '') return defaultFlag;
+  const name = teamName ? teamName.trim() : '';
+  const flags: Record<string, string> = {
+    'Algeria': '🇩🇿', 'Argentina': '🇦🇷', 'Australia': '🇦🇺', 'Austria': '🇦🇹',
+    'Belgium': '🇧🇪', 'Bosnia & Herzegovina': '🇧🇦', 'Brazil': '🇧🇷', 'Canada': '🇨🇦',
+    'Cape Verde': '🇨🇻', 'Colombia': '🇨🇴', 'Croatia': '🇭🇷', 'Curaçao': '🇨🇼',
+    'Czech Republic': '🇨🇿', 'DR Congo': '🇨🇩', 'Ecuador': '🇪🇨', 'Egypt': '🇪🇬',
+    'England': '🏴󠁧󠁢󠁥󠁮󠁧󠁿', 'France': '🇫🇷', 'Germany': '🇩🇪', 'Ghana': '🇬🇭',
+    'Haiti': '🇭🇹', 'Iran': '🇮🇷', 'Iraq': '🇮🇶', 'Ivory Coast': '🇨🇮',
+    'Japan': '🇯🇵', 'Jordan': '🇯🇴', 'Mexico': '🇲🇽', 'Morocco': '🇲🇦',
+    'Netherlands': '🇳🇱', 'New Zealand': '🇳🇿', 'Norway': '🇳🇴', 'Panama': '🇵🇦',
+    'Paraguay': '🇵🇾', 'Portugal': '🇵🇹', 'Qatar': '🇶🇦', 'Saudi Arabia': '🇸🇦',
+    'Scotland': '🏴󠁧󠁢󠁳󠁣󠁴󠁿', 'Senegal': '🇸🇳', 'South Africa': '🇿🇦', 'South Korea': '🇰🇷',
+    'Spain': '🇪🇸', 'Sweden': '🇸🇪', 'Switzerland': '🇨🇭', 'Tunisia': '🇹🇳',
+    'Turkey': '🇹🇷', 'USA': '🇺🇸', 'Uruguay': '🇺🇾', 'Uzbekistan': '🇺🇿'
+  };
+  return flags[name] || '⚽';
+};
+
 interface PredictionsListProps {
   matches: Match[];
   officialResults?: Record<string, [number, number]>;
@@ -10,14 +30,105 @@ interface PredictionsListProps {
   onResetMatches: () => void;
 }
 
+const getMatchJornada = (f: number): number => {
+  if (f <= 72) {
+    const groupMatchIndex = ((f - 1) % 6) + 1;
+    if (groupMatchIndex <= 2) return 1;
+    if (groupMatchIndex <= 4) return 2;
+    return 3;
+  }
+  if (f <= 88) return 4; // R32
+  if (f <= 96) return 5; // R16
+  if (f <= 100) return 6; // QF
+  if (f <= 102) return 7; // SF
+  if (f <= 103) return 8; // Third Place
+  return 9; // Final
+};
+
+const getJornadaLabel = (j: number): string => {
+  if (j === 1) return 'Fecha 1';
+  if (j === 2) return 'Fecha 2';
+  if (j === 3) return 'Fecha 3';
+  if (j === 4) return '16avos de Final';
+  if (j === 5) return 'Octavos de Final';
+  if (j === 6) return 'Cuartos de Final';
+  if (j === 7) return 'Semifinales';
+  if (j === 8) return 'Tercer Puesto';
+  return 'Final';
+};
+
+const getMatchCalendarDate = (fechaNum: number): string => {
+  if (fechaNum <= 72) {
+    let day = 11;
+    if (fechaNum <= 2) day = 11;
+    else if (fechaNum <= 5) day = 12;
+    else if (fechaNum <= 9) day = 13;
+    else if (fechaNum <= 13) day = 14;
+    else if (fechaNum <= 17) day = 15;
+    else if (fechaNum <= 21) day = 16;
+    else if (fechaNum <= 25) day = 17;
+    else if (fechaNum <= 29) day = 18;
+    else if (fechaNum <= 33) day = 19;
+    else if (fechaNum <= 37) day = 20;
+    else if (fechaNum <= 41) day = 21;
+    else if (fechaNum <= 45) day = 22;
+    else if (fechaNum <= 49) day = 23;
+    else if (fechaNum <= 53) day = 24;
+    else if (fechaNum <= 57) day = 25;
+    else if (fechaNum <= 61) day = 26;
+    else day = 27;
+
+    const dateObj = new Date(2026, 5, day);
+    const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+    return `${dayNames[dateObj.getDay()]} ${day}/${6}`;
+  }
+  
+  if (fechaNum <= 88) {
+    const day = 28 + Math.floor((fechaNum - 73) / 2.7);
+    if (day <= 30) {
+      const dateObj = new Date(2026, 5, day);
+      const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+      return `${dayNames[dateObj.getDay()]} ${day}/${6}`;
+    } else {
+      const julyDay = day - 30;
+      const dateObj = new Date(2026, 6, julyDay);
+      const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+      return `${dayNames[dateObj.getDay()]} ${julyDay}/${7}`;
+    }
+  }
+  
+  if (fechaNum <= 96) {
+    const day = 4 + Math.floor((fechaNum - 89) / 2);
+    const dateObj = new Date(2026, 6, day);
+    const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+    return `${dayNames[dateObj.getDay()]} ${day}/${7}`;
+  }
+  
+  if (fechaNum <= 100) {
+    const day = fechaNum <= 98 ? 9 : 10;
+    const dateObj = new Date(2026, 6, day);
+    const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+    return `${dayNames[dateObj.getDay()]} ${day}/${7}`;
+  }
+  
+  if (fechaNum === 101) return 'Mar 14/7';
+  if (fechaNum === 102) return 'Mié 15/7';
+  if (fechaNum === 103) return 'Sáb 18/7';
+  return 'Dom 19/7';
+};
+
 export default function PredictionsList({ matches, officialResults, isEditingOfficial = false, onChangeScore, onResetMatches }: PredictionsListProps) {
   const [selectedFecha, setSelectedFecha] = useState<number>(1);
+  const [specificFecha, setSpecificFecha] = useState<number>(1);
   const [selectedGroup, setSelectedGroup] = useState<string>('ALL');
+
+  const maxFecha = 9; // 9 total phases in the tournament
 
   const filteredMatches = matches.filter((match) => {
     const matchFecha = match.fecha || 1;
+    const matchJornada = getMatchJornada(matchFecha);
     const matchGroup = match.group || 'C';
-    const fechaMatch = selectedFecha === 4 || matchFecha === selectedFecha;
+    const fechaMatch = selectedFecha === 10 || matchJornada === selectedFecha;
     const groupMatch = selectedGroup === 'ALL' || matchGroup === selectedGroup;
     return fechaMatch && groupMatch;
   });
@@ -37,15 +148,6 @@ export default function PredictionsList({ matches, officialResults, isEditingOff
               : 'Tocá los botones + y − para poner tu resultado.'}
           </p>
         </div>
-        {!isEditingOfficial && (
-          <button
-            onClick={onResetMatches}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#1a1a2e] border border-[#5B5FC7]/20 hover:border-[#3CDBC0]/40 text-sm text-slate-300 hover:text-white transition-all shrink-0"
-          >
-            <RotateCcw className="w-4 h-4" />
-            Reiniciar
-          </button>
-        )}
       </div>
 
       {isEditingOfficial && (
@@ -57,30 +159,90 @@ export default function PredictionsList({ matches, officialResults, isEditingOff
 
       {/* Filters */}
       <div className="glass rounded-2xl p-5 space-y-4">
-        {/* Fecha selector */}
+        {/* Dynamic Fecha selector with arrows */}
         <div className="space-y-2">
           <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
             <Calendar className="w-3.5 h-3.5 text-[#3CDBC0]" /> Jornada
           </label>
-          <div className="grid grid-cols-4 gap-2">
-            {[
-              { value: 1, label: 'Fecha 1' },
-              { value: 2, label: 'Fecha 2' },
-              { value: 3, label: 'Fecha 3' },
-              { value: 4, label: 'Todas' },
-            ].map((f) => (
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Control con flechas para pasar de Fecha */}
+            <div className="flex items-center bg-[#1a1a2e]/60 rounded-xl border border-[#5B5FC7]/15 overflow-hidden">
+              {/* Botón Flecha Izquierda */}
               <button
-                key={f.value}
-                onClick={() => setSelectedFecha(f.value)}
-                className={`py-2.5 rounded-xl text-sm font-semibold transition-all ${
-                  selectedFecha === f.value
+                onClick={() => {
+                  const newF = Math.max(1, specificFecha - 1);
+                  setSpecificFecha(newF);
+                  setSelectedFecha(newF);
+                }}
+                disabled={specificFecha === 1}
+                className="px-3 py-2 text-sm font-bold text-slate-400 hover:text-white transition-colors hover:bg-slate-800/40 disabled:opacity-30 disabled:hover:text-slate-400 disabled:hover:bg-transparent"
+              >
+                ←
+              </button>
+
+              {/* Botón Central de Fecha */}
+              <button
+                onClick={() => {
+                  setSelectedFecha(specificFecha);
+                }}
+                className={`px-5 py-2 text-sm font-semibold transition-all border-x border-[#5B5FC7]/15 ${
+                  selectedFecha !== 10
+                    ? 'bg-[#3CDBC0]/10 text-[#3CDBC0] font-bold shadow-sm'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                {getJornadaLabel(specificFecha)}
+              </button>
+
+              {/* Botón Flecha Derecha */}
+              <button
+                onClick={() => {
+                  const newF = Math.min(maxFecha, specificFecha + 1);
+                  setSpecificFecha(newF);
+                  setSelectedFecha(newF);
+                }}
+                disabled={specificFecha === maxFecha}
+                className="px-3 py-2 text-sm font-bold text-slate-400 hover:text-white transition-colors hover:bg-slate-800/40 disabled:opacity-30 disabled:hover:text-slate-400 disabled:hover:bg-transparent"
+              >
+                →
+              </button>
+            </div>
+
+            {/* Accesos directos a llaves eliminatorias */}
+            {[
+              { value: 4, label: '16avos' },
+              { value: 5, label: '8tavos' },
+              { value: 6, label: '4tos' },
+              { value: 7, label: 'Semis' },
+              { value: 9, label: 'Final' },
+            ].map((phase) => (
+              <button
+                key={phase.value}
+                onClick={() => {
+                  setSpecificFecha(phase.value);
+                  setSelectedFecha(phase.value);
+                }}
+                className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
+                  selectedFecha === phase.value
                     ? 'bg-[#3CDBC0]/10 text-[#3CDBC0] border border-[#3CDBC0]/40 shadow-sm'
                     : 'bg-[#1a1a2e]/60 text-slate-400 border border-[#5B5FC7]/15 hover:text-white hover:bg-[#1a1a2e]'
                 }`}
               >
-                {f.label}
+                {phase.label}
               </button>
             ))}
+
+            {/* Botón "Todas" */}
+            <button
+              onClick={() => setSelectedFecha(10)}
+              className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
+                selectedFecha === 10
+                  ? 'bg-[#3CDBC0]/10 text-[#3CDBC0] border border-[#3CDBC0]/40 shadow-sm'
+                  : 'bg-[#1a1a2e]/60 text-slate-400 border border-[#5B5FC7]/15 hover:text-white hover:bg-[#1a1a2e]'
+              }`}
+            >
+              Todas
+            </button>
           </div>
         </div>
 
@@ -143,7 +305,7 @@ export default function PredictionsList({ matches, officialResults, isEditingOff
                       Grupo {match.group}
                     </span>
                     <span className="text-xs text-slate-500">
-                      Fecha {match.fecha} • {match.hora} • {match.lugar}
+                      {getJornadaLabel(getMatchJornada(match.fecha))} • {getMatchCalendarDate(match.fecha)} • {match.hora} • {match.lugar}
                     </span>
                   </div>
 
@@ -152,9 +314,9 @@ export default function PredictionsList({ matches, officialResults, isEditingOff
                   
                   {/* Local Team */}
                   <div className="flex-1 flex flex-col items-center text-center gap-1 min-w-0">
-                    <span className="text-4xl select-none">{match.flagLocal}</span>
+                    <span className="text-4xl select-none">{getFlag(match.localTeam, match.flagLocal)}</span>
                     <span className="text-sm font-bold text-white truncate w-full">{match.localTeam}</span>
-                    <span className="text-xs text-slate-500 uppercase">{match.localCode}</span>
+                    <span className="text-xs text-slate-500 uppercase">{match.localCode || match.localTeam.substring(0, 3).toUpperCase()}</span>
                   </div>
 
                   {/* Score Controls */}
@@ -206,9 +368,9 @@ export default function PredictionsList({ matches, officialResults, isEditingOff
 
                   {/* Visitor Team */}
                   <div className="flex-1 flex flex-col items-center text-center gap-1 min-w-0">
-                    <span className="text-4xl select-none">{match.flagVis}</span>
+                    <span className="text-4xl select-none">{getFlag(match.visitorTeam, match.flagVis)}</span>
                     <span className="text-sm font-bold text-white truncate w-full">{match.visitorTeam}</span>
-                    <span className="text-xs text-slate-500 uppercase">{match.visitorCode}</span>
+                    <span className="text-xs text-slate-500 uppercase">{match.visitorCode || match.visitorTeam.substring(0, 3).toUpperCase()}</span>
                   </div>
                 </div>
               </div>
