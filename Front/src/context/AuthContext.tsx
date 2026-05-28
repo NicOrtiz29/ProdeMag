@@ -36,7 +36,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           points: 0,
           accuracy: 0,
           streak: 0,
-          bio: 'Listo para ganarle al Oráculo Bot.',
+          bio: 'Listo para competir con mis compañeros.',
         });
       } else {
         setUser(null);

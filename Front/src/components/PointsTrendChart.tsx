@@ -1,10 +1,6 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import React, { useState } from 'react';
 import { TrendingUp, Users, Bot, Sparkles, HelpCircle } from 'lucide-react';
+import { StandingsEntry } from '../types';
 
 interface TrendNode {
   fecha: string;
@@ -16,50 +12,59 @@ interface TrendNode {
 
 const HISTORICAL_TREND: TrendNode[] = [
   { 
-    fecha: 'Fecha -4', 
-    longLabel: 'Hace 4 Fechas',
+    fecha: 'Fecha 1', 
+    longLabel: 'Fecha 1',
     oracle: 2, 
     humanos: 3, 
-    comentario: 'Arranque parejo con pocos goles. Probamos modelos de regresión lineal.' 
+    comentario: 'Arranque parejo en la primera fecha. Ninguno quería regalar nada en la oficina.' 
   },
   { 
-    fecha: 'Fecha -3', 
-    longLabel: 'Hace 3 Fechas',
+    fecha: 'Fecha 2', 
+    longLabel: 'Fecha 2',
     oracle: 5, 
     humanos: 4, 
-    comentario: 'La IA metió un pleno exacto y se adueñó de la punta corporativa.' 
+    comentario: 'Santi metió un pleno exacto y se adueñó de la punta corporativa.' 
   },
   { 
-    fecha: 'Fecha -2', 
-    longLabel: 'Hace 2 Fechas',
+    fecha: 'Fecha 3', 
+    longLabel: 'Fecha 3',
     oracle: 6, 
     humanos: 8, 
-    comentario: 'Santi del Backend clavó 3 puntajes ideales seguidos. Locura absoluta.' 
+    comentario: 'Santi del Backend clavó 3 puntajes ideales seguidos. ¡Estaba intratable!' 
   },
   { 
-    fecha: 'Fecha -1', 
-    longLabel: 'Hace 1 Fecha',
+    fecha: 'Fecha 4', 
+    longLabel: 'Fecha 4',
     oracle: 8, 
     humanos: 10, 
-    comentario: 'Mantenemos distancia corta con empates de bajo perfil estadístico.' 
+    comentario: 'Flor acorta distancia apostando a empates clave en el fixture.' 
   },
   { 
-    fecha: 'Fecha 0', 
-    longLabel: 'Fecha de Práctica',
+    fecha: 'Fecha 5', 
+    longLabel: 'Fecha 5',
     oracle: 10, 
     humanos: 12, 
-    comentario: 'Último test de simulación antes del arranque del fixture mundialista.' 
+    comentario: 'Última fecha de práctica cerrada. Flor queda a solo 2 puntos de Santi.' 
   },
 ];
 
-export default function PointsTrendChart() {
+interface PointsTrendChartProps {
+  standings?: StandingsEntry[];
+}
+
+export default function PointsTrendChart({ standings = [] }: PointsTrendChartProps) {
   const [selectedIndex, setSelectedIndex] = useState<number>(4);
+
+  const lastTrendNode = HISTORICAL_TREND[HISTORICAL_TREND.length - 1];
+  const botIsLeader = lastTrendNode.oracle >= lastTrendNode.humanos;
+  const botLabel = `Santi (${botIsLeader ? 'Líder' : 'Escolta'})`;
+  const humanLabel = `Flor (${botIsLeader ? 'Escolta' : 'Líder'})`;
 
   // SVG Dimension setups
   const width = 600;
   const height = 240;
   const paddingLeft = 50;
-  const paddingRight = 30;
+  const paddingRight = 50;
   const paddingTop = 25;
   const paddingBottom = 45;
 
@@ -259,11 +264,11 @@ export default function PointsTrendChart() {
         <div className="absolute top-2.5 left-4 flex gap-4.5 bg-slate-950/80 px-3 py-1.5 rounded-lg border border-slate-850/60 font-mono text-3xs">
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 bg-cyan-400 rounded-full inline-block shadow-[0_0_8px_rgba(6,182,212,0.6)]" />
-            <span className="text-slate-300 font-medium">Oracle Bot (IA)</span>
+            <span className="text-slate-300 font-medium">{botLabel}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 bg-amber-500 rounded-full inline-block shadow-[0_0_8px_rgba(245,158,11,0.5)]" />
-            <span className="text-slate-300 font-medium">Colaboradores</span>
+            <span className="text-slate-300 font-medium">{humanLabel}</span>
           </div>
         </div>
       </div>
@@ -273,13 +278,13 @@ export default function PointsTrendChart() {
         {/* Scoreboard visual */}
         <div className="flex items-center justify-center gap-3 shrink-0 bg-slate-950 rounded-xl p-3 border border-slate-850 w-full sm:w-auto h-20 min-w-[170px]">
           <div className="text-center flex-1">
-            <span className="text-[9px] font-mono uppercase text-cyan-400 font-bold block">Bot</span>
+            <span className="text-[9px] font-mono uppercase text-cyan-400 font-bold block">Santi</span>
             <span className="font-display font-black text-2xl text-white">{selectedNode.oracle}</span>
             <span className="text-4xs text-slate-500 font-mono block">puntos</span>
           </div>
           <div className="text-slate-700 font-bold text-center select-none text-sm">-vs-</div>
           <div className="text-center flex-1">
-            <span className="text-[9px] font-mono uppercase text-amber-500 font-bold block">Humans</span>
+            <span className="text-[9px] font-mono uppercase text-amber-500 font-bold block">Flor</span>
             <span className="font-display font-black text-2xl text-white">{selectedNode.humanos}</span>
             <span className="text-4xs text-slate-500 font-mono block">puntos</span>
           </div>
@@ -298,11 +303,11 @@ export default function PointsTrendChart() {
                   ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20'
                   : 'bg-slate-500/10 text-slate-400 border border-slate-500/10'
             }`}>
-              {selectedNode.oracle > selectedNode.humanos ? 'IA Ganadora' : selectedNode.humanos > selectedNode.oracle ? 'Humanos Arriba' : 'Empate'}
+              {selectedNode.oracle > selectedNode.humanos ? 'Santi Arriba' : selectedNode.humanos > selectedNode.oracle ? 'Flor Arriba' : 'Empate'}
             </span>
           </div>
           <p className="text-2xs md:text-xs text-slate-350 italic leading-relaxed">
-            <strong className="text-cyan-400 not-italic">The Oracle dice: </strong>
+            <strong className="text-cyan-400 not-italic">Comentario: </strong>
             "{selectedNode.comentario}"
           </p>
         </div>

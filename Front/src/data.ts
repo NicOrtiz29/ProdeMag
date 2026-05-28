@@ -169,15 +169,15 @@ export const STANDINGS: StandingsEntry[] = [
     lastPredictions: 'Estable pero predecible'
   },
   {
-    id: 'oracle',
-    name: 'The Oracle Bot (IA)',
+    id: 'mati_qa',
+    name: 'Mati (QA Ninja)',
     points: 10,
-    isBot: true,
-    avatar: '👁️‍🗨️',
-    role: 'Red Neuronal De Cafetería',
+    isBot: false,
+    avatar: '🥷',
+    role: 'QA Engineer',
     accuracy: 65,
     streak: 0,
-    lastPredictions: 'Perdió puntos clave por codisparador'
+    lastPredictions: 'Buscando bugs en las planillas'
   },
   {
     id: 'male_scrum',
@@ -223,7 +223,7 @@ export const BOT_STATS: BotStatItem[] = [
     icon: 'TrendingUp'
   },
   {
-    label: 'Taza de Café Reclamada',
+    label: 'Tasa de Café Reclamada',
     value: '3 tazas',
     subValue: 'Ganadas en la fase de prueba',
     icon: 'Coffee'
@@ -239,7 +239,7 @@ export const HISTORICAL_MATCHES: HistoricalMatch[] = [
     humanPrediction: [1, 1],
     pointsOracle: 4,
     pointsHuman: 1,
-    commentary: 'Acá clavamos el debut inicial del Grupo A, che. Mi red neuronal estimó el poder de la localía mexicana y sumamos 4 puntos limpios.'
+    commentary: 'Arranqué el torneo con toda. La localía de México era fija y sumé 4 puntazos exactos.'
   },
   {
     id: 'H2',
@@ -249,7 +249,7 @@ export const HISTORICAL_MATCHES: HistoricalMatch[] = [
     humanPrediction: [1, 0],
     pointsOracle: 4,
     pointsHuman: 2,
-    commentary: 'En Vancouver Canadá no perdona. Logré acertar el marcador exacto de 2-0 ganando en tendencia y precisión absoluta.'
+    commentary: 'Canadá en Vancouver se hace fuerte, le jugué al 2-0 de una y Flor quedó masticando bronca.'
   },
   {
     id: 'H3',
@@ -259,7 +259,7 @@ export const HISTORICAL_MATCHES: HistoricalMatch[] = [
     humanPrediction: [3, 1],
     pointsOracle: 2,
     pointsHuman: 4,
-    commentary: 'Uff, Santi del Backend clavó el 3-1 exacto del debut brasileño y se sumó el pleno, pero mi tendencia fue acertada sumando 2 puntazos.'
+    commentary: 'Acá Flor me ganó de mano metiendo el 3-1 exacto para Brasil, pero yo rescaté 2 puntos por la tendencia.'
   },
   {
     id: 'H4',
@@ -269,7 +269,7 @@ export const HISTORICAL_MATCHES: HistoricalMatch[] = [
     humanPrediction: [1, 2],
     pointsOracle: 4,
     pointsHuman: 0,
-    commentary: '¡TREMENDO ACIERTO EXACTO! Mis algoritmos predijeron el espectacular empate 1-1.'
+    commentary: '¡Metí un 1-1 clave entre EE. UU. y Paraguay! Flor apostó a que ganaban los visitantes y no sumó nada.'
   }
 ];
 

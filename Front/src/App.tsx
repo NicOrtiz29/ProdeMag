@@ -10,6 +10,7 @@ import { Match, StandingsEntry } from './types';
 import DashboardView from './components/DashboardView';
 import PredictionsList from './components/PredictionsList';
 import DetailedStandings from './components/DetailedStandings';
+import HistoryAndStats from './components/HistoryAndStats';
 
 import UserHeader from './components/UserHeader';
 import AuthWall from './components/AuthWall';
@@ -330,7 +331,7 @@ export default function App() {
           )}
 
           {activeTab === 'historico' && (
-            <HistoryAndStats historicalMatches={HISTORICAL_MATCHES} />
+            <HistoryAndStats historicalMatches={HISTORICAL_MATCHES} standings={dynamicStandings} />
           )}
 
 
