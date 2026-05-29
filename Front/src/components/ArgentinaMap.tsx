@@ -27,15 +27,9 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
 
   const getAssignedProvince = (player: StandingsEntry): string => {
     if (player.province && player.province.trim() !== '') return player.province;
-    // Fallbacks for default/mock users
-    const nameNorm = player.name.toLowerCase();
-    if (nameNorm.includes('santi')) return 'Buenos Aires';
-    if (nameNorm.includes('flor')) return 'Córdoba';
-    if (nameNorm.includes('mati')) return 'Santa Fe';
-    if (nameNorm.includes('male')) return 'Mendoza';
-    if (nameNorm.includes('nico')) return 'Tucumán';
-    return 'Ciudad de Buenos Aires';
+    return '';
   };
+
 
   // Define all regions shown on the map (Argentina provinces + Madrid + Venezuela)
   const allMapRegions = useMemo<ProvincePath[]>(() => {

@@ -5,7 +5,7 @@
 
 // Prode MagIA - Production Build Trigger Comment
 import React, { useState, useMemo, useEffect } from 'react';
-import { INITIAL_MATCHES, CHALLENGE_TONES, BOT_STATS, HISTORICAL_MATCHES } from './data';
+import { INITIAL_MATCHES } from './data';
 import { Match, StandingsEntry } from './types';
 
 import DashboardView from './components/DashboardView';
@@ -40,9 +40,6 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<TabId>('inicio');
   const [matches, setMatches] = useState<Match[]>(INITIAL_MATCHES);
   const [officialResults, setOfficialResults] = useState<Record<string, [number, number]>>({});
-  const [currentToneId, setCurrentToneId] = useState<string>('analista');
-  const [messageText, setMessageText] = useState<string>(CHALLENGE_TONES[0].message);
-  const [isSpinning, setIsSpinning] = useState<boolean>(false);
   const [allUsersData, setAllUsersData] = useState<{users:any[], preds:any[]}>({users: [], preds: []});
 
   // --------------------------------------------------
@@ -206,18 +203,6 @@ export default function App() {
     if (import.meta.env.DEV) console.log('Dynamic standings recomputed, count:', dynamicStandings.length);
   }, [dynamicStandings]);
 
-  const handleToneChange = (toneId: string) => {
-    setCurrentToneId(toneId);
-    const targetTone = CHALLENGE_TONES.find((t) => t.id === toneId);
-    if (targetTone) {
-      setMessageText(targetTone.message);
-    }
-  };
-
-  const handleMessageTextChange = (text: string) => {
-    setMessageText(text);
-  };
-
   // Tab definitions
   const tabs = [
     { id: 'inicio', label: 'Inicio', icon: <Home className="w-5 h-5" /> },
@@ -321,7 +306,6 @@ export default function App() {
     {/* Botón de refresco manual */}
       <button
         onClick={async () => {
-          setIsSpinning(true);
           const { data: offRes } = await supabase
             .from('official_results')
             .select('match_id, result');
@@ -330,13 +314,12 @@ export default function App() {
             offRes.forEach(r => (offObj[r.match_id] = r.result));
             setOfficialResults(offObj);
           }
-          setTimeout(() => setIsSpinning(false), 800);
         }}
         className="mb-2 px-3 py-1.5 rounded-xl bg-[#1a1a2e] hover:bg-[#1a1a2e]/80 text-slate-300"
       >
-        <span className={"ball " + (isSpinning ? "spin" : "")}>🔄</span>
-        {isSpinning ? "" : " Refrescar oficiales"}
+        🔄 Refrescar oficiales
       </button>
+
 
     {/* Lista de partidos con edición de resultados oficiales */}
     <PredictionsList
@@ -355,7 +338,7 @@ export default function App() {
           )}
 
           {activeTab === 'historico' && (
-            <HistoryAndStats historicalMatches={HISTORICAL_MATCHES} standings={dynamicStandings} />
+            <HistoryAndStats standings={dynamicStandings} />
           )}
 
           {activeTab === 'premios' && (
