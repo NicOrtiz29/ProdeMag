@@ -38,16 +38,16 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
       code: 'MAD',
       iso: 'ES-M',
       wikidata: 'Q2807',
-      // Repositioned circle to the bottom right (x=680, y=1400 with radius 40)
-      paths: ['M 680, 1360 A 40,40 0 1,1 680, 1440 A 40,40 0 1,1 680, 1360']
+      // Simplified geographic contour of Madrid Community centered around x=680, y=1400
+      paths: ['M 680,1370 L 695,1375 L 705,1380 L 710,1385 L 708,1395 L 715,1405 L 710,1415 L 700,1425 L 685,1445 L 680,1448 L 675,1445 L 665,1435 L 655,1425 L 645,1415 L 642,1405 L 650,1398 L 660,1390 L 670,1380 Z']
     };
     const venezuelaRegion: ProvincePath = {
       name: 'Venezuela',
       code: 'VEN',
       iso: 'VE',
       wikidata: 'Q717',
-      // Repositioned circle to the bottom right below Madrid (x=680, y=1540 with radius 40)
-      paths: ['M 680, 1500 A 40,40 0 1,1 680, 1580 A 40,40 0 1,1 680, 1500']
+      // Simplified geographic contour of Venezuela centered around x=680, y=1540
+      paths: ['M 635,1525 L 640,1535 L 648,1535 L 652,1525 L 665,1522 L 685,1520 L 705,1520 L 720,1522 L 725,1528 L 728,1535 L 720,1545 L 712,1555 L 705,1570 L 690,1585 L 680,1575 L 665,1565 L 655,1555 L 645,1545 L 635,1530 Z']
     };
     return [...ARGENTINA_PATHS, madridRegion, venezuelaRegion];
   }, []);
@@ -244,7 +244,7 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
                   {p.name === 'Madrid' && (
                     <text
                       x="680"
-                      y="1465"
+                      y="1475"
                       fill="#ffffff"
                       fontSize="24"
                       fontWeight="bold"
@@ -257,7 +257,7 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
                   {p.name === 'Venezuela' && (
                     <text
                       x="680"
-                      y="1605"
+                      y="1615"
                       fill="#ffffff"
                       fontSize="24"
                       fontWeight="bold"
