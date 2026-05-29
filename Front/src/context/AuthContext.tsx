@@ -143,10 +143,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const getRedirectUrl = () => {
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    return (isLocalhost ? window.location.origin : (import.meta.env.VITE_APP_URL || window.location.origin)).trim().replace(/\/$/, "");
+  };
+
   const recoverPassword = async (email: string) => {
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: import.meta.env.VITE_APP_URL || window.location.origin,
+        redirectTo: getRedirectUrl(),
       });
       if (error) return { success: false, message: error.message };
       return { success: true, message: 'Correo de recuperación enviado.' };
@@ -172,11 +177,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const loginWithGoogle = async () => {
     try {
-      const redirectUrl = (import.meta.env.VITE_APP_URL || window.location.origin).trim().replace(/\/$/, "");
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: redirectUrl
+          redirectTo: getRedirectUrl()
         }
       });
       if (error) return { success: false, message: error.message };
