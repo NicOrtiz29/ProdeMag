@@ -35,6 +35,7 @@ const PROVINCES_POOL = [
   'Santiago del Estero',
   'Tierra del Fuego',
   'Tucumán',
+  'Venezuela',
 ];
 
 import { StandingsEntry } from '../types';

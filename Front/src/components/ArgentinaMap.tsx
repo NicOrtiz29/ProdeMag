@@ -37,7 +37,7 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
     return 'Ciudad de Buenos Aires';
   };
 
-  // Define all regions shown on the map (Argentina provinces + Madrid expatriate circle)
+  // Define all regions shown on the map (Argentina provinces + Madrid + Venezuela)
   const allMapRegions = useMemo<ProvincePath[]>(() => {
     const madridRegion: ProvincePath = {
       name: 'Madrid',
@@ -47,7 +47,15 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
       // Beautiful circle at the top right (x=530, y=200 with radius 40)
       paths: ['M 530, 160 A 40,40 0 1,1 530, 240 A 40,40 0 1,1 530, 160']
     };
-    return [...ARGENTINA_PATHS, madridRegion];
+    const venezuelaRegion: ProvincePath = {
+      name: 'Venezuela',
+      code: 'VEN',
+      iso: 'VE',
+      wikidata: 'Q717',
+      // Beautiful circle below Madrid (x=530, y=330 with radius 40)
+      paths: ['M 530, 290 A 40,40 0 1,1 530, 370 A 40,40 0 1,1 530, 290']
+    };
+    return [...ARGENTINA_PATHS, madridRegion, venezuelaRegion];
   }, []);
 
   // Group standings by province
@@ -250,6 +258,19 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
                       className="pointer-events-none select-none opacity-85"
                     >
                       Madrid 🇪🇸
+                    </text>
+                  )}
+                  {p.name === 'Venezuela' && (
+                    <text
+                      x="530"
+                      y="395"
+                      fill="#ffffff"
+                      fontSize="24"
+                      fontWeight="bold"
+                      textAnchor="middle"
+                      className="pointer-events-none select-none opacity-85"
+                    >
+                      Venezuela 🇻🇪
                     </text>
                   )}
                 </g>
