@@ -184,7 +184,7 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
       
       {/* Map visualization area with SVG rendering */}
       <div 
-        className="flex-1 flex items-center justify-center relative bg-[#0c0c1d]/60 rounded-2xl border border-[#5B5FC7]/15 overflow-hidden p-4 min-h-[440px]"
+        className="flex-1 flex flex-col items-center relative bg-[#0c0c1d]/60 rounded-2xl border border-[#5B5FC7]/15 overflow-hidden p-4 min-h-[440px]"
         onMouseMove={handleMouseMove}
       >
         {/* Background Grid Accent */}
@@ -210,7 +210,7 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
         </div>
 
         {/* SVG Map of Argentina only */}
-        <div className="w-full max-w-[340px] h-[400px] relative flex items-center justify-center">
+        <div className="w-full max-w-[320px] flex-1 relative">
           <svg
             viewBox="185 0 480 1752"
             className="w-full h-full object-contain"
@@ -245,44 +245,13 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
             })}
           </svg>
 
-          {/* International Regions — completely separate from Argentina SVG */}
-          <div className="absolute bottom-2 left-0 right-0 flex gap-2 justify-center px-2">
-            {internationalRegions.map(regionName => {
-              const style = getProvinceColor(regionName);
-              const isHovered = hoveredProvince === regionName;
-              const regionStats = provinceStats[regionName];
-              const flag = regionName === 'Madrid' ? '🇪🇸' : '🇻🇪';
-              return (
-                <button
-                  key={regionName}
-                  onMouseEnter={() => setHoveredProvince(regionName)}
-                  onMouseLeave={() => setHoveredProvince(null)}
-                  className="flex-1 max-w-[130px] rounded-xl px-3 py-2 border text-left transition-all duration-300 cursor-pointer"
-                  style={{
-                    background: isHovered ? 'rgba(60, 219, 192, 0.18)' : style.fill,
-                    borderColor: isHovered ? '#3CDBC0' : style.stroke,
-                    boxShadow: isHovered ? '0 0 14px rgba(60,219,192,0.35)' : 'none'
-                  }}
-                >
-                  <div className="text-xs font-bold text-white flex items-center gap-1">
-                    <span>{flag}</span>
-                    <span>{regionName}</span>
-                  </div>
-                  <div className="text-[10px] text-slate-400 mt-0.5">
-                    {regionStats?.players.length ?? 0} jugador{(regionStats?.players.length ?? 0) !== 1 ? 'es' : ''}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Floating Tooltip inside SVG Area */}
+          {/* Floating Tooltip */}
           {hoveredProvince && hoveredStats && hoveredStats.players.length > 0 && (
             <div 
               className="absolute pointer-events-none bg-[#111124]/95 border border-[#3CDBC0]/40 rounded-xl p-3 shadow-2xl z-50 min-w-[180px] text-left transition-all duration-75"
               style={{
                 left: `${Math.min(tooltipPos.x, 150)}px`,
-                top: `${Math.min(tooltipPos.y, 380)}px`
+                top: `${Math.min(tooltipPos.y, 340)}px`
               }}
             >
               <h4 className="font-extrabold text-white text-xs border-b border-[#5B5FC7]/10 pb-1.5 mb-2 flex items-center gap-1.5">
@@ -306,6 +275,37 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
               </div>
             </div>
           )}
+        </div>
+
+        {/* International Regions — separate row BELOW the Argentina map */}
+        <div className="flex gap-3 justify-center pb-3 pt-1 w-full">
+          {internationalRegions.map(regionName => {
+            const style = getProvinceColor(regionName);
+            const isHovered = hoveredProvince === regionName;
+            const regionStats = provinceStats[regionName];
+            const flag = regionName === 'Madrid' ? '🇪🇸' : '🇻🇪';
+            return (
+              <button
+                key={regionName}
+                onMouseEnter={() => setHoveredProvince(regionName)}
+                onMouseLeave={() => setHoveredProvince(null)}
+                className="flex-1 max-w-[140px] rounded-xl px-3 py-2.5 border text-left transition-all duration-300 cursor-pointer"
+                style={{
+                  background: isHovered ? 'rgba(60, 219, 192, 0.18)' : 'rgba(30,30,50,0.5)',
+                  borderColor: isHovered ? '#3CDBC0' : 'rgba(91,95,199,0.25)',
+                  boxShadow: isHovered ? '0 0 14px rgba(60,219,192,0.35)' : 'none'
+                }}
+              >
+                <div className="text-xs font-bold text-white flex items-center gap-1.5">
+                  <span className="text-base">{flag}</span>
+                  <span>{regionName}</span>
+                </div>
+                <div className="text-[10px] text-slate-400 mt-0.5">
+                  {regionStats?.players.length ?? 0} jugador{(regionStats?.players.length ?? 0) !== 1 ? 'es' : ''}
+                </div>
+              </button>
+            );
+          })}
         </div>
       </div>
 
