@@ -37,7 +37,7 @@
 
 @layer utilities {
   .glass {
-    background: rgba(26, 26, 46, 0.35);
+    background: rgba(26, 26, 46, 0.25);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(91, 95, 199, 0.15);
