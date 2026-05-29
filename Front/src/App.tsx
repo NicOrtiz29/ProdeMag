@@ -71,7 +71,7 @@ export default function App() {
         setMatches(prev =>
           prev.map(m => {
             const p = userPreds.find(up => String(up.match_id) === m.id);
-            return p ? { ...m, prediction: p.prediction } : m;
+            return p ? { ...m, prediction: p.prediction, hasPrediction: true } : { ...m, hasPrediction: false };
           })
         );
       }
@@ -104,7 +104,7 @@ export default function App() {
     newPrediction[index] = value;
 
     // 1. Optimistic UI update
-    setMatches((prev) => prev.map(m => m.id === id ? { ...m, prediction: newPrediction } : m));
+    setMatches((prev) => prev.map(m => m.id === id ? { ...m, prediction: newPrediction, hasPrediction: true } : m));
 
     // 2. Call API
     const token = (await supabase.auth.getSession()).data.session?.access_token;

@@ -31,7 +31,7 @@ export default function DashboardView({ matches, standings, officialResults, onN
 
     matches.forEach(m => {
       const real = officialResults[m.id];
-      if (real) {
+      if (real && m.hasPrediction) {
         const pts = calculateMatchPoints(m.prediction, real);
         points += pts;
         if (pts > 0) {

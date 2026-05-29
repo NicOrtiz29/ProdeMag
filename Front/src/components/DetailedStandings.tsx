@@ -7,26 +7,11 @@ interface DetailedStandingsProps {
   standings: StandingsEntry[];
 }
 
-// Simulated players to fill the ranking when there are fewer than 8 real users
-const SIMULATED_PLAYERS: StandingsEntry[] = [
-  { id: 'sim-1', name: 'Lucas Martínez', points: 18, isBot: false, avatar: '🧑‍💻', role: 'Desarrollo', province: 'Buenos Aires' },
-  { id: 'sim-2', name: 'Valentina Ruiz', points: 15, isBot: false, avatar: '👩‍🎨', role: 'Diseño', province: 'Córdoba' },
-  { id: 'sim-3', name: 'Mateo García', points: 14, isBot: false, avatar: '🧔', role: 'Data', province: 'Mendoza' },
-  { id: 'sim-4', name: 'Camila López', points: 12, isBot: false, avatar: '👩‍💼', role: 'Marketing', province: 'Santa Fe' },
-  { id: 'sim-5', name: 'Tomás Fernández', points: 11, isBot: false, avatar: '🧑‍🔬', role: 'QA', province: 'Tucumán' },
-  { id: 'sim-6', name: 'Sofía Romero', points: 9, isBot: false, avatar: '👩‍🚀', role: 'Producto', province: 'Neuquén' },
-  { id: 'sim-7', name: 'Joaquín Díaz', points: 7, isBot: false, avatar: '🧑‍🏫', role: 'Soporte', province: 'Salta' },
-  { id: 'sim-8', name: 'Martina Gómez', points: 5, isBot: false, avatar: '👩‍⚕️', role: 'RRHH', province: 'Entre Ríos' },
-];
-
 export default function DetailedStandings({ standings }: DetailedStandingsProps) {
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Merge real standings with simulated ones (avoid duplicates by id)
-  const realIds = new Set(standings.map(s => s.id));
-  const simulatedToAdd = SIMULATED_PLAYERS.filter(s => !realIds.has(s.id));
-  const mergedStandings = [...standings, ...simulatedToAdd];
+  const mergedStandings = standings;
 
   const filteredStandings = mergedStandings.filter((entry) => {
     const matchesSearch = entry.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

@@ -35,6 +35,7 @@ export interface Match {
   fecha: number; // 1, 2, 3
   hora: string; // e.g., "18:30"
   lugar: string; // stadium name
+  hasPrediction?: boolean;
 }
 
 export interface StandingsEntry {
