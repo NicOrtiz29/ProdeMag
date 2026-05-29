@@ -19,12 +19,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  console.log("[AuthContext DEBUG] AuthProvider loaded:", {
-    VITE_APP_URL: import.meta.env.VITE_APP_URL,
-    MODE: import.meta.env.MODE,
-    window_location_origin: window.location.origin,
-  });
-
   const fetchProfile = async (userId: string) => {
     if (import.meta.env.DEV) console.log("[AuthContext] fetchProfile started for user", userId);
     try {
@@ -178,30 +172,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const loginWithGoogle = async () => {
     try {
-      const envUrl = import.meta.env.VITE_APP_URL;
-      const originUrl = window.location.origin;
-      const mode = import.meta.env.MODE;
-      const redirectUrl = (envUrl || originUrl).trim().replace(/\/$/, "");
-      
-      console.log("[AuthContext DEBUG] loginWithGoogle invoked");
-      console.log("[AuthContext DEBUG] import.meta.env.MODE:", mode);
-      console.log("[AuthContext DEBUG] import.meta.env.VITE_APP_URL:", envUrl);
-      console.log("[AuthContext DEBUG] window.location.origin:", originUrl);
-      console.log("[AuthContext DEBUG] Calculated redirectUrl:", redirectUrl);
-      
+      const redirectUrl = (import.meta.env.VITE_APP_URL || window.location.origin).trim().replace(/\/$/, "");
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: redirectUrl
         }
       });
-      if (error) {
-        console.error("[AuthContext DEBUG] signInWithOAuth error:", error);
-        return { success: false, message: error.message };
-      }
+      if (error) return { success: false, message: error.message };
       return { success: true, message: 'Redirigiendo a Google...' };
     } catch (e: any) {
-      console.error("[AuthContext DEBUG] Exception in loginWithGoogle:", e);
       return { success: false, message: e.message || 'Error en la conexión.' };
     }
   };
