@@ -1,9 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/country-flag-emoji-polyfill@0.1.4/dist/TwemojiCountryFlags.css');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Outfit", sans-serif;
+  --font-sans: "Outfit", "Twemoji Country Flags", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", "Twemoji Country Flags", sans-serif;
   
   /* Magnético brand colors */
   --color-mag-indigo: #5B5FC7;
