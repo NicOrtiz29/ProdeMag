@@ -150,6 +150,19 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
     return <span className={`${size} flex items-center justify-center select-none shrink-0`}>{avatar || '⚽'}</span>;
   };
 
+  // Get active provinces sorted by number of players
+  const activeProvinces = useMemo(() => {
+    return Object.keys(provinceStats)
+      .map(name => ({
+        name,
+        players: provinceStats[name].players,
+        count: provinceStats[name].players.length,
+        maxScore: provinceStats[name].maxScore
+      }))
+      .filter(p => p.count > 0)
+      .sort((a, b) => b.count - a.count || b.maxScore - a.maxScore);
+  }, [provinceStats]);
+
   const hoveredStats = hoveredProvince ? provinceStats[hoveredProvince] : null;
 
   return (
@@ -298,11 +311,52 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
               )}
             </div>
           ) : (
-            <div className="text-center py-8 text-xs text-slate-400 space-y-3 flex-1 flex flex-col justify-center items-center">
-              <span className="text-3xl animate-bounce">🗺️</span>
-              <p className="max-w-[200px] leading-relaxed">
-                Desplazá el mouse sobre las provincias en el mapa para ver los detalles locales de los competidores.
-              </p>
+            <div className="space-y-3 h-full flex flex-col justify-between">
+              <div className="border-b border-[#5B5FC7]/10 pb-2">
+                <span className="text-[10px] uppercase font-bold text-[#3CDBC0] tracking-wider block">Distribución General</span>
+                <h4 className="font-extrabold text-white text-sm">
+                  Jugadores por Provincia
+                </h4>
+              </div>
+              
+              {activeProvinces.length > 0 ? (
+                <div className="space-y-2.5 overflow-y-auto max-h-[220px] flex-1 pr-1 mt-2 scrollbar-none">
+                  {activeProvinces.map((ap) => {
+                    const maxPlayersCount = Math.max(...activeProvinces.map(p => p.count), 1);
+                    const barWidth = `${(ap.count / maxPlayersCount) * 100}%`;
+                    const leader = ap.players[0];
+                    
+                    return (
+                      <div key={ap.name} className="space-y-1 bg-[#0f0f23]/40 rounded-xl p-2.5 border border-[#5B5FC7]/5">
+                        <div className="flex justify-between items-center text-xs font-bold text-slate-200">
+                          <span className="truncate max-w-[120px]">{ap.name}</span>
+                          <span className="text-[#3CDBC0] text-[9px] font-mono bg-[#3CDBC0]/10 px-2 py-0.5 rounded flex items-center gap-1 border border-[#3CDBC0]/20">
+                            👥 {ap.count} {ap.count === 1 ? 'jugador' : 'jugadores'}
+                          </span>
+                        </div>
+                        {/* Custom bar chart representation */}
+                        <div className="w-full bg-slate-800/50 h-1.5 rounded-full overflow-hidden">
+                          <div className="bg-gradient-to-r from-[#5B5FC7] to-[#3CDBC0] h-full rounded-full" style={{ width: barWidth }} />
+                        </div>
+                        {leader && (
+                          <div className="flex justify-between items-center text-[10px] text-slate-400">
+                            <span className="truncate max-w-[130px]">👑 {leader.name}</span>
+                            <span className="font-bold text-white font-mono">{leader.points} pts</span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-xs text-slate-500 italic flex-1 flex flex-col justify-center">
+                  No hay jugadores asignados a provincias todavía.
+                </div>
+              )}
+              
+              <div className="text-[9px] text-slate-500 text-center leading-tight mt-1 border-t border-[#5B5FC7]/5 pt-2">
+                Desplazá el mouse sobre el mapa para ver los detalles locales.
+              </div>
             </div>
           )}
         </div>
