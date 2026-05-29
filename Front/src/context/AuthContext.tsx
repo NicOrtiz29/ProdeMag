@@ -146,7 +146,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const recoverPassword = async (email: string) => {
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: window.location.origin,
+        redirectTo: import.meta.env.VITE_APP_URL || window.location.origin,
       });
       if (error) return { success: false, message: error.message };
       return { success: true, message: 'Correo de recuperación enviado.' };
@@ -172,10 +172,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const loginWithGoogle = async () => {
     try {
+      const redirectUrl = (import.meta.env.VITE_APP_URL || window.location.origin).trim().replace(/\/$/, "");
+      if (import.meta.env.DEV) {
+        console.log("[AuthContext] Redirecting to Google with URL:", redirectUrl);
+      }
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: window.location.origin
+          redirectTo: redirectUrl
         }
       });
       if (error) return { success: false, message: error.message };
