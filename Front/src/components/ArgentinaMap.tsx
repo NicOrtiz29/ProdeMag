@@ -37,32 +37,25 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
     return 'Ciudad de Buenos Aires';
   };
 
-  // Define all regions shown on the map (Argentina provinces + Madrid + Venezuela)
+  // International regions (separate from Argentina paths)
+  const internationalRegions = ['Madrid', 'Venezuela'];
+
+  // Define all regions shown on the map (Argentina provinces only for the SVG)
   const allMapRegions = useMemo<ProvincePath[]>(() => {
-    const madridRegion: ProvincePath = {
-      name: 'Madrid',
-      code: 'MAD',
-      iso: 'ES-M',
-      wikidata: 'Q2807',
-      // Beautiful circle far to the right (x=700, y=250 with radius 40) to prevent overlapping Misiones/Corrientes
-      paths: ['M 700, 210 A 40,40 0 1,1 700, 290 A 40,40 0 1,1 700, 210']
-    };
-    const venezuelaRegion: ProvincePath = {
-      name: 'Venezuela',
-      code: 'VEN',
-      iso: 'VE',
-      wikidata: 'Q717',
-      // Beautiful circle below Madrid on the far right (x=700, y=390 with radius 40)
-      paths: ['M 700, 350 A 40,40 0 1,1 700, 430 A 40,40 0 1,1 700, 350']
-    };
-    return [...ARGENTINA_PATHS, madridRegion, venezuelaRegion];
+    return ARGENTINA_PATHS;
+  }, []);
+
+  // All named regions (Argentina + international) for stats grouping
+  const allRegions = useMemo(() => {
+    const intl = internationalRegions.map(name => ({ name }));
+    return [...ARGENTINA_PATHS, ...intl];
   }, []);
 
   // Group standings by province
   const provinceStats = useMemo(() => {
     const stats: Record<string, { players: StandingsEntry[]; maxScore: number }> = {};
 
-    allMapRegions.forEach(p => {
+    allRegions.forEach(p => {
       stats[p.name] = { players: [], maxScore: 0 };
     });
 
@@ -70,8 +63,8 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
       const dbProvince = getAssignedProvince(p);
       const dbProvinceNorm = normalize(dbProvince);
 
-      // Find matched province path
-      const matched = allMapRegions.find(path => {
+      // Find matched province/region
+      const matched = allRegions.find(path => {
         const svgNorm = normalize(path.name);
         if (svgNorm === dbProvinceNorm) return true;
         if (svgNorm === 'ciudad de buenos aires' && (dbProvinceNorm === 'caba' || dbProvinceNorm === 'ciudad autonoma de buenos aires')) return true;
@@ -92,7 +85,7 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
     });
 
     return stats;
-  }, [standings, allMapRegions]);
+  }, [standings, allRegions]);
 
   // Determine tiers dynamically based on actual province max scores
   const scoreTiers = useMemo(() => {
@@ -216,10 +209,10 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
           </div>
         </div>
 
-        {/* SVG Map of Argentina - Zoomed Viewbox for better mouse hover precision */}
-        <div className="w-full max-w-[340px] h-[480px] relative flex items-center justify-center">
+        {/* SVG Map of Argentina only */}
+        <div className="w-full max-w-[340px] h-[400px] relative flex items-center justify-center">
           <svg
-            viewBox="185 0 620 1752"
+            viewBox="185 0 480 1752"
             className="w-full h-full object-contain"
             xmlns="http://www.w3.org/2000/svg"
           >
@@ -247,36 +240,41 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
                       }}
                     />
                   ))}
-                  {p.name === 'Madrid' && (
-                    <text
-                      x="700"
-                      y="315"
-                      fill="#ffffff"
-                      fontSize="24"
-                      fontWeight="bold"
-                      textAnchor="middle"
-                      className="pointer-events-none select-none opacity-85"
-                    >
-                      Madrid 🇪🇸
-                    </text>
-                  )}
-                  {p.name === 'Venezuela' && (
-                    <text
-                      x="700"
-                      y="455"
-                      fill="#ffffff"
-                      fontSize="24"
-                      fontWeight="bold"
-                      textAnchor="middle"
-                      className="pointer-events-none select-none opacity-85"
-                    >
-                      Venezuela 🇻🇪
-                    </text>
-                  )}
                 </g>
               );
             })}
           </svg>
+
+          {/* International Regions — completely separate from Argentina SVG */}
+          <div className="absolute bottom-2 left-0 right-0 flex gap-2 justify-center px-2">
+            {internationalRegions.map(regionName => {
+              const style = getProvinceColor(regionName);
+              const isHovered = hoveredProvince === regionName;
+              const regionStats = provinceStats[regionName];
+              const flag = regionName === 'Madrid' ? '🇪🇸' : '🇻🇪';
+              return (
+                <button
+                  key={regionName}
+                  onMouseEnter={() => setHoveredProvince(regionName)}
+                  onMouseLeave={() => setHoveredProvince(null)}
+                  className="flex-1 max-w-[130px] rounded-xl px-3 py-2 border text-left transition-all duration-300 cursor-pointer"
+                  style={{
+                    background: isHovered ? 'rgba(60, 219, 192, 0.18)' : style.fill,
+                    borderColor: isHovered ? '#3CDBC0' : style.stroke,
+                    boxShadow: isHovered ? '0 0 14px rgba(60,219,192,0.35)' : 'none'
+                  }}
+                >
+                  <div className="text-xs font-bold text-white flex items-center gap-1">
+                    <span>{flag}</span>
+                    <span>{regionName}</span>
+                  </div>
+                  <div className="text-[10px] text-slate-400 mt-0.5">
+                    {regionStats?.players.length ?? 0} jugador{(regionStats?.players.length ?? 0) !== 1 ? 'es' : ''}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
 
           {/* Floating Tooltip inside SVG Area */}
           {hoveredProvince && hoveredStats && hoveredStats.players.length > 0 && (
