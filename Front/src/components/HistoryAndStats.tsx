@@ -701,28 +701,36 @@ export default function HistoryAndStats({
             {/* Prediction Bias distribution bars */}
             <div className="space-y-2.5 pt-2">
               <h4 className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Sesgo de Apuestas</h4>
-              <div className="h-3 rounded-full overflow-hidden flex bg-slate-800 text-[8px] font-black text-white">
-                {predictionBias.locals > 0 && (
-                  <div style={{ width: `${predictionBias.locals}%` }} className="bg-[#75AADB] h-full flex items-center justify-center" title="Local">
-                    L
+              {predictionBias.total === 0 ? (
+                <div className="text-[11px] text-slate-500 italic bg-slate-900/40 p-3 rounded-xl border border-white/5 text-center">
+                  Sin apuestas registradas aún. Completá tus pronósticos para ver tus tendencias.
+                </div>
+              ) : (
+                <>
+                  <div className="h-3 rounded-full overflow-hidden flex bg-slate-800 text-[8px] font-black text-white">
+                    {predictionBias.locals > 0 && (
+                      <div style={{ width: `${predictionBias.locals}%` }} className="bg-[#75AADB] h-full flex items-center justify-center" title="Local">
+                        L
+                      </div>
+                    )}
+                    {predictionBias.draws > 0 && (
+                      <div style={{ width: `${predictionBias.draws}%` }} className="bg-[#3CDBC0] h-full flex items-center justify-center" title="Empate">
+                        E
+                      </div>
+                    )}
+                    {predictionBias.visitors > 0 && (
+                      <div style={{ width: `${predictionBias.visitors}%` }} className="bg-rose-500 h-full flex items-center justify-center" title="Visitante">
+                        V
+                      </div>
+                    )}
                   </div>
-                )}
-                {predictionBias.draws > 0 && (
-                  <div style={{ width: `${predictionBias.draws}%` }} className="bg-[#3CDBC0] h-full flex items-center justify-center" title="Empate">
-                    E
+                  <div className="flex justify-between text-[9px] text-slate-400 font-medium px-0.5">
+                    <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-[#75AADB]" /> Local ({predictionBias.locals}%)</span>
+                    <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-[#3CDBC0]" /> Empate ({predictionBias.draws}%)</span>
+                    <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-rose-500" /> Vis. ({predictionBias.visitors}%)</span>
                   </div>
-                )}
-                {predictionBias.visitors > 0 && (
-                  <div style={{ width: `${predictionBias.visitors}%` }} className="bg-rose-500 h-full flex items-center justify-center" title="Visitante">
-                    V
-                  </div>
-                )}
-              </div>
-              <div className="flex justify-between text-[9px] text-slate-400 font-medium px-0.5">
-                <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-[#75AADB]" /> Local ({predictionBias.locals}%)</span>
-                <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-[#3CDBC0]" /> Empate ({predictionBias.draws}%)</span>
-                <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-rose-500" /> Vis. ({predictionBias.visitors}%)</span>
-              </div>
+                </>
+              )}
             </div>
           </div>
 
@@ -747,48 +755,11 @@ export default function HistoryAndStats({
                     className={`rounded-lg p-1.5 border text-center ${getHeatBg(gp.accuracy)}`}
                     title={`Acierto: ${gp.accuracy}% (${gp.points} pts en ${gp.total} partidos)`}
                   >
-                    <span className="block text-[10px] font-black">Gp {gp.group}</span>
+                    <span className="block text-[10px] font-black font-mono">Grupo {gp.group}</span>
                     <span className="text-[9px] font-medium block mt-0.5">{gp.accuracy}%</span>
                   </div>
                 );
               })}
-            </div>
-          </div>
-
-          {/* AI ORACLE BATTLE CARD */}
-          <div className="rounded-2xl border border-[#3CDBC0]/30 bg-gradient-to-br from-[#3CDBC0]/15 to-[#5B5FC7]/10 p-4 space-y-3 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-[#3CDBC0]/5 rounded-full filter blur-xl pointer-events-none" />
-            
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-black text-[#3CDBC0] uppercase tracking-wider flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 animate-pulse" /> Batalla de Cerebros
-              </span>
-              <span className="text-[9px] bg-slate-900/50 text-slate-300 px-2 py-0.5 rounded-full font-bold">
-                VS ORÁCULO IA
-              </span>
-            </div>
-
-            <div className="flex items-center justify-between pt-1">
-              <div className="text-left">
-                <p className="text-[10px] text-slate-400">Tus Puntos</p>
-                <p className="text-xl font-black text-white">{selectedUser?.points || 0}</p>
-              </div>
-              <div className="text-center font-bold text-slate-500 text-xs">vs</div>
-              <div className="text-right">
-                <p className="text-[10px] text-slate-400">Oráculo IA</p>
-                {/* IA Bot usually ranks high, let's look for bot named oracle or default to leader's or simulated 32 pts */}
-                <p className="text-xl font-black text-[#3CDBC0]">
-                  {standings.find(s => s.isBot)?.points || Math.max((standings[0]?.points || 20) - 2, 12)}
-                </p>
-              </div>
-            </div>
-
-            <div className="text-[10px] text-slate-300 bg-slate-900/40 p-2 rounded-lg leading-relaxed">
-              { (selectedUser?.points || 0) >= (standings.find(s => s.isBot)?.points || 20) ? (
-                <span>🎉 ¡Felicitaciones! Estás superando las predicciones de nuestra Inteligencia Artificial.</span>
-              ) : (
-                <span>🤖 El Oráculo IA lleva la delantera. ¡Ajustá tus pronósticos en la próxima ronda para ganarle!</span>
-              )}
             </div>
           </div>
 
@@ -805,16 +776,20 @@ export default function HistoryAndStats({
                   className={`flex items-center gap-3 p-2.5 rounded-xl border transition-all duration-300 ${
                     ach.active
                       ? `bg-gradient-to-r ${ach.color}`
-                      : 'bg-[#1a1a2e]/25 border-dashed border-slate-800 opacity-40 grayscale'
+                      : 'bg-[#1a1a2e]/25 border-dashed border-slate-800 opacity-45 grayscale'
                   }`}
                 >
                   <span className="text-2xl">{ach.icon}</span>
-                  <div>
-                    <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
-                      {ach.title}
-                      {ach.active && <span className="text-[8px] bg-white/20 px-1 py-0.5 rounded font-black text-white">LOCKED</span>}
-                    </h4>
-                    <p className="text-[10px] text-slate-400 mt-0.5">{ach.desc}</p>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2">
+                      <h4 className="text-xs font-bold text-white truncate">{ach.title}</h4>
+                      <span className={`text-[8px] px-1.5 py-0.5 rounded font-bold shrink-0 ${
+                        ach.active ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-slate-800 text-slate-500'
+                      }`}>
+                        {ach.active ? 'DESBLOQUEADO' : 'BLOQUEADO'}
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-slate-400 mt-0.5 leading-relaxed">{ach.desc}</p>
                   </div>
                 </div>
               ))}
