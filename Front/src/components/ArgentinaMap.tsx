@@ -44,16 +44,16 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
       code: 'MAD',
       iso: 'ES-M',
       wikidata: 'Q2807',
-      // Beautiful circle at the top right (x=530, y=200 with radius 40)
-      paths: ['M 530, 160 A 40,40 0 1,1 530, 240 A 40,40 0 1,1 530, 160']
+      // Beautiful circle far to the right (x=700, y=250 with radius 40) to prevent overlapping Misiones/Corrientes
+      paths: ['M 700, 210 A 40,40 0 1,1 700, 290 A 40,40 0 1,1 700, 210']
     };
     const venezuelaRegion: ProvincePath = {
       name: 'Venezuela',
       code: 'VEN',
       iso: 'VE',
       wikidata: 'Q717',
-      // Beautiful circle below Madrid (x=530, y=330 with radius 40)
-      paths: ['M 530, 290 A 40,40 0 1,1 530, 370 A 40,40 0 1,1 530, 290']
+      // Beautiful circle below Madrid on the far right (x=700, y=390 with radius 40)
+      paths: ['M 700, 350 A 40,40 0 1,1 700, 430 A 40,40 0 1,1 700, 350']
     };
     return [...ARGENTINA_PATHS, madridRegion, venezuelaRegion];
   }, []);
@@ -219,7 +219,7 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
         {/* SVG Map of Argentina - Zoomed Viewbox for better mouse hover precision */}
         <div className="w-full max-w-[340px] h-[480px] relative flex items-center justify-center">
           <svg
-            viewBox="185 0 460 1752"
+            viewBox="185 0 620 1752"
             className="w-full h-full object-contain"
             xmlns="http://www.w3.org/2000/svg"
           >
@@ -249,8 +249,8 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
                   ))}
                   {p.name === 'Madrid' && (
                     <text
-                      x="530"
-                      y="265"
+                      x="700"
+                      y="315"
                       fill="#ffffff"
                       fontSize="24"
                       fontWeight="bold"
@@ -262,8 +262,8 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
                   )}
                   {p.name === 'Venezuela' && (
                     <text
-                      x="530"
-                      y="395"
+                      x="700"
+                      y="455"
                       fill="#ffffff"
                       fontSize="24"
                       fontWeight="bold"
