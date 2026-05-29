@@ -43,6 +43,7 @@ import { StandingsEntry } from '../types';
 interface UserProfilePanelProps {
   matches: Match[];
   standings?: StandingsEntry[];
+  officialResults?: Record<string, [number, number]>;
 }
 
 const AVATARS_POOL = ['🚀', '⚽', '🎨', '💻', '🧠', '👑', '📈', '🧤', '🔥', '🏆', '🧙‍♂️', '⚡'];
@@ -58,7 +59,7 @@ const ROLES_POOL = [
   'Recursos Humanos'
 ];
 
-export default function UserProfilePanel({ matches, standings = [] }: UserProfilePanelProps) {
+export default function UserProfilePanel({ matches, standings = [], officialResults = {} }: UserProfilePanelProps) {
   const { user, updateUser } = useAuth();
 
   // Merge real standings with simulated ones to match what is displayed in DetailedStandings!
@@ -132,9 +133,10 @@ export default function UserProfilePanel({ matches, standings = [] }: UserProfil
     });
 
     sortedMatches.forEach(m => {
-      if (m.fecha < 73 && m.realResult) {
+      const real = officialResults[m.id];
+      if (real && m.hasPrediction) {
         resolvedMatches += 1;
-        const pts = calculateMatchPoints(m.prediction, m.realResult);
+        const pts = calculateMatchPoints(m.prediction, real);
         points += pts;
         if (pts > 0) {
           acertados += 1;
@@ -156,7 +158,7 @@ export default function UserProfilePanel({ matches, standings = [] }: UserProfil
       streak: maxStreak,
       resolvedMatches
     };
-  }, [matches]);
+  }, [matches, officialResults]);
 
   if (!user) {
     return (
@@ -257,7 +259,7 @@ export default function UserProfilePanel({ matches, standings = [] }: UserProfil
 
             <div className="space-y-1.5">
               <label className="text-[10px] uppercase font-mono tracking-wider text-slate-400 font-bold block h-8">
-                Provincia
+                desde donde estas jugando?
               </label>
               <select
                 value={editProvince || ''}
@@ -427,34 +429,6 @@ export default function UserProfilePanel({ matches, standings = [] }: UserProfil
             "{editBio || 'Sin estado folclórico definido. ¡Agrégale un toque gracioso en el formulario!'}"
           </div>
 
-        </div>
-
-        {/* Dynamic game counts info card */}
-        <div className="bg-slate-900/30 border border-slate-800 rounded-2xl p-5 space-y-3.5">
-          <h4 className="font-display font-medium text-xs text-white flex items-center gap-1.5 uppercase tracking-wide">
-            <Target className="w-4 h-4 text-cyan-400" /> Rendimiento de tu Prode
-          </h4>
-
-          <div className="space-y-2 font-mono text-[10px] leading-relaxed text-slate-350">
-            <div className="flex justify-between border-b border-slate-850 pb-1.5">
-              <span className="text-slate-450">Partidos con Goles editados:</span>
-              <strong className="text-white">{nonZeroPredictions} / {totalMatchesCount}</strong>
-            </div>
-
-            <div className="flex justify-between border-b border-slate-850 pb-1.5">
-              <span className="text-slate-450">Rival competitivo directo:</span>
-              <strong className="text-amber-500">{rankingInfo.rivalName}{rankingInfo.rivalRole}</strong>
-            </div>
-
-            <div className="flex justify-between pb-1">
-              <span className="text-slate-450">Posición estimada:</span>
-              <strong className="text-cyan-400">{rankingInfo.positionText}</strong>
-            </div>
-          </div>
-
-          <div className="border-t border-slate-850 pt-3 text-3xs text-slate-500 leading-relaxed text-center font-sans">
-            A medida que realizas cambios en el Tab de <strong className="text-slate-400 font-medium">"Pronósticos"</strong> el simulador acumula dinámicamente tu asertividad.
-          </div>
         </div>
 
       </div>

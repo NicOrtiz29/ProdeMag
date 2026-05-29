@@ -38,16 +38,16 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
       code: 'MAD',
       iso: 'ES-M',
       wikidata: 'Q2807',
-      // Beautiful circle far to the right (x=700, y=250 with radius 40) to prevent overlapping Misiones/Corrientes
-      paths: ['M 700, 210 A 40,40 0 1,1 700, 290 A 40,40 0 1,1 700, 210']
+      // Repositioned circle to the bottom right (x=680, y=1400 with radius 40)
+      paths: ['M 680, 1360 A 40,40 0 1,1 680, 1440 A 40,40 0 1,1 680, 1360']
     };
     const venezuelaRegion: ProvincePath = {
       name: 'Venezuela',
       code: 'VEN',
       iso: 'VE',
       wikidata: 'Q717',
-      // Beautiful circle below Madrid on the far right (x=700, y=390 with radius 40)
-      paths: ['M 700, 350 A 40,40 0 1,1 700, 430 A 40,40 0 1,1 700, 350']
+      // Repositioned circle to the bottom right below Madrid (x=680, y=1540 with radius 40)
+      paths: ['M 680, 1500 A 40,40 0 1,1 680, 1580 A 40,40 0 1,1 680, 1500']
     };
     return [...ARGENTINA_PATHS, madridRegion, venezuelaRegion];
   }, []);
@@ -243,8 +243,8 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
                   ))}
                   {p.name === 'Madrid' && (
                     <text
-                      x="700"
-                      y="315"
+                      x="680"
+                      y="1465"
                       fill="#ffffff"
                       fontSize="24"
                       fontWeight="bold"
@@ -256,8 +256,8 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
                   )}
                   {p.name === 'Venezuela' && (
                     <text
-                      x="700"
-                      y="455"
+                      x="680"
+                      y="1605"
                       fill="#ffffff"
                       fontSize="24"
                       fontWeight="bold"

@@ -351,7 +351,11 @@ export default function App() {
           )}
 
           {activeTab === 'perfil' && (
-            <UserProfilePanel matches={matches} standings={dynamicStandings} />
+            <UserProfilePanel 
+              matches={matches} 
+              standings={dynamicStandings} 
+              officialResults={officialResults}
+            />
           )}
         </div>
 
