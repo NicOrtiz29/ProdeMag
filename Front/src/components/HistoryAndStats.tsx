@@ -10,7 +10,7 @@ import { calculateMatchPoints } from '../utils/points';
 import {
   Calendar, Trophy, Star, Globe, Award, TrendingUp,
   Target, CheckCircle, ChevronRight, BarChart2, Filter, User,
-  Zap, Flame, PieChart, ShieldAlert, Sparkles, Smile
+  Zap, Flame, PieChart, Sparkles, Play, Pause, RotateCcw, ChevronLeft
 } from 'lucide-react';
 
 interface HistoryAndStatsProps {
@@ -61,6 +61,27 @@ export default function HistoryAndStats({
   allUsersData = { users: [], preds: [] }
 }: HistoryAndStatsProps) {
   const { user } = useAuth();
+
+  const renderAvatar = (avatar: string | undefined, size: string = 'w-8 h-8 text-lg') => {
+    if (avatar && (avatar.startsWith('data:image/') || avatar.startsWith('http') || avatar.length > 8)) {
+      return <img src={avatar} className={`${size} rounded-full object-cover select-none shrink-0`} alt="Avatar" />;
+    }
+    return <span className={`${size} flex items-center justify-center select-none shrink-0`}>{avatar || '⚽'}</span>;
+  };
+
+  const podiumColors = [
+    { ring: 'ring-[#F4C430] shadow-[0_0_15px_rgba(244,196,48,0.25)]', text: 'text-[#F4C430]', bg: 'bg-[#F4C430]/10', label: '🥇' },
+    { ring: 'ring-slate-400 shadow-[0_0_10px_rgba(148,163,184,0.15)]', text: 'text-slate-300', bg: 'bg-slate-700/20', label: '🥈' },
+    { ring: 'ring-amber-700 shadow-[0_0_10px_rgba(180,83,9,0.15)]', text: 'text-amber-700', bg: 'bg-amber-900/10', label: '🥉' },
+  ];
+
+  const getPointsBadgeColor = (pts: number | null) => {
+    if (pts === null) return 'bg-slate-800 text-slate-400 border-slate-700';
+    if (pts === 5) return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
+    if (pts === 3) return 'bg-amber-500/10 text-amber-400 border-amber-500/30';
+    if (pts > 0) return 'bg-[#75AADB]/10 text-[#75AADB] border-[#75AADB]/30';
+    return 'bg-red-500/10 text-red-400 border-red-500/20';
+  };
   
   // State for chart filters
   const [selectedUserId, setSelectedUserId] = useState<string>('');
@@ -158,7 +179,7 @@ export default function HistoryAndStats({
     });
   }, [selectedUserId, selectedMetric, matches, officialResults, allUsersData, standings]);
 
-  // Max value for bar scale
+  // Max value for Y scale
   const maxBarValue = useMemo(() => {
     const vals = stageData.flatMap(s => [s.value, s.leaderValue || 0]);
     const max = Math.max(...vals);
@@ -210,7 +231,7 @@ export default function HistoryAndStats({
     };
   }, [selectedUserId, allUsersData]);
 
-  // Advanced Stats - Streaks (Current and Max Streak)
+  // Advanced Stats - Streaks
   const streakStats = useMemo(() => {
     const userPreds = (allUsersData?.preds || []).filter(p => p.user_id === selectedUserId);
     const playedMatches = matches
@@ -274,7 +295,7 @@ export default function HistoryAndStats({
     });
   }, [selectedUserId, matches, officialResults, allUsersData]);
 
-  // Achievements calculation
+  // Achievements
   const achievements = useMemo(() => {
     const userPreds = (allUsersData?.preds || []).filter(p => p.user_id === selectedUserId);
     
@@ -342,26 +363,109 @@ export default function HistoryAndStats({
     ];
   }, [selectedUserId, matches, officialResults, allUsersData, streakStats]);
 
-  const renderAvatar = (avatar: string | undefined, size: string = 'w-8 h-8 text-lg') => {
-    if (avatar && (avatar.startsWith('data:image/') || avatar.startsWith('http') || avatar.length > 8)) {
-      return <img src={avatar} className={`${size} rounded-full object-cover select-none shrink-0`} alt="Avatar" />;
+  // 🏁 RACE TIMELINE LOGIC
+  const playedMatches = useMemo(() => {
+    return matches
+      .filter(m => officialResults[m.id] !== undefined)
+      .sort((a, b) => a.fecha - b.fecha);
+  }, [matches, officialResults]);
+
+  const [cutoffIndex, setCutoffIndex] = useState<number>(0);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+
+  // Set initial cutoff to last played match
+  useEffect(() => {
+    if (playedMatches.length > 0 && cutoffIndex === 0) {
+      setCutoffIndex(playedMatches.length);
     }
-    return <span className={`${size} flex items-center justify-center select-none shrink-0`}>{avatar || '⚽'}</span>;
+  }, [playedMatches, cutoffIndex]);
+
+  // Autoplay ticker
+  useEffect(() => {
+    let timer: any;
+    if (isPlaying) {
+      timer = setInterval(() => {
+        setCutoffIndex(prev => {
+          if (prev >= playedMatches.length) {
+            setIsPlaying(false);
+            return prev;
+          }
+          return prev + 1;
+        });
+      }, 950);
+    }
+    return () => clearInterval(timer);
+  }, [isPlaying, playedMatches]);
+
+  // Calculate cumulative scores of the Top 3 players up to cutoffIndex
+  const top3PointsHistory = useMemo(() => {
+    const top3 = standings.slice(0, 3);
+    const subset = playedMatches.slice(0, cutoffIndex);
+    
+    return top3.map(player => {
+      const userPreds = (allUsersData?.preds || []).filter(p => p.user_id === player.id);
+      let cumulativePoints = 0;
+      
+      subset.forEach(m => {
+        const real = officialResults[m.id];
+        const p = userPreds.find(up => String(up.match_id) === m.id);
+        if (real && p) {
+          cumulativePoints += calculateMatchPoints(p.prediction, real);
+        }
+      });
+      
+      return {
+        ...player,
+        cumulativePoints
+      };
+    });
+  }, [standings, playedMatches, cutoffIndex, officialResults, allUsersData]);
+
+  // Max score within history to scale race bars
+  const maxRacePoints = useMemo(() => {
+    const pts = top3PointsHistory.map(p => p.cumulativePoints);
+    const max = Math.max(...pts);
+    return max === 0 ? 10 : max;
+  }, [top3PointsHistory]);
+
+  // Cutoff match details
+  const currentCutoffMatch = useMemo(() => {
+    if (cutoffIndex === 0 || playedMatches.length === 0) return null;
+    const match = playedMatches[cutoffIndex - 1];
+    
+    const top3 = standings.slice(0, 3);
+    const playerScores = top3.map(player => {
+      const userPreds = (allUsersData?.preds || []).filter(p => p.user_id === player.id);
+      const p = userPreds.find(up => String(up.match_id) === match.id);
+      const real = officialResults[match.id];
+      const pts = (p && real) ? calculateMatchPoints(p.prediction, real) : 0;
+      return {
+        id: player.id,
+        name: player.name,
+        avatar: player.avatar,
+        prediction: p ? p.prediction : null,
+        pts
+      };
+    });
+
+    return {
+      match,
+      playerScores
+    };
+  }, [cutoffIndex, playedMatches, standings, allUsersData, officialResults]);
+
+  const renderPointsBadge = (pts: number) => {
+    if (pts === 5) return 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40 text-[9px] px-1.5 py-0.5 rounded font-black';
+    if (pts === 3) return 'bg-amber-500/20 text-amber-400 border-amber-500/40 text-[9px] px-1.5 py-0.5 rounded font-black';
+    if (pts > 0) return 'bg-[#75AADB]/20 text-[#75AADB] border-[#75AADB]/40 text-[9px] px-1.5 py-0.5 rounded font-black';
+    return 'bg-red-500/15 text-red-400 text-[9px] px-1.5 py-0.5 rounded font-bold';
   };
 
-  const getPointsBadgeColor = (pts: number | null) => {
-    if (pts === null) return 'bg-slate-800 text-slate-400 border-slate-700';
-    if (pts === 5) return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
-    if (pts === 3) return 'bg-amber-500/10 text-amber-400 border-amber-500/30';
-    if (pts > 0) return 'bg-[#75AADB]/10 text-[#75AADB] border-[#75AADB]/30';
-    return 'bg-red-500/10 text-red-400 border-red-500/20';
+  const getRankBadge = (idx: number) => {
+    if (idx === 0) return '🥇';
+    if (idx === 1) return '🥈';
+    return '🥉';
   };
-
-  const podiumColors = [
-    { ring: 'ring-[#F4C430] shadow-[0_0_15px_rgba(244,196,48,0.25)]', text: 'text-[#F4C430]', bg: 'bg-[#F4C430]/10', label: '🥇' },
-    { ring: 'ring-slate-400 shadow-[0_0_10px_rgba(148,163,184,0.15)]', text: 'text-slate-300', bg: 'bg-slate-700/20', label: '🥈' },
-    { ring: 'ring-amber-700 shadow-[0_0_10px_rgba(180,83,9,0.15)]', text: 'text-amber-700', bg: 'bg-amber-900/10', label: '🥉' },
-  ];
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -451,6 +555,152 @@ export default function HistoryAndStats({
               );
             })}
           </div>
+        </div>
+      )}
+
+      {/* 🏁 ═══════════ INTERACTIVE TOP 3 RACE RUNNER (NEW!) ═══════════ */}
+      {playedMatches.length > 0 && (
+        <div className="glass rounded-2xl p-5 border-[#3CDBC0]/20 space-y-4 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-[#3CDBC0]/5 rounded-full filter blur-2xl pointer-events-none" />
+          
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#5B5FC7]/10 pb-4">
+            <div>
+              <h3 className="text-sm font-bold text-white flex items-center gap-1.5">
+                <Sparkles className="w-4.5 h-4.5 text-[#3CDBC0]" /> Carrera de Puntos en Directo
+              </h3>
+              <p className="text-[10px] text-slate-400 mt-0.5">
+                Reproducí o deslizá para ver cómo fluctuaron los primeros 3 puestos del torneo partido a partido.
+              </p>
+            </div>
+            
+            {/* Timeline Race controls */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => {
+                  setCutoffIndex(1);
+                  setIsPlaying(false);
+                }}
+                className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 transition-colors"
+                title="Reiniciar carrera"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+              </button>
+
+              <button
+                onClick={() => setIsPlaying(!isPlaying)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-xs transition-colors shadow-md ${
+                  isPlaying 
+                    ? 'bg-rose-500 hover:bg-rose-600 text-white' 
+                    : 'bg-[#3CDBC0] hover:bg-[#3CDBC0]/95 text-[#0f0f23]'
+                }`}
+              >
+                {isPlaying ? (
+                  <>
+                    <Pause className="w-3 h-3 fill-current" /> Pausar
+                  </>
+                ) : (
+                  <>
+                    <Play className="w-3 h-3 fill-current" /> Auto Reproducir
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Cumulative Leaderboard Race Tracks */}
+          <div className="space-y-3.5 py-2">
+            {top3PointsHistory.map((player, idx) => {
+              const pct = (player.cumulativePoints / maxRacePoints) * 100;
+              const col = podiumColors[idx];
+
+              return (
+                <div key={player.id} className="space-y-1">
+                  <div className="flex items-center justify-between text-[11px] font-bold">
+                    <span className="flex items-center gap-1.5">
+                      <span>{getRankBadge(idx)}</span>
+                      {renderAvatar(player.avatar, 'w-5 h-5 text-sm')}
+                      <span className="text-slate-200">{player.name}</span>
+                    </span>
+                    <span className={`font-black ${col.text} tabular-nums`}>
+                      {player.cumulativePoints} pts
+                    </span>
+                  </div>
+                  {/* Track Bar */}
+                  <div className="h-3 rounded-full bg-slate-900/60 border border-white/5 overflow-hidden relative">
+                    <div
+                      style={{ width: `${Math.max(pct, 2)}%` }}
+                      className={`h-full rounded-full transition-all duration-500 bg-gradient-to-r ${col.bg.replace('/10', '/40')} ${col.ring.split(' ')[0].replace('ring', 'border').replace('/60','/30')}`}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Interactive Slider Timeline Bar */}
+          <div className="flex items-center gap-4 pt-2 border-t border-[#5B5FC7]/10">
+            <span className="text-[10px] font-bold font-mono text-slate-500 shrink-0">
+              Inicio
+            </span>
+            
+            <input
+              type="range"
+              min={1}
+              max={playedMatches.length}
+              value={cutoffIndex}
+              onChange={(e) => {
+                setCutoffIndex(Number(e.target.value));
+                setIsPlaying(false);
+              }}
+              className="flex-1 accent-[#3CDBC0] h-1.5 bg-slate-800 rounded-lg cursor-pointer transition-all"
+            />
+            
+            <span className="text-[10px] font-bold font-mono text-[#3CDBC0] shrink-0 bg-[#3CDBC0]/10 border border-[#3CDBC0]/20 px-2 py-0.5 rounded-full">
+              Partido {cutoffIndex} / {playedMatches.length}
+            </span>
+          </div>
+
+          {/* Details of the match at current cutoff */}
+          {currentCutoffMatch && (
+            <div className="bg-[#0f0f23]/60 border border-[#5B5FC7]/10 rounded-xl p-3.5 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[9px] uppercase font-bold tracking-wider text-slate-500">
+                  Evento # {cutoffIndex} procesado en la línea de tiempo
+                </span>
+                <span className="text-[9px] bg-white/5 text-slate-400 font-semibold px-2 py-0.5 rounded">
+                  Fase: {currentCutoffMatch.match.fecha >= 73 ? 'Eliminatorias' : 'Grupos'}
+                </span>
+              </div>
+
+              {/* Teams and score */}
+              <div className="flex items-center gap-3 py-1">
+                <span className="text-xs font-bold text-white">{currentCutoffMatch.match.localTeam} {currentCutoffMatch.match.flagLocal}</span>
+                <span className="text-xs font-black text-[#3CDBC0] bg-[#3CDBC0]/10 px-2 py-0.5 rounded border border-[#3CDBC0]/20 font-mono">
+                  {currentCutoffMatch.match.realResult ? `${currentCutoffMatch.match.realResult[0]} - ${currentCutoffMatch.match.realResult[1]}` : '—'}
+                </span>
+                <span className="text-xs font-bold text-white">{currentCutoffMatch.match.flagVis} {currentCutoffMatch.match.visitorTeam}</span>
+              </div>
+
+              {/* What each of the top 3 predicted */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-[#5B5FC7]/5">
+                {currentCutoffMatch.playerScores.map((score, idx) => (
+                  <div key={score.id} className="flex items-center justify-between bg-[#1a1a2e]/40 p-2 rounded-lg border border-[#5B5FC7]/5">
+                    <span className="text-[10px] text-slate-400 font-semibold truncate max-w-[80px]">
+                      {getRankBadge(idx)} {score.name}
+                    </span>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <span className="text-[10px] font-bold text-slate-300 font-mono">
+                        {score.prediction ? `(${score.prediction[0]}-${score.prediction[1]})` : '—'}
+                      </span>
+                      <span className={`border ${renderPointsBadge(score.pts)}`}>
+                        +{score.pts} pts
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -553,7 +803,7 @@ export default function HistoryAndStats({
                           )}
                         </div>
 
-                        {/* Leader Bar (Only shown for comparison on points metric) */}
+                        {/* Leader Bar */}
                         {isPointsMetric && stage.leaderValue > 0 && selectedUserId !== standings[0]?.id && (
                           <div
                             style={{ height: `${Math.max(leaderHeightPct, 4)}%` }}
