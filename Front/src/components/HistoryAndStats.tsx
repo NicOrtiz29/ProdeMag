@@ -75,6 +75,14 @@ export default function HistoryAndStats({
     { ring: 'ring-amber-700 shadow-[0_0_10px_rgba(180,83,9,0.15)]', text: 'text-amber-700', bg: 'bg-amber-900/10', label: '🥉' },
   ];
 
+  const magneticoColors = [
+    { ring: 'ring-[#3CDBC0] shadow-[0_0_15px_rgba(60,219,192,0.25)]', text: 'text-[#3CDBC0]', bg: 'from-[#3CDBC0] to-[#5B5FC7]', label: '🥇' },
+    { ring: 'ring-[#5B5FC7] shadow-[0_0_12px_rgba(91,95,199,0.2)]', text: 'text-[#5B5FC7]', bg: 'from-[#5B5FC7] to-[#75AADB]', label: '🥈' },
+    { ring: 'ring-[#75AADB] shadow-[0_0_10px_rgba(117,170,219,0.15)]', text: 'text-[#75AADB]', bg: 'from-[#75AADB] to-[#3CDBC0]', label: '🥉' },
+    { ring: 'ring-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.15)]', text: 'text-purple-400', bg: 'from-purple-500 to-[#5B5FC7]', label: '4️⃣' },
+    { ring: 'ring-teal-500 shadow-[0_0_8px_rgba(20,184,166,0.15)]', text: 'text-teal-400', bg: 'from-teal-500 to-[#3CDBC0]', label: '5️⃣' },
+  ];
+
   const getPointsBadgeColor = (pts: number | null) => {
     if (pts === null) return 'bg-slate-800 text-slate-400 border-slate-700';
     if (pts === 5) return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
@@ -397,12 +405,12 @@ export default function HistoryAndStats({
     return () => clearInterval(timer);
   }, [isPlaying, playedMatches]);
 
-  // Calculate cumulative scores of the Top 3 players up to cutoffIndex
-  const top3PointsHistory = useMemo(() => {
-    const top3 = standings.slice(0, 3);
+  // Calculate cumulative scores of the Top 5 players up to cutoffIndex
+  const top5PointsHistory = useMemo(() => {
+    const top5 = standings.slice(0, 5);
     const subset = playedMatches.slice(0, cutoffIndex);
     
-    return top3.map(player => {
+    return top5.map(player => {
       const userPreds = (allUsersData?.preds || []).filter(p => p.user_id === player.id);
       let cumulativePoints = 0;
       
@@ -423,18 +431,18 @@ export default function HistoryAndStats({
 
   // Max score within history to scale race bars
   const maxRacePoints = useMemo(() => {
-    const pts = top3PointsHistory.map(p => p.cumulativePoints);
+    const pts = top5PointsHistory.map(p => p.cumulativePoints);
     const max = Math.max(...pts);
     return max === 0 ? 10 : max;
-  }, [top3PointsHistory]);
+  }, [top5PointsHistory]);
 
   // Cutoff match details
   const currentCutoffMatch = useMemo(() => {
     if (cutoffIndex === 0 || playedMatches.length === 0) return null;
     const match = playedMatches[cutoffIndex - 1];
     
-    const top3 = standings.slice(0, 3);
-    const playerScores = top3.map(player => {
+    const top5 = standings.slice(0, 5);
+    const playerScores = top5.map(player => {
       const userPreds = (allUsersData?.preds || []).filter(p => p.user_id === player.id);
       const p = userPreds.find(up => String(up.match_id) === match.id);
       const real = officialResults[match.id];
@@ -464,7 +472,9 @@ export default function HistoryAndStats({
   const getRankBadge = (idx: number) => {
     if (idx === 0) return '🥇';
     if (idx === 1) return '🥈';
-    return '🥉';
+    if (idx === 2) return '🥉';
+    if (idx === 3) return '4️⃣';
+    return '5️⃣';
   };
 
   return (
@@ -609,9 +619,9 @@ export default function HistoryAndStats({
 
           {/* Cumulative Leaderboard Race Tracks */}
           <div className="space-y-3.5 py-2">
-            {top3PointsHistory.map((player, idx) => {
+            {top5PointsHistory.map((player, idx) => {
               const pct = (player.cumulativePoints / maxRacePoints) * 100;
-              const col = podiumColors[idx];
+              const col = magneticoColors[idx] || magneticoColors[magneticoColors.length - 1];
 
               return (
                 <div key={player.id} className="space-y-1">
@@ -629,7 +639,7 @@ export default function HistoryAndStats({
                   <div className="h-3 rounded-full bg-slate-900/60 border border-white/5 overflow-hidden relative">
                     <div
                       style={{ width: `${Math.max(pct, 2)}%` }}
-                      className={`h-full rounded-full transition-all duration-500 bg-gradient-to-r ${col.bg.replace('/10', '/40')} ${col.ring.split(' ')[0].replace('ring', 'border').replace('/60','/30')}`}
+                      className={`h-full rounded-full transition-all duration-500 bg-gradient-to-r ${col.bg} border ${col.ring.split(' ')[0].replace('ring', 'border')}`}
                     />
                   </div>
                 </div>
@@ -681,8 +691,8 @@ export default function HistoryAndStats({
                 <span className="text-xs font-bold text-white">{currentCutoffMatch.match.flagVis} {currentCutoffMatch.match.visitorTeam}</span>
               </div>
 
-              {/* What each of the top 3 predicted */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-[#5B5FC7]/5">
+              {/* What each of the top 5 predicted */}
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-2 pt-2 border-t border-[#5B5FC7]/5">
                 {currentCutoffMatch.playerScores.map((score, idx) => (
                   <div key={score.id} className="flex items-center justify-between bg-[#1a1a2e]/40 p-2 rounded-lg border border-[#5B5FC7]/5">
                     <span className="text-[10px] text-slate-400 font-semibold truncate max-w-[80px]">
