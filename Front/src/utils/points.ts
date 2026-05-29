@@ -4,16 +4,25 @@ export function calculateMatchPoints(prediction: [number, number], realResult: [
   const [pLocal, pVis] = prediction;
   const [rLocal, rVis] = realResult;
 
-  if (pLocal === rLocal && pVis === rVis) {
-    return 3;
+  let points = 0;
+
+  // 1. Tendency: 3 points for correct winner or draw
+  const pWinner = pLocal > pVis ? 'local' : pLocal < pVis ? 'visitor' : 'draw';
+  const rWinner = rLocal > rVis ? 'local' : rLocal < rVis ? 'visitor' : 'draw';
+
+  if (pWinner === rWinner) {
+    points += 3;
   }
 
-  // Ganador local
-  if (pLocal > pVis && rLocal > rVis) return 1;
-  // Ganador visitante
-  if (pLocal < pVis && rLocal < rVis) return 1;
-  // Empate
-  if (pLocal === pVis && rLocal === rVis) return 1;
+  // 2. Local goals: 1 point for exact local goals
+  if (pLocal === rLocal) {
+    points += 1;
+  }
 
-  return 0;
+  // 3. Visitor goals: 1 point for exact visitor goals
+  if (pVis === rVis) {
+    points += 1;
+  }
+
+  return points;
 }

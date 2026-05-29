@@ -112,23 +112,23 @@ export default function DashboardView({ matches, standings, officialResults, onN
           <Timer className="w-4 h-4 text-[#3CDBC0]" /> Reglas del Prode
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-slate-300">
-          <div className="bg-[#0a0a1e] rounded-xl p-3 border border-emerald-500/10">
-            <div className="text-emerald-400 font-bold mb-1 flex items-center gap-1.5">
-              <CheckCircle className="w-3.5 h-3.5" /> Resultado Exacto
-            </div>
-            <p className="text-slate-400 leading-relaxed">Acertás el marcador exacto → <strong className="text-emerald-400">4 puntos</strong></p>
-          </div>
           <div className="bg-[#0a0a1e] rounded-xl p-3 border border-amber-500/10">
             <div className="text-amber-400 font-bold mb-1 flex items-center gap-1.5">
               <TrendingUp className="w-3.5 h-3.5" /> Tendencia
             </div>
-            <p className="text-slate-400 leading-relaxed">Acertás ganador o empate → <strong className="text-amber-400">2 puntos</strong></p>
+            <p className="text-slate-400 leading-relaxed">Acertás ganador o empate → <strong className="text-amber-400">3 puntos</strong></p>
           </div>
-          <div className="bg-[#0a0a1e] rounded-xl p-3 border border-red-500/10">
-            <div className="text-red-400 font-bold mb-1 flex items-center gap-1.5">
-              <XCircle className="w-3.5 h-3.5" /> Fallo
+          <div className="bg-[#0a0a1e] rounded-xl p-3 border border-cyan-500/10">
+            <div className="text-cyan-400 font-bold mb-1 flex items-center gap-1.5">
+              <Target className="w-3.5 h-3.5" /> Goles por Equipo
             </div>
-            <p className="text-slate-400 leading-relaxed">No acertás ni tendencia → <strong className="text-red-400">0 puntos</strong></p>
+            <p className="text-slate-400 leading-relaxed">Acertás goles del local y/o del visitante → <strong className="text-cyan-400">+1 punto c/u</strong></p>
+          </div>
+          <div className="bg-[#0a0a1e] rounded-xl p-3 border border-emerald-500/10">
+            <div className="text-emerald-400 font-bold mb-1 flex items-center gap-1.5">
+              <CheckCircle className="w-3.5 h-3.5" /> Resultado Exacto
+            </div>
+            <p className="text-slate-400 leading-relaxed font-semibold">Marcador exacto completo → <strong className="text-emerald-400">5 puntos</strong></p>
           </div>
         </div>
       </div>
