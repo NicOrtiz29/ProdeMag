@@ -56,7 +56,7 @@ export default function AuthWall() {
           <h1 className="text-4xl font-extrabold mb-3 tracking-tight">
             Prode <span className="gradient-text-mag">MagIA</span>
           </h1>
-          <p className="text-slate-400">Inicia sesión con tu cuenta de Google para competir.</p>
+          <p className="text-slate-400 invisible select-none pointer-events-none">Inicia sesión con tu cuenta de Google para competir.</p>
         </div>
 
         {/* Card */}
