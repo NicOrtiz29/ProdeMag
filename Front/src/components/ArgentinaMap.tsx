@@ -38,16 +38,16 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
       code: 'MAD',
       iso: 'ES-M',
       wikidata: 'Q2807',
-      // Simplified geographic contour of Madrid Community centered around x=680, y=1400
-      paths: ['M 680,1370 L 695,1375 L 705,1380 L 710,1385 L 708,1395 L 715,1405 L 710,1415 L 700,1425 L 685,1445 L 680,1448 L 675,1445 L 665,1435 L 655,1425 L 645,1415 L 642,1405 L 650,1398 L 660,1390 L 670,1380 Z']
+      // Simplified geographic contour of Madrid Community (Enlarged)
+      paths: ['M 680,1320 L 710,1330 L 730,1340 L 736,1360 L 745,1380 L 736,1400 L 715,1425 L 690,1445 L 680,1450 L 670,1445 L 645,1425 L 624,1400 L 615,1380 L 624,1360 L 630,1340 L 650,1330 Z']
     };
     const venezuelaRegion: ProvincePath = {
       name: 'Venezuela',
       code: 'VEN',
       iso: 'VE',
       wikidata: 'Q717',
-      // Simplified geographic contour of Venezuela centered around x=680, y=1540
-      paths: ['M 635,1525 L 640,1535 L 648,1535 L 652,1525 L 665,1522 L 685,1520 L 705,1520 L 720,1522 L 725,1528 L 728,1535 L 720,1545 L 712,1555 L 705,1570 L 690,1585 L 680,1575 L 665,1565 L 655,1555 L 645,1545 L 635,1530 Z']
+      // Simplified geographic contour of Venezuela (Enlarged)
+      paths: ['M 605,1515 L 615,1530 L 628,1530 L 634,1515 L 655,1510 L 685,1505 L 715,1505 L 745,1510 L 760,1520 L 765,1530 L 750,1550 L 735,1570 L 720,1595 L 695,1625 L 680,1610 L 655,1590 L 635,1570 L 615,1550 Z']
     };
     return [...ARGENTINA_PATHS, madridRegion, venezuelaRegion];
   }, []);
@@ -244,7 +244,7 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
                   {p.name === 'Madrid' && (
                     <text
                       x="680"
-                      y="1475"
+                      y="1480"
                       fill="#ffffff"
                       fontSize="24"
                       fontWeight="bold"
@@ -257,7 +257,7 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
                   {p.name === 'Venezuela' && (
                     <text
                       x="680"
-                      y="1615"
+                      y="1660"
                       fill="#ffffff"
                       fontSize="24"
                       fontWeight="bold"
