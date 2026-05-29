@@ -76,6 +76,19 @@ app.use((req, res, next) => {
 const authMiddleware = require('./middleware/auth');
 app.use(authMiddleware);
 
+// ──── Normalize URL for Netlify Serverless (strips prefix) ────
+app.use((req, res, next) => {
+  if (req.url.startsWith('/.netlify/functions/api')) {
+    req.url = req.url.substring('/.netlify/functions/api'.length);
+  } else if (req.url.startsWith('/api')) {
+    req.url = req.url.substring('/api'.length);
+  }
+  if (!req.url.startsWith('/')) {
+    req.url = '/' + req.url;
+  }
+  next();
+});
+
 // ──── Routes ────
 const predictionsRouter = require('./routes/predictions');
 const officialResultsRouter = require('./routes/officialResults');
