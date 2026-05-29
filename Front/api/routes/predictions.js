@@ -1,12 +1,9 @@
 // api/routes/predictions.js
 const express = require('express');
 const router = express.Router();
-const path = require('path');
-const fs = require('fs');
 const { isPredictionAllowed } = require('../utils/time');
-
-// Load matches schedule once (could be cached)
-const matchesData = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../../src/data/worldcup2026.json'), 'utf8'));
+// Load matches schedule once (required directly so bundler packages it)
+const matchesData = require('../../src/data/worldcup2026.json');
 
 // Validation constants
 const MAX_GOALS = 20; // Maximum realistic goals per team in a single match
