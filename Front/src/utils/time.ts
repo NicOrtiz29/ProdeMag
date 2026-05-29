@@ -61,6 +61,26 @@ export function getMatchDateTimeUTC(match: Match): Date {
 export function isPredictionOpen(match: Match): boolean {
   const matchDate = getMatchDateTimeUTC(match);
   const now = new Date();
-  const cutoffTime = matchDate.getTime() - 30 * 60 * 1000;
+  const cutoffTime = matchDate.getTime() - 45 * 60 * 1000;
   return now.getTime() < cutoffTime;
+}
+
+export interface TimeStatus {
+  status: 'open' | 'urgent' | 'closed';
+  label: string;
+}
+
+export function getMatchTimeStatus(match: Match): TimeStatus {
+  const matchDate = getMatchDateTimeUTC(match);
+  const now = new Date();
+  const diffMs = matchDate.getTime() - now.getTime();
+  const diffMins = diffMs / (60 * 1000);
+
+  if (diffMins <= 45) {
+    return { status: 'closed', label: 'Cerrado' };
+  } else if (diffMins <= 60) {
+    return { status: 'urgent', label: 'Queda poco tiempo' };
+  } else {
+    return { status: 'open', label: 'Todavía estás a tiempo' };
+  }
 }
