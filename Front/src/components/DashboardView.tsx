@@ -5,7 +5,7 @@
 
 import React, { useMemo } from 'react';
 import { Match, StandingsEntry } from '../types';
-import { Target, Trophy, BarChart3, CheckCircle, TrendingUp, XCircle, Timer } from 'lucide-react';
+import { Target, CheckCircle, TrendingUp, Timer } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { calculateMatchPoints } from '../utils/points';
 import ArgentinaMap from './ArgentinaMap';
@@ -20,31 +20,36 @@ interface DashboardViewProps {
 export default function DashboardView({ matches, standings, officialResults, onNavigateToTab }: DashboardViewProps) {
   const { user } = useAuth();
   
-  const totalMatches = matches.filter(m => m.fecha < 73).length;
-  
-  // Calculate stats for the current logged-in user
+  const totalMatches = matches.length;
+
+  // Calculate stats for the current logged-in user using their own predictions from matches state
+  // (matches state is already merged with the current user's predictions from DB in App.tsx)
   const userStats = useMemo(() => {
     let points = 0;
     let acertados = 0;
     let errados = 0;
 
     matches.forEach(m => {
-      if (m.fecha < 73) {
-        const real = officialResults[m.id];
-        if (real) {
-          const pts = calculateMatchPoints(m.prediction, real);
-          points += pts;
-          if (pts > 0) {
-            acertados += 1;
-          } else {
-            errados += 1;
-          }
+      const real = officialResults[m.id];
+      if (real) {
+        const pts = calculateMatchPoints(m.prediction, real);
+        points += pts;
+        if (pts > 0) {
+          acertados += 1;
+        } else {
+          errados += 1;
         }
       }
     });
 
-    return { points, acertados, errados };
-  }, [matches, officialResults]);
+    // Cross-check with standings entry for this user (source of truth from DB)
+    const myStanding = user ? standings.find(s => s.id === user.id) : null;
+    return {
+      points: myStanding ? myStanding.points : points,
+      acertados,
+      errados
+    };
+  }, [matches, officialResults, standings, user]);
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">

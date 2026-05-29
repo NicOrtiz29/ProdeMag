@@ -169,7 +169,7 @@ export default function App() {
 
       Object.keys(officialResults).forEach(matchId => {
         const matchObj = matches.find(m => m.id === matchId);
-        if (matchObj && matchObj.fecha < 73) {
+        if (matchObj) {
           const pObj = uPreds.find((m: any) => m.match_id === matchId);
           if (pObj) {
             points += calculateMatchPoints(pObj.prediction, officialResults[matchId]);
