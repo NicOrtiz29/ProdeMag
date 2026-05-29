@@ -338,7 +338,12 @@ export default function App() {
           )}
 
           {activeTab === 'historico' && (
-            <HistoryAndStats standings={dynamicStandings} />
+            <HistoryAndStats 
+              standings={dynamicStandings} 
+              matches={matches}
+              officialResults={officialResults}
+              allUsersData={allUsersData}
+            />
           )}
 
           {activeTab === 'premios' && (
