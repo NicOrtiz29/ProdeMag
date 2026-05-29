@@ -22,6 +22,7 @@ const PROVINCES_POOL = [
   'Jujuy',
   'La Pampa',
   'La Rioja',
+  'Madrid',
   'Mendoza',
   'Misiones',
   'Neuquén',

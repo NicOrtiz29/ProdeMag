@@ -37,11 +37,24 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
     return 'Ciudad de Buenos Aires';
   };
 
+  // Define all regions shown on the map (Argentina provinces + Madrid expatriate circle)
+  const allMapRegions = useMemo<ProvincePath[]>(() => {
+    const madridRegion: ProvincePath = {
+      name: 'Madrid',
+      code: 'MAD',
+      iso: 'ES-M',
+      wikidata: 'Q2807',
+      // Beautiful circle at the top right (x=530, y=200 with radius 40)
+      paths: ['M 530, 160 A 40,40 0 1,1 530, 240 A 40,40 0 1,1 530, 160']
+    };
+    return [...ARGENTINA_PATHS, madridRegion];
+  }, []);
+
   // Group standings by province
   const provinceStats = useMemo(() => {
     const stats: Record<string, { players: StandingsEntry[]; maxScore: number }> = {};
 
-    ARGENTINA_PATHS.forEach(p => {
+    allMapRegions.forEach(p => {
       stats[p.name] = { players: [], maxScore: 0 };
     });
 
@@ -50,7 +63,7 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
       const dbProvinceNorm = normalize(dbProvince);
 
       // Find matched province path
-      const matched = ARGENTINA_PATHS.find(path => {
+      const matched = allMapRegions.find(path => {
         const svgNorm = normalize(path.name);
         if (svgNorm === dbProvinceNorm) return true;
         if (svgNorm === 'ciudad de buenos aires' && (dbProvinceNorm === 'caba' || dbProvinceNorm === 'ciudad autonoma de buenos aires')) return true;
@@ -71,7 +84,7 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
     });
 
     return stats;
-  }, [standings]);
+  }, [standings, allMapRegions]);
 
   // Determine tiers dynamically based on actual province max scores
   const scoreTiers = useMemo(() => {
@@ -202,7 +215,7 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
             className="w-full h-full object-contain"
             xmlns="http://www.w3.org/2000/svg"
           >
-            {ARGENTINA_PATHS.map((p) => {
+            {allMapRegions.map((p) => {
               const style = getProvinceColor(p.name);
               const isHovered = hoveredProvince === p.name;
               
@@ -219,13 +232,26 @@ export default function ArgentinaMap({ standings }: ArgentinaMapProps) {
                       d={d}
                       fill={isHovered ? 'rgba(60, 219, 192, 0.35)' : style.fill}
                       stroke={isHovered ? '#3CDBC0' : style.stroke}
-                      strokeWidth={isHovered ? 4.5 : 1.8}
+                      strokeWidth={isHovered ? 7.5 : 3.0}
                       className={`${style.class} transition-all duration-300`}
                       style={{
                         filter: isHovered ? 'drop-shadow(0 0 10px rgba(60,219,192,0.65))' : 'none'
                       }}
                     />
                   ))}
+                  {p.name === 'Madrid' && (
+                    <text
+                      x="530"
+                      y="265"
+                      fill="#ffffff"
+                      fontSize="24"
+                      fontWeight="bold"
+                      textAnchor="middle"
+                      className="pointer-events-none select-none opacity-85"
+                    >
+                      Madrid 🇪🇸
+                    </text>
+                  )}
                 </g>
               );
             })}
