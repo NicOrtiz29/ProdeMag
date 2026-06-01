@@ -15,7 +15,7 @@
 
 <br/>
 
-Dashboard interactivo de predicciones de fútbol para el **Mundial FIFA 2026**. Los usuarios registran sus pronósticos, compiten en un ranking general, y siguen el fixture en tiempo real. Incluye sistema de premios y chat grupal en tiempo real entre participantes.
+Dashboard interactivo de predicciones de fútbol para el **Mundial FIFA 2026**. Los usuarios registran sus pronósticos bajo un sistema de reglas dinámico, compiten en un ranking general en tiempo real, visualizan estadísticas de rendimiento personalizadas y participan en un chat grupal interactivo.
 
 <br/>
 
@@ -33,6 +33,7 @@ Dashboard interactivo de predicciones de fútbol para el **Mundial FIFA 2026**. 
 - [🗄️ Base de Datos](#️-base-de-datos)
 - [🔐 Roles y Permisos](#-roles-y-permisos)
 - [📊 Sistema de Puntuación](#-sistema-de-puntuación)
+- [⏰ Límite de Predicción](#-límite-de-predicción)
 - [🎁 Sistema de Premios](#-sistema-de-premios)
 - [💬 Chat Grupal](#-chat-grupal)
 - [🚀 Deploy](#-deploy)
@@ -44,18 +45,16 @@ Dashboard interactivo de predicciones de fútbol para el **Mundial FIFA 2026**. 
 
 | Feature | Descripción |
 |---|---|
-| 🎯 **Pronósticos** | Cargá tus predicciones para cada partido del Mundial. Interfaz intuitiva con selectores de goles. |
-| 📊 **Ranking en vivo** | Tabla de posiciones dinámica calculada en tiempo real según resultados oficiales. |
-| 🏟️ **Fixture completo** | Bracket visual con fase de grupos, octavos, cuartos, semis y final. |
-| 🗺️ **Mapa de Argentina** | Visualización interactiva con distribución geográfica de participantes por provincia. |
-| 📈 **Historial y estadísticas** | Gráficos de tendencia de puntos, precisión y rachas. |
-| 🎁 **Premios** | Sistema de premios configurables por el admin para los primeros puestos. |
-| 💬 **Chat grupal** | Chat en tiempo real entre participantes con Supabase Realtime. |
-| 👤 **Perfiles de usuario** | Panel de perfil con estadísticas personales, avatar y provincia. |
-| 🔒 **Autenticación** | Login/Registro con Supabase Auth (email + password). |
-| ⚙️ **Panel Admin** | Carga de resultados oficiales y configuración del torneo (solo admins). |
-| 🌑 **Dark Mode** | Diseño premium con modo oscuro por defecto. |
-| 📱 **Mobile-first** | Navegación inferior para mobile, tabs para desktop. Totalmente responsive. |
+| 🎯 **Pronósticos (Cutoff)** | Carga de predicciones con límite estricto de **45 minutos** antes de cada partido. Indicadores visuales y animados de estado en tiempo real. |
+| 📊 **Podio y Ranking** | Tabla de posiciones dinámica con un Podio de Honor animado en 3D para los 3 primeros puestos. |
+| 🏎️ **Carrera de Puntos** | Línea de tiempo interactiva (directo) del Top 5 de participantes con controles de reproducción automática (Play, Pausa, Reiniciar) y slider manual. |
+| 📈 **Historial y Analíticas** | Panel premium con gráfico de progreso por ronda (comparativo entre usuario y líder con filtros), racha de aciertos y sesgos de predicción. |
+| 🏅 **Logros e Insignias** | Sistema de logros desbloqueables dinámicamente (Gurú de Grupos, Francotirador, Racha Imbatible, Pacto del Empate, Muro de Acero). |
+| 🗺️ **Mapa con Exterior** | Distribución geográfica de participantes por provincia argentina, incluyendo contornos simplificados flotantes para **Madrid** y **Venezuela**. |
+| 🎁 **Premios** | Panel de premios configurables por administración según la posición final del ranking. |
+| 💬 **Chat Grupal** | Chat grupal integrado en tiempo real mediante Supabase Realtime (canal `postgres_changes`). |
+| 👤 **Perfiles de Usuario** | Gestión de avatar, selección de provincia ("¿Desde dónde estás jugando?") y estadísticas personales basadas íntegramente en datos reales de la DB. |
+| 🔒 **Autenticación** | Autenticación con Supabase Auth (email/password o Google Auth) con flujo inteligente de redirección en desarrollo local. |
 
 ---
 
@@ -66,8 +65,8 @@ Dashboard interactivo de predicciones de fútbol para el **Mundial FIFA 2026**. 
 │                     FRONTEND                         │
 │         React 19 + Vite + TailwindCSS 4              │
 │              Puerto: 3000                            │
+│                                                      │
 ├──────────────┬───────────────────────────────────────┤
-│              │                                       │
 │   Supabase   │          API Backend                  │
 │   Client JS  │      Express 5 + TypeScript           │
 │  (Auth, DB)  │         Puerto: 3005                  │
@@ -77,7 +76,7 @@ Dashboard interactivo de predicciones de fútbol para el **Mundial FIFA 2026**. 
 │       Auth  ·  PostgreSQL  ·  RLS  ·  Storage        │
 ├──────────────────────────────────────────────────────┤
 │                 API-FOOTBALL (v3)                    │
-│           Datos de partidos en vivo                  │
+│      Sincronización de fixture y partidos en vivo     │
 ├──────────────────────────────────────────────────────┤
 │               SUPABASE REALTIME                      │
 │           Chat grupal en tiempo real                 │
@@ -89,32 +88,24 @@ Dashboard interactivo de predicciones de fútbol para el **Mundial FIFA 2026**. 
 ## 🛠️ Tech Stack
 
 ### Frontend (`/Front`)
-| Tecnología | Uso |
-|---|---|
-| **React 19** | UI components con hooks |
-| **Vite 6** | Build tool y dev server |
-| **TypeScript** | Tipado estático |
-| **TailwindCSS 4** | Estilos utility-first |
-| **Lucide React** | Iconografía |
-| **Motion (Framer)** | Animaciones y transiciones |
-| **Supabase JS** | Auth y consultas a la DB |
-| **Supabase Realtime** | Chat grupal en tiempo real |
+- **React 19**: Interfaz declarativa, Context API para estado de autenticación.
+- **Vite 6**: Servidor de desarrollo optimizado y bundles ultrarápidos.
+- **TypeScript**: Tipado estático estricto.
+- **TailwindCSS 4**: Estilos modernos y customizados mediante variables CSS nativas (diseño premium *glassmorphism*).
+- **Lucide React**: Iconografía minimalista.
+- **Motion (Framer)**: Micro-animaciones en tarjetas de fixtures y transiciones de tabs.
+- **Supabase Client JS**: Comunicación directa para autenticación y base de datos.
 
 ### Backend (`/API`)
-| Tecnología | Uso |
-|---|---|
-| **Express 5** | API REST |
-| **TypeScript** | Tipado |
-| **Supabase JS (service_role)** | Operaciones admin sobre la DB |
-| **API-Football v3** | Sincronización de fixtures y resultados |
-| **Luxon** | Manejo de fechas y zonas horarias |
+- **Express 5**: Servidor RESTful para tareas de administración y sincronización.
+- **TypeScript**: Consistencia de tipado en toda la solución.
+- **API-Football v3**: API externa para la obtención automatizada de resultados y partidos del mundial.
+- **Luxon**: Manejo preciso de fechas y husos horarios locales.
 
-### Infraestructura
-| Servicio | Uso |
-|---|---|
-| **Supabase** | Auth, base de datos PostgreSQL, Row Level Security |
-| **API-Football** | Datos de partidos del Mundial en tiempo real |
-| **Supabase Realtime** | Chat grupal entre participantes |
+### Base de Datos e Infraestructura
+- **Supabase**: Base de datos relacional PostgreSQL.
+- **Row Level Security (RLS)**: Políticas estrictas a nivel de fila para proteger los pronósticos y configuraciones de usuario.
+- **Supabase Realtime**: Manejo de eventos de chat instantáneos.
 
 ---
 
@@ -129,52 +120,48 @@ prode-mag-ia/
 │   └── .env                      # Variables de entorno del backend
 │
 ├── Front/                        # Frontend React + Vite
-│   ├── public/                   # Assets estáticos (imágenes de premios)
+│   ├── public/                   # Assets estáticos (premios, etc.)
 │   ├── src/
-│   │   ├── App.tsx               # Componente raíz con routing por tabs
-│   │   ├── main.tsx              # Entry point React
-│   │   ├── index.css             # Estilos globales
-│   │   ├── types.ts              # Interfaces TypeScript
-│   │   ├── data.ts               # Datos iniciales (partidos, tonos, stats)
+│   │   ├── App.tsx               # Componente raíz con navegación por pestañas (Tabs)
+│   │   ├── main.tsx              # Entry point de React
+│   │   ├── index.css             # Estilos globales y tokens de diseño Glassmorphism
+│   │   ├── types.ts              # Tipos y modelos de datos TS
+│   │   ├── data.ts               # Estructuras de soporte y flags
 │   │   ├── components/
-│   │   │   ├── AuthWall.tsx          # Pantalla de login/registro
-│   │   │   ├── DashboardView.tsx     # Vista principal / inicio
-│   │   │   ├── PredictionsList.tsx   # Lista de pronósticos editables
-│   │   │   ├── FixtureBracket.tsx    # Bracket del torneo completo
-│   │   │   ├── DetailedStandings.tsx # Ranking detallado con stats
-│   │   │   ├── StandingsTable.tsx    # Tabla de posiciones resumida
-│   │   │   ├── HistoryAndStats.tsx   # Historial + gráficos de tendencia
-│   │   │   ├── PremiosView.tsx       # Vista de premios por puesto
-│   │   │   ├── UserHeader.tsx        # Header con info del usuario
-│   │   │   ├── UserProfilePanel.tsx  # Panel de perfil completo
-│   │   │   ├── ChatWidget.tsx        # Chat grupal en tiempo real
-│   │   │   ├── ArgentinaMap.tsx      # Mapa interactivo de Argentina
-│   │   │   ├── ChallengeBox.tsx      # Mensajes de desafío (Slack/Teams)
-│   │   │   ├── GroupStandingsWidget.tsx # Widget de posiciones por grupo
-│   │   │   ├── OracleHeader.tsx      # Header del oráculo IA
-│   │   │   ├── PointsTrendChart.tsx  # Gráfico de tendencia de puntos
-│   │   │   ├── SuperAdminSettings.tsx # Configuración de Superadmin
-│   │   │   └── JsonViewer.tsx        # Visor de datos JSON (debug)
+│   │   │   ├── AuthWall.tsx          # Login, Registro y Google Auth
+│   │   │   ├── DashboardView.tsx     # Resumen de inicio
+│   │   │   ├── PredictionsList.tsx   # Carga y edición de pronósticos
+│   │   │   ├── FixtureBracket.tsx    # Bracket interactivo de eliminatorias
+│   │   │   ├── DetailedStandings.tsx # Tabla de posiciones y estadísticas detalladas
+│   │   │   ├── StandingsTable.tsx    # Widget simplificado de posiciones
+│   │   │   ├── HistoryAndStats.tsx   # Podio, Línea de tiempo de carrera de puntos, Heatmap y Logros
+│   │   │   ├── PremiosView.tsx       # Catálogo de premios
+│   │   │   ├── UserHeader.tsx        # Encabezado del participante
+│   │   │   ├── UserProfilePanel.tsx  # Configuración de perfil y avatar
+│   │   │   ├── ChatWidget.tsx        # Widget de chat realtime
+│   │   │   ├── ArgentinaMap.tsx      # Mapa de Argentina interactivo con soporte de Madrid/Venezuela
+│   │   │   ├── ChallengeBox.tsx      # Widget dinámico de retos
+│   │   │   ├── GroupStandingsWidget. # Posiciones en fase de grupos
+│   │   │   └── SuperAdminSettings.tsx# Gestión y configuraciones del administrador
 │   │   ├── context/
-│   │   │   └── AuthContext.tsx       # Contexto de autenticación
+│   │   │   └── AuthContext.tsx       # Contexto global de Supabase Auth
 │   │   ├── lib/
-│   │   │   └── supabase.ts          # Cliente Supabase inicializado
+│   │   │   └── supabase.ts           # Cliente Supabase con redirección inteligente para dev local
 │   │   └── utils/
-│   │       ├── points.ts            # Cálculo de puntuación
-│   │       ├── standings.ts         # Lógica de tabla de posiciones
-│   │       ├── fixtureResolver.ts   # Resolución del bracket/fixture
-│   │       └── stadiumAudio.ts      # Efectos de audio del estadio
+│   │       ├── points.ts             # Lógica del sistema de puntos 3+1+1
+│   │       ├── standings.ts          # Algoritmo de ordenación y desempates de posiciones
+│   │       ├── fixtureResolver.ts    # Procesamiento del fixture eliminatorio
+│   │       └── stadiumAudio.ts       # Audio interactivo de tribuna
 │   ├── sql/
-│   │   ├── create_prizes_table.sql       # Tabla de premios
-│   │   ├── create_messages_table.sql     # Tabla de mensajes del chat
-│   │   ├── official_results_rls_admin.sql # RLS para resultados oficiales
-│   │   └── users_rls_allow_all.sql       # RLS para usuarios
+│   │   ├── create_prizes_table.sql
+│   │   ├── create_messages_table.sql
+│   │   ├── official_results_rls_admin.sql
+│   │   └── users_rls_allow_all.sql
 │   ├── vite.config.ts
 │   └── package.json
 │
-├── supabase-schema.sql           # Schema principal de la DB
-├── .env.example                  # Template de variables de entorno
-├── metadata.json                 # Metadata de la app
+├── supabase-schema.sql           # Schema principal completo de la DB
+├── .env.example                  # Plantilla de variables de entorno consolidada
 └── README.md                     # Este archivo
 ```
 
@@ -185,9 +172,8 @@ prode-mag-ia/
 ### Prerrequisitos
 
 - **Node.js** >= 18
-- Cuenta en [Supabase](https://supabase.com/) (proyecto creado)
-- API Key de [API-Football](https://www.api-football.com/) (opcional, para sync en vivo)
-
+- Cuenta en **Supabase**
+- API Key de **API-Football** (opcional, para actualización en vivo)
 
 ### 1. Clonar el repositorio
 
@@ -196,28 +182,23 @@ git clone https://github.com/NicOrtiz29/ProdeMag.git
 cd ProdeMag
 ```
 
-### 2. Configurar la base de datos
+### 2. Configuración de la Base de Datos
 
-Ejecutar los scripts SQL en tu proyecto de Supabase (SQL Editor):
+1. Ingresa a la consola de Supabase, ve al **SQL Editor** y ejecuta el contenido de [supabase-schema.sql](file:///Users/nico/Documents/prode-mag-ia/supabase-schema.sql) para inicializar las tablas de partidos, predicciones, perfiles y resultados.
+2. Ejecuta los scripts SQL adicionales de la carpeta `Front/sql/` en este orden:
+   - `users_rls_allow_all.sql`
+   - `official_results_rls_admin.sql`
+   - `create_messages_table.sql`
+   - `create_prizes_table.sql`
 
-```bash
-# 1. Schema principal
-supabase-schema.sql
+### 3. Configurar Variables de Entorno
 
-# 2. Scripts adicionales (en orden)
-Front/sql/users_rls_allow_all.sql
-Front/sql/official_results_rls_admin.sql
-Front/sql/create_messages_table.sql
-Front/sql/create_prizes_table.sql
-```
-
-### 3. Configurar variables de entorno
+Duplica el archivo [.env.example](file:///Users/nico/Documents/prode-mag-ia/.env.example) para crear las configuraciones de frontend y backend:
 
 #### Frontend (`Front/.env`)
 ```env
 VITE_SUPABASE_URL=https://tu-proyecto.supabase.co
 VITE_SUPABASE_ANON_KEY=tu_anon_key
-
 ```
 
 #### Backend (`API/.env` o raíz `/.env`)
@@ -230,7 +211,7 @@ SEASON=2026
 PORT=3005
 ```
 
-### 4. Instalar dependencias
+### 4. Instalar Dependencias
 
 ```bash
 # Frontend
@@ -242,25 +223,23 @@ cd ../API
 npm install
 ```
 
-### 5. Ejecutar en desarrollo
+### 5. Iniciar Servidores de Desarrollo
 
 ```bash
-# Terminal 1 — Frontend (puerto 3000)
+# Terminal 1 — Frontend (Puerto 3000)
 cd Front
 npm run dev
 
-# Terminal 2 — Backend (puerto 3005)
+# Terminal 2 — Backend (Puerto 3005)
 cd API
 npm start
 ```
-
-Abrir **http://localhost:3000** en el navegador.
 
 ---
 
 ## 🗄️ Base de Datos
 
-### Diagrama de tablas
+### Diagrama Entidad-Relación
 
 ```mermaid
 erDiagram
@@ -320,99 +299,77 @@ erDiagram
     }
 ```
 
-### Tablas principales
-
-| Tabla | Descripción |
-|---|---|
-| `users` | Perfiles de usuario (extends `auth.users` via trigger) |
-| `matches` | Partidos del Mundial con estado y resultados |
-| `predictions` | Pronósticos de cada usuario por partido |
-| `official_results` | Resultados oficiales cargados por admin |
-| `prizes` | Premios configurados por posición en el ranking |
-
 ---
 
 ## 🔐 Roles y Permisos
 
 | Rol | Permisos |
 |---|---|
-| **user** | Ver partidos, cargar pronósticos propios, ver ranking, ver premios, chat grupal |
-| **admin** | Todo lo anterior + cargar resultados oficiales |
-| **Superadmin** | Todo lo anterior + gestionar partidos, configuración avanzada, gestionar premios |
+| **User** | Cargar sus propios pronósticos, interactuar con el chat, ver ranking, mapa y premios. |
+| **Admin** | Todo lo de User + cargar resultados oficiales en partidos. |
+| **Superadmin** | Acceso total al panel de control, gestión avanzada de premios y partidos del fixture. |
 
-La seguridad se implementa con **Row Level Security (RLS)** de Supabase:
-
-- Los usuarios solo pueden **insertar/actualizar** sus propios pronósticos
-- Los resultados oficiales solo pueden ser **escritos** por admins/superadmins
-- Todos pueden **leer** partidos, resultados, posiciones y premios
+La seguridad de las consultas directas desde el cliente se gestiona mediante políticas **RLS (Row Level Security)** en Supabase.
 
 ---
 
-## 📊 Sistema de Puntuación
+## 📊 Sistema de Puntuación (Regla 3+1+1)
 
-Los puntos se calculan comparando la predicción del usuario con el resultado oficial:
+El puntaje acumulado por cada predicción sobre un partido jugado se calcula siguiendo una estructura de **3+1+1**:
 
-| Acierto | Puntos |
-|---|---|
-| 🎯 **Resultado exacto** (ej: 2-1 y fue 2-1) | **3 puntos** |
-| ✅ **Ganador correcto** (ej: 2-0 y fue 3-1) | **1 punto** |
-| ❌ **Fallo** | **0 puntos** |
+| Logro en el Pronóstico | Puntos | Descripción |
+|---|:---:|---|
+| **Tendencia Correcta** | **3** | Acertar el ganador del partido o el empate. |
+| **Goles Local Exactos** | **+1** | Acertar el número exacto de goles del equipo local. |
+| **Goles Visitante Exactos**| **+1** | Acertar el número exacto de goles del equipo visitante. |
+
+- **Puntaje Máximo por partido**: **5 puntos** (Resultado Exacto).
+- **Acierto Parcial**: Si fallas la tendencia pero aciertas la cantidad de goles de uno de los equipos (por ejemplo, predijiste 2-1, pero terminó 1-1), obtienes **1 punto** por la cantidad exacta de goles.
+
+---
+
+## ⏰ Límite de Predicción
+
+- Para garantizar la transparencia y equidad de la competencia, la edición de pronósticos para cada partido se bloquea estrictamente **45 minutos antes** del horario oficial de inicio del partido.
+- Las tarjetas de partido muestran estados de tiempo animados y bloquean automáticamente los campos de entrada de goles al cumplirse el límite de tiempo.
 
 ---
 
 ## 🎁 Sistema de Premios
 
-Los premios se configuran desde la base de datos y se muestran en la pestaña **Premios**:
+Los premios se configuran de forma dinámica por los administradores desde la base de datos y se muestran en la sección correspondiente. Ejemplos por defecto:
 
-| Puesto | Premio |
-|---|---|
-| 🥇 1° | Remera de Argentina (camiseta oficial) |
-| 🥈 2° | Cafetera Nespresso |
-| 🥉 3° | Pava eléctrica |
-| 4° | Juego de mate premium |
-| 5° | Kit Gin Tonic artesanal |
-
-Los premios son editables por admins desde la tabla `prizes` en Supabase.
+- **1° Puesto**: Camiseta oficial de la Selección Argentina 🇦🇷
+- **2° Puesto**: Cafetera Nespresso ☕
+- **3° Puesto**: Pava eléctrica premium ⚡
+- **4° Puesto**: Juego de mate artesanal 🧉
+- **5° Puesto**: Kit de Gin Tonic premium 🍸
 
 ---
 
 ## 💬 Chat Grupal
 
-El proyecto incluye un **chat grupal en tiempo real** entre los participantes del prode:
-
-- 💬 **Widget flotante** embebido en la interfaz (botón en esquina inferior derecha)
-- ⚡ **Actualizaciones en tiempo real** via Supabase Realtime (canal `postgres_changes`)
-- 👥 **Mensajes persistentes** almacenados en la tabla `messages` de Supabase
-- 🎨 Los mensajes propios se muestran en verde, los ajenos en blanco
+- **Realtime**: El widget del chat grupal utiliza Supabase Realtime para transmitir mensajes de manera instantánea a todos los participantes en línea.
+- **Persistencia**: Los mensajes se guardan en la tabla `messages` con referencias al avatar y nombre de cada participante.
+- **Diseño**: Visualización diferenciada con burbujas de colores (verde para mensajes propios y blanco/gris para los de otros participantes).
 
 ---
 
 ## 🚀 Deploy
 
 ### Frontend
-El frontend está construido con Vite y puede deployarse en cualquier plataforma de hosting estático:
-
+Para compilar la aplicación React optimizada para producción:
 ```bash
 cd Front
 npm run build
-# Output en /Front/dist
 ```
-
-Plataformas compatibles: **Vercel**, **Netlify**, **Firebase Hosting**, **Cloudflare Pages**.
+El directorio de salida será `/Front/dist`, listo para alojarse en plataformas estáticas como **Netlify**, **Vercel** o **Cloudflare Pages**.
 
 ### Backend
-El backend Express puede deployarse como servicio en:
-
-- **Railway**
-- **Render**
-- **Google Cloud Run**
-- **Fly.io**
-
-### Sincronización de partidos
-El endpoint `POST /api/sync-matches` sincroniza los datos de partidos desde API-Football hacia Supabase. Se puede automatizar con un cron job:
+El servidor Express se puede desplegar como servicio web en plataformas como **Railway**, **Render** o **Fly.io**. Para sincronizar manualmente fixtures a través de endpoints protegidos por token:
 
 ```bash
-curl -X POST http://localhost:3005/api/sync-matches \
+curl -X POST https://mi-backend.railway.app/api/sync-matches \
   -H "Authorization: Bearer TU_SERVICE_ROLE_KEY" \
   -H "Content-Type: application/json"
 ```
@@ -423,8 +380,8 @@ curl -X POST http://localhost:3005/api/sync-matches \
 
 <div align="center">
 
-Hecho con 💜 por **MAG**
+Creado con 💜 por **MAG**
 
-**Prode MagIA** © 2026 — Mundial FIFA 2026
+**Prode MagIA** © 2026 — Copa Mundial de la FIFA 2026
 
 </div>
