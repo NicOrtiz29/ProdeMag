@@ -14,6 +14,7 @@ import DetailedStandings from './components/DetailedStandings';
 import HistoryAndStats from './components/HistoryAndStats';
 import FixtureBracket from './components/FixtureBracket';
 import PremiosView from './components/PremiosView';
+import ChallengeBox from './components/ChallengeBox';
 
 import UserHeader from './components/UserHeader';
 import AuthWall from './components/AuthWall';
@@ -30,10 +31,33 @@ import {
   Trophy,
   History,
   GitFork,
-  Gift
+  Gift,
+  MessageSquare
 } from 'lucide-react';
 
 type TabId = 'inicio' | 'pronosticos' | 'fixture' | 'admin' | 'tabla' | 'slack' | 'historico' | 'json' | 'perfil' | 'premios';
+
+function generateChallengeMessage(
+  toneId: string,
+  userName: string,
+  points: number,
+  rank: number | null,
+  leader: string
+): string {
+  const rankText = rank ? `${rank}º puesto` : 'participando';
+  switch (toneId) {
+    case 'picante':
+      return `🌶️ ¡Atención equipo! Habla ${userName} desde el ${rankText} del Prode MagIA Mundial 2026.\n\nVeo a varios muy cómodos abajo en la tabla... ¿Qué pasó con los gurús del fútbol de la oficina? A ver si empiezan a embocarle a los marcadores porque el que termine último paga las medialunas el viernes. 🥐☕\n\nPor ahora el puntero es ${leader}. A ver quién se anima a desafiarme en la próxima fecha. 😉⚽`;
+    case 'formal':
+      return `💼 Estimados colegas, comparto la actualización del Prode MagIA Mundial 2026.\n\nActualmente me encuentro en la posición ${rankText} con un acumulado de ${points} puntos. Felicitaciones a ${leader} por liderar la clasificación general de la empresa.\n\nLes recuerdo que los pronósticos se bloquean estrictamente 45 minutos antes del inicio de cada encuentro. Los invito a mantener sus predicciones al día para asegurar una competencia transparente y ordenada.\n\nSaludos cordiales.`;
+    case 'informativo':
+      return `📊 Reporte del Prode MagIA - Mundial FIFA 2026\n\n• Participante: ${userName}\n• Posición actual: ${rankText}\n• Puntos acumulados: ${points} pts\n• Líder del torneo: ${leader}\n\nLa competencia se encuentra muy reñida en los puestos de vanguardia del podio. No olviden verificar el estado del fixture en la plataforma para ajustar sus pronósticos a tiempo. ¡Buen juego para todos! ⚽📈`;
+    case 'humor':
+      return `🤡 ¡Hola gente! Paso a dejarles un tip de oro del Prode MagIA Mundial 2026.\n\nViendo que estoy en el ${rankText} y que mis predicciones vienen siendo un absoluto desastre, les sugiero firmemente que miren lo que yo pronostiqué y pongan exactamente lo contrario. Éxito garantizado para ustedes.\n\nFelicidades a ${leader} que claramente sí entiende de fútbol. ¡Yo sigo participando por diversión! 🧉⚽`;
+    default:
+      return '';
+  }
+}
 
 export default function App() {
   const { user, isLoading } = useAuth();
@@ -41,6 +65,28 @@ export default function App() {
   const [matches, setMatches] = useState<Match[]>(INITIAL_MATCHES);
   const [officialResults, setOfficialResults] = useState<Record<string, [number, number]>>({});
   const [allUsersData, setAllUsersData] = useState<{users:any[], preds:any[]}>({users: [], preds: []});
+
+  const [currentToneId, setCurrentToneId] = useState<string>('picante');
+  const [challengeMessage, setChallengeMessage] = useState<string>('');
+
+  const challengeTones = useMemo(() => [
+    { id: 'picante', name: 'Picante', emoji: '🌶️', badge: 'Provocativo', message: '' },
+    { id: 'formal', name: 'Formal', emoji: '💼', badge: 'Corporativo', message: '' },
+    { id: 'informativo', name: 'Informativo', emoji: '📊', badge: 'Estadístico', message: '' },
+    { id: 'humor', name: 'Humorístico', emoji: '🤡', badge: 'Auto-degradante', message: '' }
+  ], []);
+
+  // Update challenge message when tone, user, or leaderboard changes
+  useEffect(() => {
+    if (!user) return;
+    const myRankIndex = dynamicStandings.findIndex(s => s.id === user.id);
+    const myRank = myRankIndex !== -1 ? myRankIndex + 1 : null;
+    const leaderName = dynamicStandings[0]?.name || 'Líder';
+    const myPoints = myRankIndex !== -1 ? dynamicStandings[myRankIndex].points : 0;
+    
+    const message = generateChallengeMessage(currentToneId, user.name || 'Participante', myPoints, myRank, leaderName);
+    setChallengeMessage(message);
+  }, [currentToneId, user, dynamicStandings]);
 
   // --------------------------------------------------
   // Load all required data (official results, users, predictions)
@@ -210,6 +256,7 @@ export default function App() {
     { id: 'fixture', label: 'Fixture', icon: <GitFork className="w-5 h-5 text-[#3CDBC0]" /> },
     ...(user?.isAdmin ? [{ id: 'admin', label: 'Admin', icon: <Target className="w-5 h-5 text-[#F4C430]" /> }] : []),
     { id: 'tabla', label: 'Ranking', icon: <Trophy className="w-5 h-5" /> },
+    { id: 'slack', label: 'Desafíos', icon: <MessageSquare className="w-5 h-5 text-[#3CDBC0]" /> },
     { id: 'historico', label: 'Historial', icon: <History className="w-5 h-5" /> },
     { id: 'premios', label: 'Premios', icon: <Gift className="w-5 h-5 text-[#3CDBC0]" /> },
   ] as const;
@@ -335,6 +382,16 @@ export default function App() {
 
           {activeTab === 'tabla' && (
             <DetailedStandings standings={dynamicStandings} />
+          )}
+
+          {activeTab === 'slack' && (
+            <ChallengeBox 
+              tones={challengeTones}
+              currentToneId={currentToneId}
+              onToneChange={setCurrentToneId}
+              messageText={challengeMessage}
+              onMessageTextChange={setChallengeMessage}
+            />
           )}
 
           {activeTab === 'historico' && (

@@ -105,6 +105,31 @@ export default function DashboardView({ matches, standings, officialResults, onN
         </div>
       </div>
 
+      {/* Quick CTAs for slack rivalry generator and prizes */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div 
+          onClick={() => onNavigateToTab('slack')}
+          className="glass rounded-xl p-4 border border-[#3CDBC0]/20 hover:border-[#3CDBC0]/50 transition-all duration-300 cursor-pointer flex items-center gap-3 bg-gradient-to-r from-[#3CDBC0]/5 to-transparent hover:scale-[1.01]"
+        >
+          <span className="text-2xl">🔥</span>
+          <div className="min-w-0">
+            <h4 className="font-bold text-white text-xs">Generador de Desafíos</h4>
+            <p className="text-[10px] text-slate-400 mt-0.5 truncate">Creá mensajes picantes para Slack o Teams de tu oficina.</p>
+          </div>
+        </div>
+
+        <div 
+          onClick={() => onNavigateToTab('premios')}
+          className="glass rounded-xl p-4 border border-[#5B5FC7]/20 hover:border-[#5B5FC7]/50 transition-all duration-300 cursor-pointer flex items-center gap-3 bg-gradient-to-r from-[#5B5FC7]/5 to-transparent hover:scale-[1.01]"
+        >
+          <span className="text-2xl">🎁</span>
+          <div className="min-w-0">
+            <h4 className="font-bold text-white text-xs">Catálogo de Premios</h4>
+            <p className="text-[10px] text-slate-400 mt-0.5 truncate">Mirá qué premios podés ganar según tu posición final.</p>
+          </div>
+        </div>
+      </div>
+
       {/* Interactive Argentina Map component replacing navigation cards */}
       <div className="space-y-3">
         <h3 className="font-bold text-white text-sm px-1">Distribución de Jugadores por Provincia</h3>
