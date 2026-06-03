@@ -76,6 +76,45 @@ export default function App() {
     { id: 'humor', name: 'Humorístico', emoji: '🤡', badge: 'Auto-degradante', message: '' }
   ], []);
 
+  const dynamicStandings = useMemo(() => {
+    const registeredUsers = allUsersData.users || [];
+    const allPreds = allUsersData.preds || [];
+    
+    const userEntries: StandingsEntry[] = registeredUsers.map((u: any) => {
+      let points = 0;
+      const uPreds = allPreds.filter(p => p.user_id === u.id);
+
+      Object.keys(officialResults).forEach(matchId => {
+        const matchObj = matches.find(m => m.id === matchId);
+        if (matchObj) {
+          const pObj = uPreds.find((m: any) => m.match_id === matchId);
+          if (pObj) {
+            points += calculateMatchPoints(pObj.prediction, officialResults[matchId]);
+          }
+        }
+      });
+
+      return {
+        id: u.id,
+        name: u.name,
+        points: points,
+        isBot: false,
+        avatar: u.avatar || '⚽',
+        role: u.role,
+        province: u.province
+      };
+    });
+
+    const combined = userEntries;
+    // Debug logs
+    if (import.meta.env.DEV) console.log('User entries count:', userEntries.length);
+    if (import.meta.env.DEV) console.log('Official results keys:', Object.keys(officialResults));
+    combined.sort((a, b) => b.points - a.points);
+    // Log after sorting
+    if (import.meta.env.DEV) console.log('Sorted standings count:', combined.length);
+    return combined;
+  }, [officialResults, allUsersData, matches]);
+
   // Update challenge message when tone, user, or leaderboard changes
   useEffect(() => {
     if (!user) return;
@@ -205,44 +244,7 @@ export default function App() {
     // Intentionally retain user predictions; do not clear them
   };
 
-  const dynamicStandings = useMemo(() => {
-    const registeredUsers = allUsersData.users || [];
-    const allPreds = allUsersData.preds || [];
-    
-    const userEntries: StandingsEntry[] = registeredUsers.map((u: any) => {
-      let points = 0;
-      const uPreds = allPreds.filter(p => p.user_id === u.id);
 
-      Object.keys(officialResults).forEach(matchId => {
-        const matchObj = matches.find(m => m.id === matchId);
-        if (matchObj) {
-          const pObj = uPreds.find((m: any) => m.match_id === matchId);
-          if (pObj) {
-            points += calculateMatchPoints(pObj.prediction, officialResults[matchId]);
-          }
-        }
-      });
-
-      return {
-        id: u.id,
-        name: u.name,
-        points: points,
-        isBot: false,
-        avatar: u.avatar || '⚽',
-        role: u.role,
-        province: u.province
-      };
-    });
-
-    const combined = userEntries;
-    // Debug logs
-    if (import.meta.env.DEV) console.log('User entries count:', userEntries.length);
-    if (import.meta.env.DEV) console.log('Official results keys:', Object.keys(officialResults));
-    combined.sort((a, b) => b.points - a.points);
-    // Log after sorting
-    if (import.meta.env.DEV) console.log('Sorted standings count:', combined.length);
-    return combined;
-  }, [officialResults, allUsersData]);
 
   // Log when dynamicStandings recompute
   useEffect(() => {
